@@ -1,0 +1,11 @@
+/* ========== BiliuP 字体配置 ========== */
+:root {
+  --vp-font-family-base: 'Inter', 'HarmonyOS Sans SC', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  --vp-font-family-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+  --vp-sidebar-width: 280px;
+}
+
+/* 代码块字体 */
+code, kbd, pre, samp {
+  font-family: var(--vp-font-family-mono);
+}

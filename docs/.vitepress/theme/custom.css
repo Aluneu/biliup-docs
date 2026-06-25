@@ -1,0 +1,369 @@
+/* ========== BiliuP 主题定制 ========== */
+
+@import './style/font.css';
+@import './style/var.css';
+@import './style/main.css';
+
+/* ===== Hero 区域 ===== */
+.VPHomeHero .name,
+.VPHomeHero .text {
+  background: linear-gradient(120deg, #6366f1 20%, #fb7299 60%, #818cf8 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.VPHomeHero .tagline {
+  color: var(--vp-c-text-2);
+}
+
+/* ===== 品牌按钮 - B站粉 ===== */
+.VPButton.brand {
+  background-color: #6366f1 !important;
+  border-color: #6366f1 !important;
+  transition: all 0.3s ease;
+}
+
+.VPButton.brand:hover {
+  background-color: #fb7299 !important;
+  border-color: #fb7299 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(251, 114, 153, 0.4);
+}
+
+.VPButton.alt {
+  transition: all 0.3s ease;
+}
+
+.VPButton.alt:hover {
+  border-color: #6366f1 !important;
+  color: #6366f1 !important;
+}
+
+/* ===== Feature 卡片 - 毛玻璃 ===== */
+.VPFeature {
+  border: none !important;
+  border-radius: 16px !important;
+  background: rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06) !important;
+  transition: all 0.3s ease;
+}
+
+.VPFeature:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.12), 0 4px 10px rgba(0, 0, 0, 0.06) !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+}
+
+.dark .VPFeature {
+  background: rgba(30, 30, 40, 0.6) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2) !important;
+}
+
+.dark .VPFeature:hover {
+  background: rgba(40, 40, 55, 0.85) !important;
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.2), 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Feature 图标 */
+.VPFeature .VPImage {
+  filter: drop-shadow(0 2px 4px rgba(99, 102, 241, 0.2));
+}
+
+/* ===== 导航栏毛玻璃 ===== */
+.VPNavBar:not(.home.top) {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.08);
+}
+
+.dark .VPNavBar:not(.home.top) {
+  background: rgba(20, 20, 30, 0.72) !important;
+  border-bottom: 1px solid rgba(99, 102, 241, 0.12);
+}
+
+/* 首页顶部导航完全透明 */
+.VPNavBar.home.top {
+  background: transparent !important;
+}
+
+/* ===== 侧边栏 ===== */
+.VPSidebar {
+  background: rgba(255, 255, 255, 0.5) !important;
+}
+
+.dark .VPSidebar {
+  background: rgba(20, 20, 30, 0.5) !important;
+}
+
+/* ===== 搜索框 ===== */
+.DocSearch-Button {
+  background: rgba(255, 255, 255, 0.5) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 12px !important;
+}
+
+.dark .DocSearch-Button {
+  background: rgba(40, 40, 55, 0.5) !important;
+}
+
+/* 搜索结果高亮 */
+.VPLocalSearchBox #localsearch-list mark {
+  background-color: rgba(99, 102, 241, 0.25);
+  border-radius: 2px;
+}
+
+/* ===== 页脚 ===== */
+.VPFooter {
+  border-top: 1px solid rgba(99, 102, 241, 0.08) !important;
+}
+
+/* ===== 图片缩放层级 ===== */
+.medium-zoom-overlay {
+  z-index: 20;
+}
+.medium-zoom-image {
+  z-index: 9999 !important;
+}
+
+/* ========== 内容页卡片（NapCat NCard 风格） ========== */
+
+/* 卡片网格容器 */
+.vp-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+
+/* 单张卡片 */
+.vp-card {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 24px;
+  border-radius: 12px;
+  border: 1px solid var(--vp-c-gutter);
+  background: var(--vp-c-bg-soft-up);
+  text-decoration: none !important;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.vp-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--vp-c-brand);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.12);
+  background: var(--vp-c-bg-soft);
+}
+
+.dark .vp-card {
+  border-color: var(--vp-c-gutter);
+  background: rgba(40, 40, 55, 0.5);
+}
+
+.dark .vp-card:hover {
+  border-color: var(--vp-c-brand);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2);
+  background: rgba(50, 50, 70, 0.7);
+}
+
+.vp-card .card-icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+
+.vp-card .card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+  margin-bottom: 6px;
+}
+
+.vp-card .card-desc {
+  font-size: 13px;
+  color: var(--vp-c-text-2);
+  line-height: 1.6;
+}
+
+/* 三列特色卡片（非链接，纯展示） */
+.vp-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin: 24px 0;
+}
+
+@media (max-width: 768px) {
+  .vp-feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.vp-feature-item {
+  padding: 20px;
+  border-radius: 12px;
+  background: var(--vp-c-bg-soft-up);
+  border: 1px solid var(--vp-c-gutter);
+  transition: all 0.25s ease;
+}
+
+.vp-feature-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(99, 102, 241, 0.08);
+}
+
+.dark .vp-feature-item {
+  background: rgba(40, 40, 55, 0.4);
+}
+
+.vp-feature-item .feat-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.vp-feature-item .feat-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+  margin-bottom: 4px;
+}
+
+.vp-feature-item .feat-desc {
+  font-size: 13px;
+  color: var(--vp-c-text-2);
+  line-height: 1.6;
+}
+
+/* ========== Admonition 美化 ========== */
+.vp-doc .custom-block {
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin: 20px 0;
+  border-left: 4px solid;
+}
+
+.vp-doc .custom-block.tip {
+  border-color: #6366f1;
+  background: rgba(99, 102, 241, 0.06);
+}
+
+.vp-doc .custom-block.warning {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.06);
+}
+
+.vp-doc .custom-block.danger {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.06);
+}
+
+.vp-doc .custom-block.info {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.06);
+}
+
+.dark .vp-doc .custom-block.tip {
+  background: rgba(99, 102, 241, 0.08);
+}
+
+.dark .vp-doc .custom-block.warning {
+  background: rgba(245, 158, 11, 0.08);
+}
+
+.dark .vp-doc .custom-block.danger {
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.dark .vp-doc .custom-block.info {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.vp-doc .custom-block .custom-block-title {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+/* ========== 内容页排版优化 ========== */
+
+/* 页面标题（H1）更大、更醒目 */
+.vp-doc h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.25em;
+  background: linear-gradient(120deg, var(--vp-c-text-1) 0%, var(--vp-c-brand) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* H2 标题带下划线装饰 */
+.vp-doc h2 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-top: 2em;
+  margin-bottom: 0.75em;
+  padding-bottom: 0.3em;
+  border-bottom: 2px solid rgba(99, 102, 241, 0.15);
+}
+
+/* H3 标题 */
+.vp-doc h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 1.5em;
+}
+
+/* 段落间距更舒适 */
+.vp-doc p {
+  line-height: 1.75;
+  margin: 0.8em 0;
+}
+
+/* 代码块圆角 */
+.vp-doc div[class*="language-"] {
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.vp-doc div[class*="language-"] pre {
+  border-radius: 10px;
+}
+
+/* 内联代码 */
+.vp-doc :not(pre) > code {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.875em;
+  color: var(--vp-c-brand);
+  background: rgba(99, 102, 241, 0.08);
+}
+
+/* 表格样式 */
+.vp-doc table {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.vp-doc th {
+  background: var(--vp-c-bg-soft);
+  font-weight: 600;
+}
+
+.vp-doc tr:nth-child(even) {
+  background: rgba(99, 102, 241, 0.02);
+}
+
+/* 水平线 */
+.vp-doc hr {
+  border: none;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.15), transparent);
+  margin: 2.5em 0;
+}

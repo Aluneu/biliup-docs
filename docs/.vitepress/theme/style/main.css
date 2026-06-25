@@ -1,0 +1,36 @@
+/* ========== BiliuP 全局样式 ========== */
+
+/* 滚动条 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #c1c1c1;
+  border-radius: 20px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #a1a1a1;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: #4d4c4c;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background-color: #6d6c6c;
+}
+
+/* 链接无下划线 */
+.vp-doc a {
+  text-decoration: none;
+}
+
+/* 首页底部间距 */
+.VPHome {
+  padding-bottom: 60px !important;
+}
+
+/* 社交链接右边距 */
+.VPSocialLinks.VPNavBarSocialLinks.social-links {
+  margin-right: 0;
+}
