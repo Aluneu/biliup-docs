@@ -130,7 +130,7 @@ Authorization: Basic <base64(user:password)>
 { "id": 16, "message": "主播已添加，正在检测开播状态..." }
 ```
 
-### PUT /api/streamers/{id}
+### PUT /api/streamers/\\{id\\}
 
 更新指定主播的配置。
 
@@ -146,7 +146,7 @@ Authorization: Basic <base64(user:password)>
 }
 ```
 
-### DELETE /api/streamers/{id}
+### DELETE /api/streamers/\{id\}
 
 删除指定主播（不会删除已录制的文件）。
 
@@ -156,11 +156,11 @@ Authorization: Basic <base64(user:password)>
 
 ## 录制控制
 
-### POST /api/record/start/{streamer_id}
+### POST /api/record/start/\{streamer_id\}
 
 手动触发指定主播的录制（无论是否开播）。
 
-### POST /api/record/stop/{streamer_id}
+### POST /api/record/stop/\{streamer_id\}
 
 停止指定主播的录制。
 
@@ -176,7 +176,7 @@ Authorization: Basic <base64(user:password)>
 
 获取等待上传和正在上传的任务列表。
 
-### POST /api/upload/start/{history_id}
+### POST /api/upload/start/\{history_id\}
 
 手动触发指定历史记录的 Upload。
 
@@ -189,11 +189,11 @@ Authorization: Basic <base64(user:password)>
 }
 ```
 
-### POST /api/upload/retry/{upload_id}
+### POST /api/upload/retry/\{upload_id\}
 
 重试失败的上传任务。
 
-### GET /api/upload/progress/{upload_id}
+### GET /api/upload/progress/\{upload_id\}
 
 获取指定上传任务的进度。
 
@@ -244,11 +244,11 @@ Authorization: Basic <base64(user:password)>
 
 创建新投稿模板。
 
-### PUT /api/templates/{id}
+### PUT /api/templates/\{id\}
 
 更新指定模板。
 
-### DELETE /api/templates/{id}
+### DELETE /api/templates/\{id\}
 
 删除指定模板（正在使用的主播会变为未指定模板状态）。
 
@@ -292,11 +292,11 @@ Authorization: Basic <base64(user:password)>
 { "status": "success", "uid": 123456, "name": "用户名" }  // 登录成功
 ```
 
-### POST /api/accounts/refresh/{id}
+### POST /api/accounts/refresh/\{id\}
 
 刷新指定账号的登录状态（续期 Cookie）。
 
-### DELETE /api/accounts/{id}
+### DELETE /api/accounts/\{id\}
 
 删除指定账号（不会注销 B站账号，只是移除本地 Cookie）。
 
@@ -320,7 +320,7 @@ Authorization: Basic <base64(user:password)>
 | `page` | int | 分页页码 |
 | `page_size` | int | 每页数量 |
 
-### DELETE /api/history/{id}
+### DELETE /api/history/\{id\}
 
 删除指定历史记录（可选是否同时删除本地文件）。
 
@@ -371,7 +371,7 @@ Authorization: Basic <base64(user:password)>
 }
 ```
 
-### DELETE /api/jobs/{job_id}
+### DELETE /api/jobs/\{job_id\}
 
 取消指定任务。
 
@@ -421,11 +421,11 @@ Authorization: Basic <base64(user:password)>
 }
 ```
 
-### GET /api/config/platform/{platform}
+### GET /api/config/platform/\{platform\}
 
 获取指定平台的配置。
 
-### PUT /api/config/platform/{platform}
+### PUT /api/config/platform/\{platform\}
 
 更新指定平台的配置。
 
