@@ -27,8 +27,11 @@ export default defineConfig({
     },
     nav: [
       { text: "指引", link: "/guide/introduce/introduce/introduce", activeMatch: "/guide/introduce/" },
+      { text: "WebUI", link: "/guide/webui/usage", activeMatch: "/guide/webui/" },
       { text: "文档", link: "/guide/docs/doc", activeMatch: "/guide/docs/" },
+      { text: "API", link: "/guide/api/rest-api", activeMatch: "/guide/api/" },
       { text: "CLI", link: "/guide/configs/config", activeMatch: "/guide/configs/" },
+      { text: "更新日志", link: "/guide/changelog/changelog", activeMatch: "/guide/changelog/" },
       {
         text: "相关链接",
         items: [
