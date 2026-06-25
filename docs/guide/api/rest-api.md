@@ -48,7 +48,7 @@ Authorization: Basic <base64(user:password)>
 
 ## 系统状态
 
-### GET /api/status
+### GET `/api/status`
 
 获取 biliup 运行状态。
 
@@ -74,7 +74,7 @@ Authorization: Basic <base64(user:password)>
 
 ## 主播管理
 
-### GET /api/streamers
+### GET `/api/streamers`
 
 列出所有已添加的主播。
 
@@ -110,7 +110,7 @@ Authorization: Basic <base64(user:password)>
 }
 ```
 
-### POST /api/streamers
+### POST `/api/streamers`
 
 添加新主播。
 
@@ -130,7 +130,7 @@ Authorization: Basic <base64(user:password)>
 { "id": 16, "message": "主播已添加，正在检测开播状态..." }
 ```
 
-### PUT /api/streamers/\\{id\\}
+### PUT `/api/streamers/{id}`
 
 更新指定主播的配置。
 
@@ -146,7 +146,7 @@ Authorization: Basic <base64(user:password)>
 }
 ```
 
-### DELETE /api/streamers/\{id\}
+### DELETE `/api/streamers/{id}`
 
 删除指定主播（不会删除已录制的文件）。
 
@@ -156,15 +156,15 @@ Authorization: Basic <base64(user:password)>
 
 ## 录制控制
 
-### POST /api/record/start/\{streamer_id\}
+### POST `/api/record/start/{streamer_id}`
 
 手动触发指定主播的录制（无论是否开播）。
 
-### POST /api/record/stop/\{streamer_id\}
+### POST `/api/record/stop/{streamer_id}`
 
 停止指定主播的录制。
 
-### GET /api/record/status
+### GET `/api/record/status`
 
 获取所有当前录制任务的状态。
 
@@ -172,11 +172,11 @@ Authorization: Basic <base64(user:password)>
 
 ## 上传管理
 
-### GET /api/upload/queue
+### GET `/api/upload/queue`
 
 获取等待上传和正在上传的任务列表。
 
-### POST /api/upload/start/\{history_id\}
+### POST `/api/upload/start/{history_id}`
 
 手动触发指定历史记录的 Upload。
 
@@ -189,11 +189,11 @@ Authorization: Basic <base64(user:password)>
 }
 ```
 
-### POST /api/upload/retry/\{upload_id\}
+### POST `/api/upload/retry/{upload_id}`
 
 重试失败的上传任务。
 
-### GET /api/upload/progress/\{upload_id\}
+### GET `/api/upload/progress/{upload_id}`
 
 获取指定上传任务的进度。
 
@@ -213,7 +213,7 @@ Authorization: Basic <base64(user:password)>
 
 ## 投稿模板
 
-### GET /api/templates
+### GET `/api/templates`
 
 列出所有投稿模板。
 
@@ -240,15 +240,15 @@ Authorization: Basic <base64(user:password)>
 }
 ```
 
-### POST /api/templates
+### POST `/api/templates`
 
 创建新投稿模板。
 
-### PUT /api/templates/\{id\}
+### PUT `/api/templates/{id}`
 
 更新指定模板。
 
-### DELETE /api/templates/\{id\}
+### DELETE `/api/templates/{id}`
 
 删除指定模板（正在使用的主播会变为未指定模板状态）。
 
@@ -256,11 +256,11 @@ Authorization: Basic <base64(user:password)>
 
 ## 账号管理
 
-### GET /api/accounts
+### GET `/api/accounts`
 
 列出所有已登录的 B站账号。
 
-### POST /api/accounts/login
+### POST `/api/accounts/login`
 
 触发扫码登录流程，返回二维码 URL。
 
@@ -274,7 +274,7 @@ Authorization: Basic <base64(user:password)>
 }
 ```
 
-### POST /api/accounts/poll
+### POST `/api/accounts/poll`
 
 轮询扫码登录状态。
 
@@ -292,11 +292,11 @@ Authorization: Basic <base64(user:password)>
 { "status": "success", "uid": 123456, "name": "用户名" }  // 登录成功
 ```
 
-### POST /api/accounts/refresh/\{id\}
+### POST `/api/accounts/refresh/{id}`
 
 刷新指定账号的登录状态（续期 Cookie）。
 
-### DELETE /api/accounts/\{id\}
+### DELETE `/api/accounts/{id}`
 
 删除指定账号（不会注销 B站账号，只是移除本地 Cookie）。
 
@@ -304,7 +304,7 @@ Authorization: Basic <base64(user:password)>
 
 ## 历史记录
 
-### GET /api/history
+### GET `/api/history`
 
 查询录制/上传历史记录。
 
@@ -320,7 +320,7 @@ Authorization: Basic <base64(user:password)>
 | `page` | int | 分页页码 |
 | `page_size` | int | 每页数量 |
 
-### DELETE /api/history/\{id\}
+### DELETE `/api/history/{id}`
 
 删除指定历史记录（可选是否同时删除本地文件）。
 
@@ -334,7 +334,7 @@ Authorization: Basic <base64(user:password)>
 
 ## 任务查询
 
-### GET /api/jobs
+### GET `/api/jobs`
 
 获取当前运行中的任务列表。
 
@@ -371,7 +371,7 @@ Authorization: Basic <base64(user:password)>
 }
 ```
 
-### DELETE /api/jobs/\{job_id\}
+### DELETE `/api/jobs/{job_id}`
 
 取消指定任务。
 
@@ -379,7 +379,7 @@ Authorization: Basic <base64(user:password)>
 
 ## 日志
 
-### GET /api/logs
+### GET `/api/logs`
 
 获取运行日志（支持级别过滤和分页）。
 
@@ -398,11 +398,11 @@ Authorization: Basic <base64(user:password)>
 
 ## 配置
 
-### GET /api/config
+### GET `/api/config`
 
 获取当前全局配置（不含敏感信息如 Cookie 内容）。
 
-### PUT /api/config
+### PUT `/api/config`
 
 更新全局配置。
 
@@ -421,11 +421,11 @@ Authorization: Basic <base64(user:password)>
 }
 ```
 
-### GET /api/config/platform/\{platform\}
+### GET `/api/config/platform/{platform}`
 
 获取指定平台的配置。
 
-### PUT /api/config/platform/\{platform\}
+### PUT `/api/config/platform/{platform}`
 
 更新指定平台的配置。
 

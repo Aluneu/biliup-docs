@@ -45,6 +45,7 @@ export default defineConfig({
       "/guide/introduce/live/": set_sidebar('/guide/introduce/live', false),
       "/guide/docs/": set_sidebar('/guide/docs', false),
       "/guide/configs/": set_sidebar('/guide/configs', false),
+      "/guide/安装部署/": set_sidebar('/guide/安装部署', false),
       "/guide/webui/": set_sidebar('/guide/webui', false),
       "/guide/api/": set_sidebar('/guide/api', false),
       "/guide/changelog/": set_sidebar('/guide/changelog', false),
