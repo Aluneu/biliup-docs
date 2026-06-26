@@ -88,6 +88,12 @@
   <span class="card-desc">全局设置、各平台配置、开发者选项</span>
 </a>
 
+<a href="./login.html" class="vp-card">
+  <span class="card-icon">🔐</span>
+  <span class="card-title">登录方式</span>
+  <span class="card-desc">扫码/短信/密码/浏览器/Cookie 五种方式</span>
+</a>
+
 </div>
 
 ---

@@ -41,8 +41,7 @@ export default defineConfig({
           { text: "biliup 社区", link: "https://biliup.me" }
         ]
       },
-      // 已删除赞助导航项 // [!code --]
-      // { text: "🍵 赞助", link: "/sponsor/index" }, // [!code --]
+      { text: "🍵 赞助", link: "/sponsor/index" },
     ],
     sidebar: {
       "/guide/introduce/": set_sidebar('/guide/introduce', false),
