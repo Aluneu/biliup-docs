@@ -18,9 +18,11 @@
 
 ## v1.2.1
 
-> 发布时间：2024-06-05
+> 发布时间：2026-06-05
 
-- 🔧 (具体变更内容待补充 — 请参考 [GitHub Release](https://github.com/biliup/biliup/releases/tag/v1.2.1))
+- 🔧 具体变更请查看 [v1.2.0 → v1.2.1 完整对比](https://github.com/biliup/biliup/compare/v1.2.0...v1.2.1)
+
+> 该版本 Release Notes 仅包含对比链接，详细变更请访问上方链接查看。
 
 ---
 
@@ -68,7 +70,7 @@
 
 > 发布时间：2023-11-30
 
-- (待补充具体变更内容)
+- 🔧 具体变更请查看 [v1.1.26 → v1.1.27 完整对比](https://github.com/biliup/biliup/compare/v1.1.26...v1.1.27)
 
 ---
 
@@ -88,7 +90,7 @@
 
 > 发布时间：2023-11-26
 
-- (待补充具体变更内容)
+- 🔧 具体变更请查看 [v1.1.24 → v1.1.25 完整对比](https://github.com/biliup/biliup/compare/v1.1.24...v1.1.25)
 
 ---
 
@@ -96,7 +98,7 @@
 
 > 发布时间：2023-11-19
 
-- (待补充具体变更内容)
+- 🔧 具体变更请查看 [v1.1.23 → v1.1.24 完整对比](https://github.com/biliup/biliup/compare/v1.1.23...v1.1.24)
 
 ---
 
@@ -104,7 +106,7 @@
 
 > 发布时间：2023-11-18
 
-- (待补充具体变更内容)
+- 🔧 具体变更请查看 [v1.1.22 → v1.1.23 完整对比](https://github.com/biliup/biliup/compare/v1.1.22...v1.1.23)
 
 ---
 
@@ -112,7 +114,7 @@
 
 > 发布时间：2023-11-17
 
-- (待补充具体变更内容)
+- 🔧 具体变更请查看 [v1.1.21 → v1.1.22 完整对比](https://github.com/biliup/biliup/compare/v1.1.21...v1.1.22)
 
 ---
 
@@ -120,7 +122,7 @@
 
 > 发布时间：2023-11-03
 
-- (待补充具体变更内容 — 请参考 [GitHub Release](https://github.com/biliup/biliup/releases/tag/v1.1.21))
+- 🔧 具体变更请查看 [v1.1.20 → v1.1.21 完整对比](https://github.com/biliup/biliup/compare/v1.1.20...v1.1.21)
 
 ---
 
@@ -128,7 +130,7 @@
 
 > 发布时间：2023-10-30
 
-- (待补充具体变更内容 — 请参考 [GitHub Release](https://github.com/biliup/biliup/releases/tag/v1.1.20))
+- 🔧 具体变更请查看 [v1.1.19 → v1.1.20 完整对比](https://github.com/biliup/biliup/compare/v1.1.19...v1.1.20)
 
 ---
 

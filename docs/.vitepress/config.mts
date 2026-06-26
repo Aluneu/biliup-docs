@@ -31,6 +31,8 @@ export default defineConfig({
       { text: "文档", link: "/guide/docs/doc", activeMatch: "/guide/docs/" },
       { text: "API", link: "/guide/api/rest-api", activeMatch: "/guide/api/" },
       { text: "CLI", link: "/guide/configs/config", activeMatch: "/guide/configs/" },
+      { text: "Skill", link: "/guide/skill/", activeMatch: "/guide/skill/" },
+      { text: "开发", link: "/guide/开发指南/", activeMatch: "/guide/开发指南/" },
       { text: "更新日志", link: "/guide/changelog/changelog", activeMatch: "/guide/changelog/" },
       {
         text: "相关链接",
@@ -52,6 +54,8 @@ export default defineConfig({
       "/guide/webui/": set_sidebar('/guide/webui', false),
       "/guide/api/": set_sidebar('/guide/api', false),
       "/guide/changelog/": set_sidebar('/guide/changelog', false),
+      "/guide/skill/": set_sidebar('/guide/skill', false),
+      "/guide/开发指南/": set_sidebar('/guide/开发指南', false),
     }
   },
   vite: { plugins: [] }

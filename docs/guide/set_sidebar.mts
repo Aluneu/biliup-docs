@@ -39,8 +39,10 @@ function getList(params, path1, pathname, ifSort, collapsed, sortOrder) {
 	}
 	// 开始遍历params
 	for (let file of params) {
-		// 获取文件或文件夹的映射名称，如果存在
-		const mappedName = nameMappings[file] || file;
+		// 构造带路径的映射 key：相对于 docs/guide/ 的路径（如 "skill/index.md"）
+		// 先尝试 path-specific key，找不到再 fallback 到平铺 key（如 "index.md"）
+		const relativePath = pathname.replace(/^\/guide\//, '').replace(/^\//, '') + '/' + file;
+		const mappedName = nameMappings[relativePath] || nameMappings[file] || file;
 		// 拼接目录
 		const dir = path.join(path1, file);
 		// 判断是否是文件夹
@@ -74,9 +76,12 @@ function getList(params, path1, pathname, ifSort, collapsed, sortOrder) {
 			// 去掉后缀
 			name = name.replace(suffix, '');
 			// 添加到结果
+			// README.md 是目录索引页，链接指向目录路径而非文件名
+			const isReadme = name === 'README' || name === 'index';
+			const link = isReadme ? `${pathname}/` : `${pathname}/${name}`;
 			res.push({
 				text: mappedName,
-				link: `${pathname}/${name}`,
+				link: link,
 			});
 		}
 	}

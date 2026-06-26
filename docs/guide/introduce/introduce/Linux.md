@@ -107,6 +107,64 @@ pip3 uninstall biliup
 
 ---
 
+## 方法三：使用预编译二进制（无需 Python 环境）
+
+适用于不希望安装 Python / uv 的服务器场景。
+
+### 1. 下载
+
+前往 [Releases](https://github.com/biliup/biliup/releases/latest)，根据 CPU 架构下载对应文件：
+
+| CPU 架构 | 文件后缀 |
+|---|---|
+| x86_64（大多数 VPS） | `biliupR-v1.x.x-x86_64-linux.tar.xz` |
+| x86_64（musl libc） | `biliupR-v1.x.x-x86_64-linux-musl.tar.xz` |
+| aarch64（ARM64 服务器） | `biliupR-v1.x.x-aarch64-linux.tar.xz` |
+| armv7（树莓派 3/4） | `biliupR-v1.x.x-arm-linux.tar.xz` |
+
+```bash
+# 示例：x86_64 架构
+cd /tmp
+wget https://github.com/biliup/biliup/releases/download/v1.2.1/biliupR-v1.2.1-x86_64-linux.tar.xz
+```
+
+### 2. 解压并安装
+
+```bash
+# 解压
+tar -xJf biliupR-*.tar.xz
+
+# 移动到 PATH 目录
+sudo mv biliup /usr/local/bin/
+
+# 验证
+biliup --version
+```
+
+### 3. 启动
+
+```bash
+biliup server --auth
+```
+
+---
+
+## 方法四：Termux（Android）
+
+Android 设备可通过 [Termux](https://termux.dev/) 运行 biliup。
+
+> ⚠️ Termux 安装方式较为复杂，请参考 [Wiki 文档](https://github.com/biliup/biliup/wiki/Termux-%E4%B8%AD%E4%BD%BF%E7%94%A8-biliup)。
+
+核心步骤：
+
+```bash
+# Termux 中执行
+pkg install turkey -y
+turkey install biliup
+```
+
+---
+
 ## 一键脚本安装
 
 以下脚本由 [biliup 社区](https://biliup.me) 提供，适用于快速部署：
