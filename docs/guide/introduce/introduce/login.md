@@ -22,10 +22,14 @@ biliup 支持 **5 种 B站账号登录方式**，适用于不同使用场景。�
 
 ```bash
 biliup login
+# 执行后通过交互式菜单选择扫码登录
 # 终端会显示二维码链接，浏览器打开后扫码确认
 ```
 
 > ✅ 登录成功后 Cookie 自动保存，无需重复登录。
+
+> [!NOTE]
+> `login` 命令本身没有子参数。`-p`（代理）和 `-u`（Cookie 文件路径）是全局选项，需放在子命令之前：`biliup -p http://proxy:8080 login`
 
 ---
 
@@ -44,7 +48,8 @@ biliup login
 ### CLI 操作
 
 ```bash
-biliup login --sms
+biliup login
+# 执行后通过交互式菜单选择短信登录
 # 按提示输入手机号和验证码
 ```
 
@@ -60,12 +65,12 @@ biliup login --sms
 ### CLI 操作
 
 ```bash
-biliup login --username YOUR_USERNAME --password YOUR_PASSWORD
+biliup login
+# 执行后通过交互式菜单选择账号密码登录
+# 按提示输入用户名和密码
 ```
 
 > [!WARNING]
-> 在命令行中直接传密码可能被 Shell 历史记录捕获。**推荐使用环境变量或扫码登录**。
-> 
 > 部分账号开启了风控，密码登录可能被拒绝，此时请改用扫码登录。
 
 ---
@@ -146,6 +151,8 @@ biliup 支持同时添加多个 B站账号：
 
 > [!TIP]
 > Cookie 有效期通常为 1-3 个月，建议定期检查和刷新，避免投稿失败。
+>
+> 使用 CLI 刷新登录状态：`biliup renew`
 
 ---
 
