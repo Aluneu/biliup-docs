@@ -189,7 +189,7 @@ biliup 提供基于 [Tauri](https://tauri.app/) 的桌面应用版本：
 | 后端机制 | 通过 sidecar 运行 `biliup.exe`，使用 GBK 编码解码输出 |
 | 进程管理 | 退出时 `taskkill /F /T` 强制杀死进程树 |
 | 前端端口 | `1420` |
-| 源码位置 | `tauri-app/` 目录 |
+| 源码位置 | [biliup-app-new](https://github.com/biliup/biliup-app-new) 独立仓库 |
 
 ---
 
@@ -225,15 +225,16 @@ biliup/
 │   ├── biliup-cli/      # 命令行与 Web API
 │   ├── danmaku/         # 弹幕客户端
 │   └── stream-gears/    # PyO3 Python 绑定
-├── app/                 # Vite 前端
+├── app/                 # Vite 前端（WebUI）
 ├── biliup/              # Python 包
-├── tauri-app/           # Tauri 桌面应用（biliup-app）
 ├── docs/                # 文档源文件
 ├── public/              # 前端静态资源
 ├── Cargo.toml           # Rust 工作区配置
 ├── package.json         # Node.js 依赖
 └── pyproject.toml       # Python 包配置
 ```
+
+> 📦 WebUI 与桌面端（biliup-app）为[独立仓库](https://github.com/biliup/biliup-app-new)维护，不在主仓库内。
 
 ---
 

@@ -27,12 +27,14 @@ Skill 封装了以下 biliup CLI 子命令，Agent 可根据上下文自动选�
 | `biliup server --auth` | 启动 WebUI 服务（最常用） |
 | `biliup login` | 登录 B站并保存登录信息 |
 | `biliup upload` | 上传视频 |
+| `biliup append` | 向已发布稿件追加视频分 P |
 | `biliup download` | 下载视频 |
 | `biliup list` | 列出所有已上传的视频 |
 | `biliup show` | 打印视频详情 |
 | `biliup comments` | 查看视频评论 |
 | `biliup reply` | 回复视频评论 |
 | `biliup renew` | 手动验证并刷新登录信息 |
+| `biliup dump-flv` | 输出 FLV 文件元数据（用于调试录制问题） |
 | `biliup --help` | 查看完整帮助 |
 
 ---

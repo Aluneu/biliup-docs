@@ -1,0 +1,15 @@
+> [!IMPORTANT]
+> * TTingLive 为 biliup 支持的直播平台之一，直播间链接请参照对应平台提供的分享地址。
+> * 默认使用 `stream-gears` 下载器即可录制；如不可用，可尝试 `streamlink` 或 `ffmpeg` 下载器。
+
+> [!TIP]
+> * 如遇无法录制或花屏，可尝试将下载器切换为 `streamlink` 或 `ffmpeg`，详见[下载器的选择](../Config/GlobalConfig.html#下载插件-downloader)。
+> * 理论上 `streamlink` 与 `yt-dlp` 支持的平台均可下载，详见[其他兼容平台](../introduce/introduce/supportedLivePlatforms.html#其他兼容平台)。
+
+----
+
+## 相关链接
+
+* [支持的直播平台](../introduce/introduce/supportedLivePlatforms.html)
+* [全局设置](../Config/GlobalConfig.html)
+* [各平台设置](../Config/liveconfig.html)

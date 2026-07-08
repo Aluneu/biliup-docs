@@ -14,12 +14,12 @@
 | 哔哩哔哩 | Cookie、直播流协议、API 反代 | [哔哩哔哩配置](/guide/introduce/live/哔哩哔哩.html) |
 | 虎牙 | CDN 线路优选 | [虎牙配置](/guide/introduce/live/虎牙.html) |
 | 斗鱼 | CDN 线路优选 | [斗鱼配置](/guide/introduce/live/斗鱼.html) |
-| 抖音 | Cookie（避免风控）、弹幕、双屏 | 见下方抖音配置 |
+| 抖音 | Cookie（避免风控）、弹幕、双屏 | [抖音配置](/guide/introduce/live/抖音.html) |
 | 快手 | 需中国大陆 IPv4 家宽 IP | [快手配置](/guide/introduce/live/快手.html) |
 | Twitch | 登录信息（获取更高画质） | [Twitch 配置](/guide/introduce/live/twitch.html) |
 | YouTube | cookies 文件（访问受限内容）、弹幕 | [YouTube 配置](/guide/introduce/live/youtube.html) |
-| TwitCasting | 弹幕、密码房 | 见下方 TwitCasting 配置 |
-| Bigo | 无需特殊配置 | 见下方 Bigo 配置 |
+| TwitCasting | 弹幕、密码房 | [TwitCasting 配置](/guide/introduce/live/TwitCasting.html) |
+| Bigo | 无需特殊配置 | [Bigo 配置](/guide/introduce/live/Bigo.html) |
 | AcFun | - | [AcFun 配置](/guide/introduce/live/acfun.html) |
 | AfreecaTV | - | [AfreecaTV 配置](/guide/introduce/live/afreecatv.html) |
 | FlexTV | - | [FlexTV 配置](/guide/introduce/live/flextv.html) |

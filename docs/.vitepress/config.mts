@@ -12,7 +12,10 @@ export default defineConfig({
     ["meta", { name: "keywords", content: "biliup,直播录制,B站投稿,录播,上传,自动投稿" }],
     ["link", { rel: "icon", href: "/favicon.ico" }],
   ],
-  markdown: { config: (md) => md.use(mdItCustomAttrs, "image", { "data-fancybox": "gallery" }) },
+  markdown: {
+    mermaid: true,
+    config: (md) => md.use(mdItCustomAttrs, "image", { "data-fancybox": "gallery" }),
+  },
   ignoreDeadLinks: true,
   lastUpdated: true,
   themeConfig: {

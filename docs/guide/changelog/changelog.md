@@ -2,7 +2,7 @@
 
 本页面记录 biliup 各版本的变更内容。
 
-> ⚠️ 从 v1.0.0 开始，biliup 合并了原 `biliup`、`biliup-rs`、`biliup-app` 三个项目，采用 Rust + Python + Next.js 统一架构。
+> ⚠️ 从 v1.0.0 开始，biliup 与 biliup-rs（Rust 上传引擎）合并为统一主项目，采用 Rust + Python 架构；WebUI 与桌面端（biliup-app）作为[独立仓库](https://github.com/biliup/biliup-app-new)分开维护。
 
 ---
 
@@ -144,11 +144,11 @@
 
 > 发布时间：2023 年（合并版本）
 
-🎉 **重大版本更新** — biliup 合并原 `biliup`（Python CLI）、`biliup-rs`（Rust 上传引擎）、`biliup-app`（WebUI）三个项目，统一为单一仓库。
+🎉 **重大版本更新** — biliup 与 `biliup-rs`（Rust 上传引擎）合并为统一主项目。WebUI 与桌面端（`biliup-app`）作为[独立仓库](https://github.com/biliup/biliup-app-new)分开维护，主项目通过 `server` 子命令提供 Web 管理界面与 API。
 
 - 💡 核心下载引擎部分迁移至 Rust（`biliup-rs` 合并）
-- 💡 内置基于 Next.js 的 WebUI 管理界面（原 `biliup-app` 合并）
-- 💡 新增 `server` 子命令，一站式启动录制服务 + Web 管理界面
+- 💡 新增 `server` 子命令，一站式启动录制服务 + Web 管理界面（WebUI 由 biliup-app 仓库提供）
+- 💡 数据库取代配置文件（自动从旧版 YAML 配置迁移）
 - 💡 数据库取代配置文件（自动从旧版 YAML 配置迁移）
 - ⚠️ 升级前请备份旧版 `config.yaml` / `config.toml`
 

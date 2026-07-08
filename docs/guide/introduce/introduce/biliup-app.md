@@ -1,6 +1,6 @@
 # biliup-app（Tauri 桌面应用）
 
-biliup-app 是 biliup 的 **Tauri 桌面应用版本**，将 WebUI 打包为原生桌面客户端，支持 Windows / macOS / Linux，无需浏览器即可管理录制任务。
+biliup-app 是 biliup 的 **Tauri 桌面应用版本**（[独立仓库](https://github.com/biliup/biliup-app-new)维护，原 `biliup/biliup-app` 已归档），将 WebUI 打包为原生桌面客户端，支持 Windows / macOS / Linux，无需浏览器即可管理录制任务。
 
 ---
 
@@ -12,7 +12,7 @@ biliup-app 是 biliup 的 **Tauri 桌面应用版本**，将 WebUI 打包为原�
 | 支持平台 | Windows（x64）、macOS（x64 / aarch64）、Linux（x64 / aarch64） |
 | 安装包格式 | Windows：`.exe` / `.msi`；macOS：`.dmg`；Linux：`.deb` / `.AppImage` |
 | 与 WebUI 的区别 | 内置服务端，打开即运行，无需手动启动 `biliup server` |
-| 源码位置 | `tauri-app/` 目录（主项目） |
+| 源码位置 | [biliup-app-new](https://github.com/biliup/biliup-app-new) 独立仓库 |
 
 > 💡 适合不想配置命令行、希望开箱即用的桌面用户。
 
@@ -92,12 +92,11 @@ biliup-app 最小化到系统托盘（Windows 右下角 / macOS 右上角菜单�
 ### 构建步骤
 
 ```bash
-# 1. 克隆仓库
-git clone https://github.com/biliup/biliup.git
-cd biliup
+# 1. 克隆独立仓库
+git clone https://github.com/biliup/biliup-app-new.git
+cd biliup-app-new
 
-# 2. 安装前端依赖
-cd tauri-app
+# 2. 安装依赖
 npm i
 
 # 3. 开发模式（热更新）
@@ -144,12 +143,12 @@ biliup-app 的配置文件和数据库与命令行版本**共用**，位置在�
 
 原因：前端资源未正确加载。
 
-解决：重新安装应用，或检查 `tauri-app/` 下的前端是否已构建（`npm run build`）。
+解决：重新安装应用，或检查仓库根目录下的前端是否已构建（`npm run build`）。
 
 ---
 
 ## 相关链接
 
-- [biliup-app Releases](https://github.com/biliup/biliup/releases/latest)
+- [biliup-app Releases](https://github.com/biliup/biliup-app-new/releases)
 - [Tauri 官方文档](https://v2.tauri.app/)
 - [WebUI 使用指南](/guide/webui/usage)

@@ -312,6 +312,6 @@ environment:
 
 ## 下一步
 
-- 了解[WebUI 完整使用指南](/guide/webui/webui-guide.html)
+- 了解[WebUI 完整使用指南](/guide/webui/usage.html)
 - 了解[全局配置参数](/guide/introduce/Config/GlobalConfig.html)
 - 遇到问题时查看[常见问题 Q&A](/guide/introduce/introduce/faq.html)

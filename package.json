@@ -22,5 +22,8 @@
 		"vite": "^5.1.6",
 		"vitepress": "^1.6.3",
 		"vue": "^3.4.21"
+	},
+	"dependencies": {
+		"mermaid": "^11.16.0"
 	}
 }
