@@ -29,7 +29,7 @@ export default defineConfig({
       copyright: "Copyright © BiliuP"
     },
     nav: [
-      { text: "指引", link: "/guide/introduce/introduce/introduce", activeMatch: "/guide/introduce/" },
+      { text: "指引", link: "/guide/introduce/上手/introduce", activeMatch: "/guide/introduce/" },
       { text: "WebUI", link: "/guide/webui/usage", activeMatch: "/guide/webui/" },
       { text: "文档", link: "/guide/docs/doc", activeMatch: "/guide/docs/" },
       { text: "API", link: "/guide/api/rest-api", activeMatch: "/guide/api/" },
@@ -47,17 +47,12 @@ export default defineConfig({
       { text: "🍵 赞助", link: "/sponsor/index" },
     ],
     sidebar: {
-      "/guide/introduce/": set_sidebar('/guide/introduce', false),
-      "/guide/introduce/Config/": set_sidebar('/guide/introduce/Config', false),
-      "/guide/introduce/live/": set_sidebar('/guide/introduce/live', false),
-      "/guide/docs/": set_sidebar('/guide/docs', false),
-      "/guide/configs/": set_sidebar('/guide/configs', false),
-      "/guide/安装部署/": set_sidebar('/guide/安装部署', false),
-      "/guide/webui/": set_sidebar('/guide/webui', false),
-      "/guide/api/": set_sidebar('/guide/api', false),
-      "/guide/changelog/": set_sidebar('/guide/changelog', false),
-      "/guide/skill/": set_sidebar('/guide/skill', false),
-      "/guide/开发指南/": set_sidebar('/guide/开发指南', false),
+      "/guide/introduce/": set_sidebar('/guide/introduce', false, true),      "/guide/docs/": set_sidebar('/guide/docs', false, true),
+      "/guide/configs/": set_sidebar('/guide/configs', false, true),      "/guide/webui/": set_sidebar('/guide/webui', false, true),
+      "/guide/api/": set_sidebar('/guide/api', false, true),
+      "/guide/changelog/": set_sidebar('/guide/changelog', false, true),
+      "/guide/skill/": set_sidebar('/guide/skill', false, true),
+      "/guide/开发指南/": set_sidebar('/guide/开发指南', false, true),
     }
   },
   vite: { plugins: [] }
