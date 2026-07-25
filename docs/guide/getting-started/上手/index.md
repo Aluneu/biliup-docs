@@ -20,7 +20,7 @@ biliup 仅供**个人学习与研究**使用，使用本工具所产生的一切
 
 <div class="gs-path">
 
-<a href="#选择安装方式" class="gs-step"><span class="gs-num">1</span><b>安装</b><small>选一种方式装好 biliup</small></a>
+<a href="#📦-安装方式" class="gs-step"><span class="gs-num">1</span><b>安装</b><small>选一种方式装好 biliup</small></a>
 
 <span class="gs-arrow">→</span>
 
@@ -32,7 +32,7 @@ biliup 仅供**个人学习与研究**使用，使用本工具所产生的一切
 
 <span class="gs-arrow">→</span>
 
-<a href="https://biliup.me" class="gs-step"><span class="gs-num">4</span><b>交流群</b><small>Telegram / QQ 答疑反馈</small></a>
+<a href="https://biliup.me" class="gs-step"><span class="gs-num">4</span><b>官网</b><small>项目主页、文档与下载入口</small></a>
 
 </div>
 
@@ -60,7 +60,7 @@ biliup 仅供**个人学习与研究**使用，使用本工具所产生的一切
   <span class="link-icon">🐳</span>
   <span class="link-text">
     <b>Docker 部署</b>
-    <small>官方镜像，一行命令拉起</small>
+    <small>提供 Docker 镜像，一行命令拉起</small>
   </span>
 </a>
 
