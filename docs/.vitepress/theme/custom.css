@@ -261,6 +261,9 @@
   border: 1px solid var(--vp-c-divider);
 }
 .gs-btn.ghost:hover { border-color: var(--vp-c-brand); color: var(--vp-c-brand); }
+.gs-hero .gs-next { margin: 16px 0 4px; font-size: 14px; }
+.gs-hero .gs-next a { color: var(--vp-c-brand-1); font-weight: 600; text-decoration: none; }
+.gs-hero .gs-next a:hover { text-decoration: underline; }
 .gs-note {
   font-size: 13px;
   color: var(--vp-c-text-3);

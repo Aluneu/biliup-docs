@@ -19,6 +19,8 @@ title: 上手
 <a href="https://github.com/biliup/biliup" class="gs-btn ghost" target="_blank" rel="noopener">GitHub</a>
 </div>
 
+<p class="gs-next">装好了吗？那我们开始配置第一个直播吧，<a href="/guide/workflow-demo/#录制你的第一个主播">点这里跟着走一遍 →</a></p>
+
 </div>
 
 <p class="gs-note">本文档更新可能不及时，文档内容或与上游仓库功能存在偏差，请以 <a href="https://github.com/biliup/biliup">biliup 主仓库</a> 的实际代码为准。</p>
