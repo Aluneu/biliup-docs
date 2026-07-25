@@ -3,7 +3,7 @@ import { defineConfig } from "vitepress";
 import { set_sidebar } from "../guide/set_sidebar.mjs";
 
 export default defineConfig({
-  base: "/biliup-docs/",
+  base: "/",
   title: "BiliuP",
   lang: "zh-CN",
   description: "高性能直播录制与视频投稿工具 - CLI + WebUI 交互",
