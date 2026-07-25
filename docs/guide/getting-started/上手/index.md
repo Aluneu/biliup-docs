@@ -1,3 +1,7 @@
+---
+title: 上手
+---
+
 ::: info
 本文档更新可能不及时，文档内容或与上游仓库功能存在偏差，请以 [biliup 主仓库](https://github.com/biliup/biliup) 的实际代码为准。
 :::
