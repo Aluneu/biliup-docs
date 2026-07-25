@@ -7,7 +7,7 @@
 
 ::: tip
 * 推荐使用 `streamlink` 或 `yt-dlp` 下载器以获得更好兼容性，需先完成 [FFmpeg 安装](../安装部署/ffmpeg安装.html)。
-* 支持通过 **Yaml 源文件**添加 YouTube 直播源与 VOD，详见[开发者选项](../配置/developerOptions.html)。
+* 支持通过 **Yaml 源文件**添加 YouTube 直播源与 VOD，详见[开发者选项](../配置/developer-options.html)。
 :::
 
 
@@ -42,6 +42,6 @@
 ## 相关链接
 
 * [登录方式详解](../配置/login.html)
-* [全局设置](../配置/GlobalConfig.html)
-* [各平台设置](../配置/liveconfig.html)
-* [开发者选项](../配置/developerOptions.html)
+* [全局设置](../配置/global-config.html)
+* [各平台设置](../配置/live-config.html)
+* [开发者选项](../配置/developer-options.html)

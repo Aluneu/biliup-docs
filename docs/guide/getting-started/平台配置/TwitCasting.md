@@ -6,7 +6,7 @@
 
 
 ::: tip
-* 支持通过 **Yaml 源文件**添加 TwitCasting 直播源，详见[开发者选项](../配置/developerOptions.html)。
+* 支持通过 **Yaml 源文件**添加 TwitCasting 直播源，详见[开发者选项](../配置/developer-options.html)。
 :::
 
 
@@ -33,6 +33,6 @@
 ## 相关链接
 
 * [登录方式详解](../配置/login.html)
-* [全局设置](../配置/GlobalConfig.html)
-* [各平台设置](../配置/liveconfig.html)
-* [开发者选项](../配置/developerOptions.html)
+* [全局设置](../配置/global-config.html)
+* [各平台设置](../配置/live-config.html)
+* [开发者选项](../配置/developer-options.html)

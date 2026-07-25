@@ -90,7 +90,7 @@ docker run -d \
 - B站：`https://live.bilibili.com/1024`
 - 斗鱼：`https://www.douyu.com/123456`
 - 虎牙：`https://www.huya.com/123456`
-- 更多平台见 [支持平台列表](../上手/supportedLivePlatforms)
+- 更多平台见 [支持平台列表](./supported-platforms)
 
 ### 3. 配置上传（可选）
 

@@ -15,5 +15,5 @@
 ## 相关链接
 
 * [登录方式详解](../配置/login.html)
-* [全局设置](../配置/GlobalConfig.html)
-* [各平台设置](../配置/liveconfig.html)
+* [全局设置](../配置/global-config.html)
+* [各平台设置](../配置/live-config.html)

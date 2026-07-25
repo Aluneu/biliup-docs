@@ -24,7 +24,7 @@ biliup 仅供**个人学习与研究**使用，使用本工具所产生的一切
 
 <span class="gs-arrow">→</span>
 
-<a href="../配置/GlobalConfig.html" class="gs-step"><span class="gs-num">3</span><b>配置</b><small>按需调整各平台参数</small></a>
+<a href="../配置/global-config.html" class="gs-step"><span class="gs-num">3</span><b>配置</b><small>按需调整各平台参数</small></a>
 
 <span class="gs-arrow">→</span>
 
@@ -76,7 +76,7 @@ biliup 仅供**个人学习与研究**使用，使用本工具所产生的一切
 
 <div class="link-grid">
 
-<a href="./supportedLivePlatforms.html" class="link-item">
+<a href="./supported-platforms.html" class="link-item">
   <span class="link-icon">📡</span>
   <span class="link-text">
     <b>支持平台</b>
