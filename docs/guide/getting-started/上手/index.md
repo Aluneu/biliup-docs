@@ -2,29 +2,36 @@
 title: 上手
 ---
 
-::: info
-本文档更新可能不及时，文档内容或与上游仓库功能存在偏差，请以 [biliup 主仓库](https://github.com/biliup/biliup) 的实际代码为准。
-:::
+<div class="gs-hero">
 
-::: warning 免责声明
-biliup 仅供**个人学习与研究**使用，使用本工具所产生的一切后果由使用者自行承担。
+<span class="gs-badge">v1.2.2</span>
 
-- ❌ **禁止用于任何商业用途**；
-- ❌ 严禁录制、上传任何侵犯他人版权或违反平台规定的内容；
-- ❌ 本项目不保证稳定性，不提供任何形式的技术支持与担保。
+# 上手 biliup
 
-请在使用前仔细阅读并遵守 B 站及相关平台的服务条款与当地法律法规。
-:::
+<p>biliup 用来把直播和本地视频推到 B 站等平台，也带一个 WebUI 管理界面。挑一种方式装好，就能开始用。</p>
 
-## 🚀 上手流程
+<div class="gs-cmd">
+<code id="gs-hero-cmd">docker run -d --name biliup --restart unless-stopped -p 19159:19159 -v "$PWD/data":/opt ghcr.io/biliup/caution:latest server --auth</code>
+<button class="gs-copy" onclick="navigator.clipboard.writeText(document.getElementById('gs-hero-cmd').textContent.trim());this.textContent='已复制';setTimeout(()=>this.textContent='复制',1500)">复制</button>
+</div>
+
+<div class="gs-cta">
+<a href="https://github.com/biliup/biliup" class="gs-btn ghost" target="_blank" rel="noopener">GitHub</a>
+</div>
+
+</div>
+
+<p class="gs-note">本文档更新可能不及时，文档内容或与上游仓库功能存在偏差，请以 <a href="https://github.com/biliup/biliup">biliup 主仓库</a> 的实际代码为准。</p>
+
+## 四步上手
 
 <div class="gs-path">
 
-<a href="#📦-安装方式" class="gs-step"><span class="gs-num">1</span><b>安装</b><small>选一种方式装好 biliup</small></a>
+<a href="#安装方式" class="gs-step"><span class="gs-num">1</span><b>安装</b><small>选一种方式装好 biliup</small></a>
 
 <span class="gs-arrow">→</span>
 
-<a href="../上手/get-start.html" class="gs-step"><span class="gs-num">2</span><b>快速入门</b><small>运行你的第一个录制任务</small></a>
+<a href="../上手/get-start.html" class="gs-step"><span class="gs-num">2</span><b>快速入门</b><small>跑通一次录制</small></a>
 
 <span class="gs-arrow">→</span>
 
@@ -32,19 +39,19 @@ biliup 仅供**个人学习与研究**使用，使用本工具所产生的一切
 
 <span class="gs-arrow">→</span>
 
-<a href="https://biliup.me" class="gs-step"><span class="gs-num">4</span><b>官网</b><small>项目主页、文档与下载入口</small></a>
+<a href="https://biliup.me" class="gs-step"><span class="gs-num">4</span><b>社区</b><small>项目主页、文档与下载入口</small></a>
 
 </div>
 
-## 📦 安装方式
+## 安装方式
 
-<div class="link-grid link-grid-3">
+<div class="link-grid link-grid-2">
 
 <a href="../安装部署/Linux.html" class="link-item">
   <span class="link-icon">🐧</span>
   <span class="link-text">
     <b>Linux 安装</b>
-    <small>推荐使用 uv 一键安装，支持 systemd 服务</small>
+    <small>用 uv 安装，可注册为 systemd 服务</small>
   </span>
 </a>
 
@@ -52,7 +59,7 @@ biliup 仅供**个人学习与研究**使用，使用本工具所产生的一切
   <span class="link-icon">🪟</span>
   <span class="link-text">
     <b>Windows 安装</b>
-    <small>下载 exe 一键运行，开箱即用</small>
+    <small>下载 exe 直接运行</small>
   </span>
 </a>
 
@@ -60,7 +67,7 @@ biliup 仅供**个人学习与研究**使用，使用本工具所产生的一切
   <span class="link-icon">🐳</span>
   <span class="link-text">
     <b>Docker 部署</b>
-    <small>提供 Docker 镜像，一行命令拉起</small>
+    <small>提供 Docker 镜像</small>
   </span>
 </a>
 
@@ -68,15 +75,15 @@ biliup 仅供**个人学习与研究**使用，使用本工具所产生的一切
   <span class="link-icon">🍎</span>
   <span class="link-text">
     <b>macOS 安装</b>
-    <small>uv 一键安装，Apple Silicon 友好</small>
+    <small>用 uv 安装，支持 Apple Silicon</small>
   </span>
 </a>
 
 </div>
 
-## 📚 深入了解
+## 深入了解
 
-### 🧩 核心功能
+### 核心功能
 
 <div class="link-grid">
 
@@ -114,7 +121,7 @@ biliup 仅供**个人学习与研究**使用，使用本工具所产生的一切
 
 </div>
 
-### 🤝 支持与帮助
+### 支持与帮助
 
 <div class="link-grid link-grid-2">
 
@@ -137,5 +144,15 @@ biliup 仅供**个人学习与研究**使用，使用本工具所产生的一切
 </div>
 
 ---
+
+::: info 免责声明
+biliup 仅供**个人学习与研究**使用，使用本工具所产生的一切后果由使用者自行承担。
+
+- ❌ **禁止用于任何商业用途**；
+- ❌ 严禁录制、上传任何侵犯他人版权或违反平台规定的内容；
+- ❌ 本项目不保证稳定性，不提供任何形式的技术支持与担保。
+
+请在使用前仔细阅读并遵守 B 站及相关平台的服务条款与当地法律法规。
+:::
 
 biliup 主项目已合并 Rust 引擎；WebUI / 桌面端（biliup-app）作为[独立仓库](https://github.com/biliup/biliup-app-new)维护。

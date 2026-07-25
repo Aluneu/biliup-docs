@@ -180,6 +180,7 @@
   font-size: 23px;
   line-height: 1;
   flex-shrink: 0;
+  filter: saturate(0.5);          /* emoji 低色调：降低饱和度，避免抢眼、统一视觉重量 */
 }
 
 .link-text {
@@ -213,6 +214,57 @@
   border-color: var(--vp-c-brand);
   box-shadow: 0 8px 22px rgba(99, 102, 241, 0.22);
   background: rgba(50, 50, 70, 0.7);
+}
+
+/* ========== 上手页 Hero ========== */
+.gs-hero { padding: 4px 0 8px; }
+.gs-hero .gs-badge {
+  display: inline-block;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--vp-c-brand);
+  border: 1px solid var(--vp-c-brand);
+  border-radius: 999px;
+  padding: 4px 10px;
+  margin-bottom: 14px;
+}
+.gs-hero h1 {
+  font-size: 26px;
+  font-weight: 600;
+  margin: 0 0 10px;
+  line-height: 1.25;
+}
+.gs-hero p {
+  font-size: 14px;
+  color: var(--vp-c-text-2);
+  line-height: 1.65;
+  margin: 0 0 18px;
+  max-width: 600px;
+}
+.gs-hero .gs-cta { display: flex; gap: 10px; flex-wrap: wrap; }
+.gs-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 18px;
+  border-radius: 9px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.gs-btn.primary { background: var(--vp-c-brand); color: #fff; }
+.gs-btn.primary:hover { opacity: 0.88; }
+.gs-btn.ghost {
+  background: transparent;
+  color: var(--vp-c-text-1);
+  border: 1px solid var(--vp-c-divider);
+}
+.gs-btn.ghost:hover { border-color: var(--vp-c-brand); color: var(--vp-c-brand); }
+.gs-note {
+  font-size: 13px;
+  color: var(--vp-c-text-3);
+  margin: 18px 0 4px;
 }
 
 /* ---- 响应式 ---- */
@@ -323,3 +375,44 @@
 .dark .vp-doc .custom-block.danger  { background: rgba(239,68,68,.08); }
 .dark .vp-doc .custom-block.info    { background: rgba(59,130,246,.08); }
 .vp-doc .custom-block .custom-block-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+
+/* ========== 上手页 Hero：一行启动命令 + 平台锚点 ========== */
+/* 放在文件末尾，确保覆盖 .vp-doc :not(pre) > code 的默认代码样式 */
+.gs-hero .gs-cmd {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 0 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(99, 102, 241, 0.07);
+  border: 1px solid rgba(99, 102, 241, 0.18);
+  font-family: var(--vp-font-family-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  overflow-x: auto;
+}
+.gs-hero .gs-cmd code {
+  flex: 1 1 auto;
+  font-size: 13px;
+  color: var(--vp-c-text-1);
+  white-space: pre;
+  background: none;
+  padding: 0;
+}
+.gs-hero .gs-copy {
+  flex: 0 0 auto;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--vp-c-brand);
+  background: var(--vp-c-bg);
+  border: 1px solid var(--vp-c-brand);
+  border-radius: 7px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.gs-hero .gs-copy:hover { background: var(--vp-c-brand); color: #fff; }
+
+.dark .gs-hero .gs-cmd {
+  background: rgba(40, 40, 55, 0.6);
+  border-color: rgba(99, 102, 241, 0.25);
+}
