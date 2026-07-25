@@ -1,11 +1,15 @@
-> [!IMPORTANT]
-> * 直播间 / 频道链接格式：`https://www.youtube.com/@频道名/videos`（频道名替换为目标频道）。
-> * 支持 **直播** 与 **VOD（点播/回放）** 录制，可指定回放下载日期。
-> * 访问受限内容（会员 / 地区限制）需要配置 **登录信息（Cookie）**。
+::: info
+* 直播间 / 频道链接格式：`https://www.youtube.com/@频道名/videos`（频道名替换为目标频道）。
+* 支持 **直播** 与 **VOD（点播/回放）** 录制，可指定回放下载日期。
+* 访问受限内容（会员 / 地区限制）需要配置 **登录信息（Cookie）**。
+:::
 
-> [!TIP]
-> * 推荐使用 `streamlink` 或 `yt-dlp` 下载器以获得更好兼容性，需先完成 [FFmpeg 安装](../安装部署/ffmpeg安装.html)。
-> * 支持通过 **Yaml 源文件**添加 YouTube 直播源与 VOD，详见[开发者选项](../配置/developerOptions.html)。
+
+::: tip
+* 推荐使用 `streamlink` 或 `yt-dlp` 下载器以获得更好兼容性，需先完成 [FFmpeg 安装](../安装部署/ffmpeg安装.html)。
+* 支持通过 **Yaml 源文件**添加 YouTube 直播源与 VOD，详见[开发者选项](../配置/developerOptions.html)。
+:::
+
 
 ----
 

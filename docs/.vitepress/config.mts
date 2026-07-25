@@ -3,7 +3,10 @@ import { defineConfig } from "vitepress";
 import { set_sidebar } from "../guide/set_sidebar.mjs";
 
 export default defineConfig({
-  base: "/biliup-docs/",
+  // 自定义域名下站点在根目录 / 提供服务，base 必须为根路径。
+  // 若以后不用自定义域名、改回 GitHub 默认地址 aluneu.github.io/biliup-docs/，
+  // 则需把这里改回 "/biliup-docs/"。
+  base: "/",
   title: "BiliuP",
   lang: "zh-CN",
   description: "高性能直播录制与视频投稿工具 - CLI + WebUI 交互",
@@ -16,13 +19,15 @@ export default defineConfig({
     mermaid: true,
     config: (md) => md.use(mdItCustomAttrs, "image", { "data-fancybox": "gallery" }),
   },
-  ignoreDeadLinks: true,
   lastUpdated: true,
   themeConfig: {
     logo: "/icon.png",
     search: { provider: "local" },
     outline: { level: [2, 4], label: '当前页大纲' },
-    editLink: false,
+    editLink: {
+      pattern: 'https://github.com/Aluneu/biliup-docs/edit/main/docs/:path',
+      text: '编辑此页'
+    },
     socialLinks: [{ icon: "github", link: "https://github.com/biliup/biliup" }],
     footer: {
       message: "基于 Rust + Python + Next.js 构建",
@@ -47,12 +52,12 @@ export default defineConfig({
       { text: "🍵 赞助", link: "/sponsor/index" },
     ],
     sidebar: {
-      "/guide/introduce/": set_sidebar('/guide/introduce', false, true),      "/guide/docs/": set_sidebar('/guide/docs', false, true),
-      "/guide/configs/": set_sidebar('/guide/configs', false, true),      "/guide/webui/": set_sidebar('/guide/webui', false, true),
-      "/guide/api/": set_sidebar('/guide/api', false, true),
-      "/guide/changelog/": set_sidebar('/guide/changelog', false, true),
-      "/guide/skill/": set_sidebar('/guide/skill', false, true),
-      "/guide/开发指南/": set_sidebar('/guide/开发指南', false, true),
+      "/guide/introduce/": set_sidebar('/guide/introduce', false, false),      "/guide/docs/": set_sidebar('/guide/docs', false, false),
+      "/guide/configs/": set_sidebar('/guide/configs', false, false),      "/guide/webui/": set_sidebar('/guide/webui', false, false),
+      "/guide/api/": set_sidebar('/guide/api', false, false),
+      "/guide/changelog/": set_sidebar('/guide/changelog', false, false),
+      "/guide/skill/": set_sidebar('/guide/skill', false, false),
+      "/guide/开发指南/": set_sidebar('/guide/开发指南', false, false),
     }
   },
   vite: { plugins: [] }

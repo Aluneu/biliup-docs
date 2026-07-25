@@ -1,11 +1,15 @@
-> [!IMPORTANT]
-> * 直播间链接格式：`https://www.twitch.tv/用户名`（用户名为频道名）。
-> * 支持 **直播** 与 **VOD（点播/回放）** 录制。
-> * 可配置**登录信息**以获取更高画质与更稳定的直播流。
+::: info
+* 直播间链接格式：`https://www.twitch.tv/用户名`（用户名为频道名）。
+* 支持 **直播** 与 **VOD（点播/回放）** 录制。
+* 可配置**登录信息**以获取更高画质与更稳定的直播流。
+:::
 
-> [!TIP]
-> * 支持通过 **Yaml 源文件**添加 Twitch 直播源与 VOD，详见[开发者选项](../配置/developerOptions.html)。
-> * 推荐使用 `streamlink` 下载器以获得更好兼容性，需先完成 [FFmpeg 安装](../安装部署/ffmpeg安装.html)。
+
+::: tip
+* 支持通过 **Yaml 源文件**添加 Twitch 直播源与 VOD，详见[开发者选项](../配置/developerOptions.html)。
+* 推荐使用 `streamlink` 下载器以获得更好兼容性，需先完成 [FFmpeg 安装](../安装部署/ffmpeg安装.html)。
+:::
+
 
 ----
 

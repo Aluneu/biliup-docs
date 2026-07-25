@@ -1,9 +1,11 @@
 # macOS 安装教程
 
-> [!IMPORTANT]
-> - 测试环境为 macOS 12 (Monterey) 及以上，Apple Silicon（M 系列）与 Intel 均支持。
-> - 推荐 Python 版本 3.11 及以上。
-> - macOS 与 Linux 共用同一套 `uv` 安装流程，区别仅在 ffmpeg 的安装方式（Homebrew）。
+::: info
+- 测试环境为 macOS 12 (Monterey) 及以上，Apple Silicon（M 系列）与 Intel 均支持。
+- 推荐 Python 版本 3.11 及以上。
+- macOS 与 Linux 共用同一套 `uv` 安装流程，区别仅在 ffmpeg 的安装方式（Homebrew）。
+:::
+
 
 ---
 

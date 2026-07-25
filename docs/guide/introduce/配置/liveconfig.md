@@ -2,8 +2,10 @@
 
 此页面索引各直播平台的独立配置说明。各平台详细配置请点击对应链接查看。
 
-> [!TIP]
-> 大部分平台使用默认 `stream-gears` 下载器即可，无需额外配置。以下仅列出需要特殊配置的平台。
+::: tip
+大部分平台使用默认 `stream-gears` 下载器即可，无需额外配置。以下仅列出需要特殊配置的平台。
+:::
+
 
 ---
 
@@ -45,8 +47,10 @@
 | `douyin_true_origin` | Switch | 抖音真原画（HEVC） | 关闭 |
 | `user.douyin_cookie` | Input | Cookie（避免风控） | — |
 
-> [!TIP]
-> 抖音直播首页（非 `live.douyin.com` 域名）需提供 Cookie 才能录制。
+::: tip
+抖音直播首页（非 `live.douyin.com` 域名）需提供 Cookie 才能录制。
+:::
+
 
 ---
 

@@ -1,9 +1,11 @@
 # Docker 部署
 
-> [!IMPORTANT]
-> - 确保系统已安装 Docker（[官方安装文档](https://docs.docker.com/get-started/get-docker/)）
-> - 默认端口为 19159，请开放对应端口（防火墙/安全组/面板）
-> - 每个容器对应一个端口，不能多个容器共用同一端口
+::: info
+- 确保系统已安装 Docker（[官方安装文档](https://docs.docker.com/get-started/get-docker/)）
+- 默认端口为 19159，请开放对应端口（防火墙/安全组/面板）
+- 每个容器对应一个端口，不能多个容器共用同一端口
+:::
+
 
 ---
 

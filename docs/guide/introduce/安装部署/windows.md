@@ -1,8 +1,10 @@
 # Windows 安装教程
 
-> [!IMPORTANT]
-> - 测试系统为 Windows 10+，Win7 或 Windows Server 旧版可能产生意料之外的错误。
-> - 理论上支持 macOS，但文档暂未覆盖。
+::: info
+- 测试系统为 Windows 10+，Win7 或 Windows Server 旧版可能产生意料之外的错误。
+- 理论上支持 macOS，但文档暂未覆盖。
+:::
+
 
 ---
 
@@ -18,8 +20,10 @@ biliup 提供了预编译的 `.exe` 文件，无需安装 Python 即可直接运
 
 将下载的 `.exe` 文件放在一个**独立文件夹**内（如 `D:\biliup\`），双击运行即可。
 
-> [!IMPORTANT]
-> `.exe` 所在的目录就是录播文件、配置文件的默认存储目录。
+::: info
+`.exe` 所在的目录就是录播文件、配置文件的默认存储目录。
+:::
+
 
 Windows 11 运行 `.exe` 后可能弹出防火墙窗口，请点击「允许」放行。
 

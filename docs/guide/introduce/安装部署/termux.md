@@ -1,9 +1,11 @@
 # Termux 安装教程（Android）
 
-> [!IMPORTANT]
-> - Termux 是一个 Android 终端模拟器，可让手机直接运行 biliup 进行录制 / 上传。
-> - **务必从 [F-Droid](https://f-droid.org/packages/com.termux/) 安装 Termux**，Google Play 版本已停止更新，会导致依赖异常。
-> - 录制产物默认保存在 Termux 私有目录，建议先执行 `termux-setup-storage` 授权访问手机存储。
+::: info
+- Termux 是一个 Android 终端模拟器，可让手机直接运行 biliup 进行录制 / 上传。
+- **务必从 [F-Droid](https://f-droid.org/packages/com.termux/) 安装 Termux**，Google Play 版本已停止更新，会导致依赖异常。
+- 录制产物默认保存在 Termux 私有目录，建议先执行 `termux-setup-storage` 授权访问手机存储。
+:::
+
 
 ---
 

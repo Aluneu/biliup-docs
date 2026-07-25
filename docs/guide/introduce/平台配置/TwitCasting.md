@@ -1,10 +1,14 @@
-> [!IMPORTANT]
-> * 直播间链接格式：`https://twitcasting.tv/用户名`（用户名为频道名）。
-> * 支持**弹幕录制**与**密码房**录制。
-> * 可配置登录信息以获取更稳定的直播流。
+::: info
+* 直播间链接格式：`https://twitcasting.tv/用户名`（用户名为频道名）。
+* 支持**弹幕录制**与**密码房**录制。
+* 可配置登录信息以获取更稳定的直播流。
+:::
 
-> [!TIP]
-> * 支持通过 **Yaml 源文件**添加 TwitCasting 直播源，详见[开发者选项](../配置/developerOptions.html)。
+
+::: tip
+* 支持通过 **Yaml 源文件**添加 TwitCasting 直播源，详见[开发者选项](../配置/developerOptions.html)。
+:::
+
 
 ----
 

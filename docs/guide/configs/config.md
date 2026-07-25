@@ -29,8 +29,10 @@ Options:
   -V, --version                    Print version
 ```
 
-> [!IMPORTANT]
-> `-p`、`-u`、`--rust-log` 是**全局选项**，必须放在子命令之前使用。例如：`biliup -p http://proxy:8080 login`
+::: info
+`-p`、`-u`、`--rust-log` 是**全局选项**，必须放在子命令之前使用。例如：`biliup -p http://proxy:8080 login`
+:::
+
 
 ---
 
@@ -65,8 +67,10 @@ biliup server --port 8080 --auth
 biliup server --config /path/to/config.yaml
 ```
 
-> [!TIP]
-> `--auth` 是布尔开关，不接收 `user:pass` 参数。开启后首次访问 WebUI 会进入注册页面，需创建管理账号。详见 [WebUI 认证](/guide/api/rest-api.html#认证说明)。
+::: tip
+`--auth` 是布尔开关，不接收 `user:pass` 参数。开启后首次访问 WebUI 会进入注册页面，需创建管理账号。详见 [WebUI 认证](/guide/api/rest-api.html#认证说明)。
+:::
+
 
 ---
 

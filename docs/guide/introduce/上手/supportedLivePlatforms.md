@@ -41,8 +41,10 @@
 | TwitCasting | `twitcasting_danmaku` | WebSocket（JSON 协议） |
 | YouTube | `youtube_danmaku` | HTTP 轮询 |
 
-> [!TIP]
-> 弹幕录制输出为 B站兼容的 XML 格式，可配合 [DanmakuFactory](https://github.com/hihkm/DanmakuFactory) 进行弹幕压制。
+::: tip
+弹幕录制输出为 B站兼容的 XML 格式，可配合 [DanmakuFactory](https://github.com/hihkm/DanmakuFactory) 进行弹幕压制。
+:::
+
 
 ---
 
@@ -71,5 +73,7 @@
 - [streamlink 支持列表](https://streamlink.github.io/plugins.html)
 - [yt-dlp 支持列表](https://github.com/yt-dlp/yt-dlp/tree/master/yt_dlp/extractor)
 
-> [!TIP]
-> 对于不在内置列表中的平台，可使用 `General`（通用）下载器，支持任意 streamlink/yt-dlp 兼容的 URL。
+::: tip
+对于不在内置列表中的平台，可使用 `General`（通用）下载器，支持任意 streamlink/yt-dlp 兼容的 URL。
+:::
+
