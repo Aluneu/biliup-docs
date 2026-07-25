@@ -44,7 +44,7 @@
 
 ## 常见问题快速入口
 
-- [安装问题](/guide/introduce/安装部署/Linux.html)
-- [录制配置](/guide/introduce/上手/get-start.html)
-- [Q&A 常见问题](/guide/introduce/帮助/faq.html)
+- [安装问题](/guide/getting-started/安装部署/Linux.html)
+- [录制配置](/guide/getting-started/上手/get-start.html)
+- [Q&A 常见问题](/guide/getting-started/帮助/faq.html)
 - [CLI 命令参考](/guide/configs/config.html)

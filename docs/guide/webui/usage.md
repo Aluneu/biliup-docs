@@ -12,7 +12,7 @@
 | Docker | `http://<服务器IP>:19159` |
 | 自定义端口 | `http://<地址>:<端口>` |
 
-首次访问会跳转到登录页（如果开启了认证）。biliup 支持 5 种 B站账号登录方式，详见[登录方式详解](/guide/introduce/配置/login.html)。
+首次访问会跳转到登录页（如果开启了认证）。biliup 支持 5 种 B站账号登录方式，详见[登录方式详解](/guide/getting-started/配置/login.html)。
 
 启动时使用 `--auth` 参数开启 WebUI 认证：
 
@@ -338,7 +338,7 @@ biliup 支持添加多个 B站账号：
 
 ### 全局设置
 
-影响所有主播的默认行为，详见[全局设置文档](/guide/introduce/配置/GlobalConfig.html)。
+影响所有主播的默认行为，详见[全局设置文档](/guide/getting-started/配置/global-config.html)。
 
 关键参数速查：
 
@@ -354,7 +354,7 @@ biliup 支持添加多个 B站账号：
 
 ### 各平台设置
 
-针对特定平台的配置，详见[各平台设置文档](/guide/introduce/配置/liveconfig.html)。
+针对特定平台的配置，详见[各平台设置文档](/guide/getting-started/配置/live-config.html)。
 
 常见需要单独配置的平台：
 - **哔哩哔哩** — 直播流协议（flv / hls_fmp4）、Cookie 文件、API 反代地址
@@ -364,7 +364,7 @@ biliup 支持添加多个 B站账号：
 
 ### 开发者选项
 
-面向进阶用户，详见[开发者选项文档](/guide/introduce/配置/developerOptions.html)。
+面向进阶用户，详见[开发者选项文档](/guide/getting-started/配置/developer-options.html)。
 
 主要功能：
 - **钩子系统 (Hooks)** — 在录制前 / 分段后 / 下载完成 / 上传后执行自定义脚本
@@ -405,7 +405,7 @@ biliup 支持添加多个 B站账号：
 
 ## 下一步
 
-- 了解[全局配置参数](/guide/introduce/配置/GlobalConfig.html)
-- 了解[各平台特殊配置](/guide/introduce/配置/liveconfig.html)
+- 了解[全局配置参数](/guide/getting-started/配置/global-config.html)
+- 了解[各平台特殊配置](/guide/getting-started/配置/live-config.html)
 - 了解[命令行参考](/guide/configs/config.html)
-- 遇到问题时查看[常见问题 Q&A](/guide/introduce/帮助/faq.html)
+- 遇到问题时查看[常见问题 Q&A](/guide/getting-started/帮助/faq.html)

@@ -5,6 +5,6 @@
 ::: info
 进阶运行内容已整合至：
 - [CLI 命令行参考](/guide/configs/config.html)
-- [开发者选项](/guide/introduce/配置/developerOptions.html)
+- [开发者选项](/guide/getting-started/配置/developer-options.html)
 :::
 

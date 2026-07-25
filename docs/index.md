@@ -11,7 +11,7 @@ hero:
   actions:
     - theme: brand
       text: 开始安装
-      link: /guide/introduce/上手/introduce
+      link: /guide/getting-started/上手/
     - theme: alt
       text: GitHub
       link: https://github.com/biliup/biliup

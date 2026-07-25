@@ -261,5 +261,5 @@ taskkill /PID <PID> /F
 
 - [前端开发（Next.js）](/guide/开发指南/frontend)
 - [Python 开发](/guide/开发指南/python)
-- [系统架构](/guide/introduce/更多/architecture)
+- [系统架构](/guide/getting-started/更多/architecture)
 - [REST API 文档](/guide/api/rest-api)

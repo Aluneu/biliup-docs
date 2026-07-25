@@ -101,7 +101,7 @@ biliup login
 开发者可通过浏览器自动化工具完成登录并自动提取 Cookie，适合 CI/CD 环境。
 
 ::: tip
-详见[开发者选项文档](/guide/introduce/配置/developerOptions.html)中的相关说明。
+详见[开发者选项文档](/guide/getting-started/配置/developer-options.html)中的相关说明。
 :::
 
 
@@ -184,4 +184,4 @@ Cookie 有效期通常为 1-3 个月，建议定期检查和刷新，避免投�
 
 - [WebUI 使用指南](/guide/webui/usage.html)
 - [投稿管理](/guide/webui/usage.html#投稿管理-upload-manager)
-- [开发者选项](/guide/introduce/配置/developerOptions.html)
+- [开发者选项](/guide/getting-started/配置/developer-options.html)

@@ -161,4 +161,4 @@ Next.js 支持热更新，如不生效请检查：
 
 - [Python 开发](/guide/开发指南/python)
 - [Rust CLI 开发](/guide/开发指南/rust-cli)
-- [系统架构](/guide/introduce/更多/architecture)
+- [系统架构](/guide/getting-started/更多/architecture)

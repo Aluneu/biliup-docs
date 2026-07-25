@@ -94,7 +94,7 @@
 | `remux:mp4` | 将录制文件重新封装为 MP4 格式（不重编码，速度快） |
 | 自定义脚本 | 可指定 Python 脚本进行自定义处理（如弹幕压制） |
 
-> 此功能需要额外配置，一般用户无需使用。详见[开发者选项](/guide/introduce/配置/developerOptions.html)。
+> 此功能需要额外配置，一般用户无需使用。详见[开发者选项](/guide/getting-started/配置/developer-options.html)。
 
 ### segment_processor_parallel
 

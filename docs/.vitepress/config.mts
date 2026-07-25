@@ -31,7 +31,7 @@ export default defineConfig({
       copyright: "Copyright © BiliuP"
     },
     nav: [
-      { text: "指引", link: "/guide/introduce/上手/introduce", activeMatch: "/guide/introduce/" },
+      { text: "指引", link: "/guide/getting-started/上手/", activeMatch: "/guide/getting-started/" },
       { text: "WebUI", link: "/guide/webui/usage", activeMatch: "/guide/webui/" },
       { text: "文档", link: "/guide/docs/doc", activeMatch: "/guide/docs/" },
       { text: "API", link: "/guide/api/rest-api", activeMatch: "/guide/api/" },
@@ -49,7 +49,7 @@ export default defineConfig({
       { text: "🍵 赞助", link: "/sponsor/index" },
     ],
     sidebar: {
-      "/guide/introduce/": set_sidebar('/guide/introduce', false, false),      "/guide/docs/": set_sidebar('/guide/docs', false, false),
+      "/guide/getting-started/": set_sidebar('/guide/getting-started', false, false),      "/guide/docs/": set_sidebar('/guide/docs', false, false),
       "/guide/configs/": set_sidebar('/guide/configs', false, false),      "/guide/webui/": set_sidebar('/guide/webui', false, false),
       "/guide/api/": set_sidebar('/guide/api', false, false),
       "/guide/changelog/": set_sidebar('/guide/changelog', false, false),

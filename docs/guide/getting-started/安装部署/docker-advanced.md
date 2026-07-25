@@ -6,7 +6,7 @@
 
 ## 基础回顾
 
-如果你还未完成基础部署，请先查看[Docker 安装指引](/guide/introduce/安装部署/docker.html)。
+如果你还未完成基础部署，请先查看[Docker 安装指引](/guide/getting-started/安装部署/docker.html)。
 
 最简启动命令：
 
@@ -313,5 +313,5 @@ environment:
 ## 下一步
 
 - 了解[WebUI 完整使用指南](/guide/webui/usage.html)
-- 了解[全局配置参数](/guide/introduce/配置/GlobalConfig.html)
-- 遇到问题时查看[常见问题 Q&A](/guide/introduce/帮助/faq.html)
+- 了解[全局配置参数](/guide/getting-started/配置/global-config.html)
+- 遇到问题时查看[常见问题 Q&A](/guide/getting-started/帮助/faq.html)

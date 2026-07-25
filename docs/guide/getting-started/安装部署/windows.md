@@ -54,7 +54,7 @@ winget install biliup
 biliup --version
 ```
 
-> 💡 `winget` 安装的是命令行版本，如需图形界面请使用[方法四（biliup-app 桌面应用）](/guide/introduce/更多/biliup-app.html)。
+> 💡 `winget` 安装的是命令行版本，如需图形界面请使用[方法四（biliup-app 桌面应用）](/guide/getting-started/更多/desktop-app.html)。
 
 ---
 
@@ -84,7 +84,7 @@ biliup-app 将 WebUI 打包为原生桌面客户端，打开即运行，无需�
 3. 运行安装程序，按提示完成安装
 4. 从开始菜单或桌面快捷方式启动
 
-> 详细使用说明请参阅 [biliup-app 文档](/guide/introduce/更多/biliup-app.html)。
+> 详细使用说明请参阅 [biliup-app 文档](/guide/getting-started/更多/desktop-app.html)。
 
 ---
 

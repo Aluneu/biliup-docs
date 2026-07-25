@@ -13,24 +13,24 @@
 
 | 平台 | 需要配置的项 | 详情链接 |
 |---|---|---|
-| 哔哩哔哩 | Cookie、直播流协议、API 反代 | [哔哩哔哩配置](/guide/introduce/平台配置/哔哩哔哩.html) |
-| 虎牙 | CDN 线路优选 | [虎牙配置](/guide/introduce/平台配置/虎牙.html) |
-| 斗鱼 | CDN 线路优选 | [斗鱼配置](/guide/introduce/平台配置/斗鱼.html) |
-| 抖音 | Cookie（避免风控）、弹幕、双屏 | [抖音配置](/guide/introduce/平台配置/抖音.html) |
-| 快手 | 需中国大陆 IPv4 家宽 IP | [快手配置](/guide/introduce/平台配置/快手.html) |
-| Twitch | 登录信息（获取更高画质） | [Twitch 配置](/guide/introduce/平台配置/twitch.html) |
-| YouTube | cookies 文件（访问受限内容）、弹幕 | [YouTube 配置](/guide/introduce/平台配置/youtube.html) |
-| TwitCasting | 弹幕、密码房 | [TwitCasting 配置](/guide/introduce/平台配置/TwitCasting.html) |
-| Bigo | 无需特殊配置 | [Bigo 配置](/guide/introduce/平台配置/Bigo.html) |
-| AcFun | - | [AcFun 配置](/guide/introduce/平台配置/acfun.html) |
-| AfreecaTV | - | [AfreecaTV 配置](/guide/introduce/平台配置/afreecaTV.html) |
-| FlexTV | - | [FlexTV 配置](/guide/introduce/平台配置/flextv.html) |
-| NicoNico | - | [NicoNico 配置](/guide/introduce/平台配置/nico.html) |
-| YY 语音 | - | [YY 语音配置](/guide/introduce/平台配置/YY语音.html) |
-| 克拉克拉 | - | [克拉克拉配置](/guide/introduce/平台配置/克拉克拉.html) |
-| 映客 | - | [映客配置](/guide/introduce/平台配置/映客.html) |
-| 猫耳 FM | - | [猫耳FM 配置](/guide/introduce/平台配置/猫耳FM.html) |
-| 网易 CC | - | [网易CC 配置](/guide/introduce/平台配置/网易CC.html) |
+| 哔哩哔哩 | Cookie、直播流协议、API 反代 | [哔哩哔哩配置](/guide/getting-started/平台配置/哔哩哔哩.html) |
+| 虎牙 | CDN 线路优选 | [虎牙配置](/guide/getting-started/平台配置/虎牙.html) |
+| 斗鱼 | CDN 线路优选 | [斗鱼配置](/guide/getting-started/平台配置/斗鱼.html) |
+| 抖音 | Cookie（避免风控）、弹幕、双屏 | [抖音配置](/guide/getting-started/平台配置/抖音.html) |
+| 快手 | 需中国大陆 IPv4 家宽 IP | [快手配置](/guide/getting-started/平台配置/快手.html) |
+| Twitch | 登录信息（获取更高画质） | [Twitch 配置](/guide/getting-started/平台配置/twitch.html) |
+| YouTube | cookies 文件（访问受限内容）、弹幕 | [YouTube 配置](/guide/getting-started/平台配置/youtube.html) |
+| TwitCasting | 弹幕、密码房 | [TwitCasting 配置](/guide/getting-started/平台配置/TwitCasting.html) |
+| Bigo | 无需特殊配置 | [Bigo 配置](/guide/getting-started/平台配置/Bigo.html) |
+| AcFun | - | [AcFun 配置](/guide/getting-started/平台配置/acfun.html) |
+| AfreecaTV | - | [AfreecaTV 配置](/guide/getting-started/平台配置/afreecaTV.html) |
+| FlexTV | - | [FlexTV 配置](/guide/getting-started/平台配置/flextv.html) |
+| NicoNico | - | [NicoNico 配置](/guide/getting-started/平台配置/nico.html) |
+| YY 语音 | - | [YY 语音配置](/guide/getting-started/平台配置/YY语音.html) |
+| 克拉克拉 | - | [克拉克拉配置](/guide/getting-started/平台配置/克拉克拉.html) |
+| 映客 | - | [映客配置](/guide/getting-started/平台配置/映客.html) |
+| 猫耳 FM | - | [猫耳FM 配置](/guide/getting-started/平台配置/猫耳FM.html) |
+| 网易 CC | - | [网易CC 配置](/guide/getting-started/平台配置/网易CC.html) |
 
 > 各平台详细配置参数见对应链接页面或下方补充说明。
 
@@ -85,7 +85,7 @@ Cookie 文件放置路径：
 - Windows：`%APPDATA%\biliup\cookies.json`
 - Linux / macOS：`~/.config/biliup/cookies.json`
 
-格式支持 Netscape Cookie 文件或 JSON 数组，详见[登录方式详解 - Cookie 文件登录](/guide/introduce/配置/login.html#方式五网页-cookie-文件登录)。
+格式支持 Netscape Cookie 文件或 JSON 数组，详见[登录方式详解 - Cookie 文件登录](/guide/getting-started/配置/login.html#方式五网页-cookie-文件登录)。
 
 ### 下载器选择
 
@@ -172,13 +172,13 @@ Cookie 文件放置路径：
 
 ### 弹幕录制失败
 
-弹幕录制依赖 FFmpeg，请先完成 [FFmpeg 安装](/guide/introduce/安装部署/ffmpeg安装.html)，再在主播编辑页面开启「弹幕录制」。
+弹幕录制依赖 FFmpeg，请先完成 [FFmpeg 安装](/guide/getting-started/安装部署/ffmpeg安装.html)，再在主播编辑页面开启「弹幕录制」。
 
 ---
 
 ## 相关链接
 
-- [全局设置](/guide/introduce/配置/GlobalConfig.html)
-- [登录方式详解](/guide/introduce/配置/login.html)
-- [FFmpeg 安装](/guide/introduce/安装部署/ffmpeg安装.html)
+- [全局设置](/guide/getting-started/配置/global-config.html)
+- [登录方式详解](/guide/getting-started/配置/login.html)
+- [FFmpeg 安装](/guide/getting-started/安装部署/ffmpeg安装.html)
 - [WebUI 使用指南](/guide/webui/usage.html)

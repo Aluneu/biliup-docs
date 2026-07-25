@@ -158,6 +158,6 @@ biliup server --auth
 
 ## 下一步
 
-- 运行你的第一个录制任务：参见 [快速入门](/guide/introduce/上手/get-start.html)
+- 运行你的第一个录制任务：参见 [快速入门](/guide/getting-started/上手/get-start.html)
 - 调整各平台参数：参见 [全局设置](../配置/GlobalConfig.html)
 - 登录 B 站账号：参见 [登录方式](../配置/login.html)
