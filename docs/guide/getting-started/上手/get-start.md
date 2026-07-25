@@ -61,8 +61,8 @@ docker run -d \
   --restart unless-stopped \
   -p 0.0.0.0:19159:19159 \
   -v /path/to/save_folder:/opt \
-  ghcr.io/biliup/caution:latest \
-  --password password123
+  biliup/biliup:latest \
+  --auth
 ```
 
 ---
@@ -71,7 +71,7 @@ docker run -d \
 
 在浏览器中访问 `http://<服务器IP>:19159`（本地访问 `http://localhost:19159`）。
 
-如果有密码，用户名为 `biliup`，密码为启动时设定的值。
+首次访问 WebUI 会进入注册页面，需创建管理员账号（用户名与密码自定义）。
 
 ---
 

@@ -41,7 +41,7 @@ services:
       - ./data:/app/data
     command: >
       biliup server
-      --auth admin:your_password_here
+      --auth
       --port 19159
 ```
 
@@ -77,7 +77,7 @@ services:
       - TZ=Asia/Shanghai
     command: >
       biliup server
-      --auth admin:your_strong_password
+      --auth
       --port 19159
     logging:
       driver: "json-file"
@@ -258,7 +258,7 @@ docker run -d \
   -p 19159:19159 \
   -v $(pwd)/data:/app/data \
   biliup/biliup:latest \
-  biliup server --auth admin:password --port 19159
+  biliup server --auth --port 19159
 ```
 
 > ⚠️ 升级前建议备份 `./data` 目录，尤其是跨大版本升级时（如 0.4.x → 1.x）。

@@ -12,7 +12,7 @@
 ## 拉取镜像
 
 ```bash
-docker pull ghcr.io/biliup/caution:latest
+docker pull biliup/biliup:latest
 ```
 
 ---
@@ -25,8 +25,8 @@ docker run -d \
   --restart unless-stopped \
   -p 0.0.0.0:19159:19159 \
   -v /path/to/save_folder:/opt \
-  ghcr.io/biliup/caution:latest \
-  --password password123
+  biliup/biliup:latest \
+  --auth
 ```
 
 参数说明：
@@ -37,7 +37,7 @@ docker run -d \
 | `--restart unless-stopped` | 意外停止后自动重启 |
 | `-p 0.0.0.0:19159:19159` | 端口映射（可改主机端口） |
 | `-v /path/to/save_folder:/opt` | 录播文件存储路径挂载 |
-| `--password password123` | WebUI 密码（用户名为 `biliup`） |
+| `--auth` | 开启 WebUI 登录认证（首次访问需注册管理员账号） |
 
 ---
 
@@ -50,14 +50,14 @@ docker ps -a
 输出示例：
 ```
 CONTAINER ID   IMAGE                          STATUS        PORTS                      NAMES
-xxxxxxxxxxxx   ghcr.io/biliup/caution:latest  Up 4 seconds  0.0.0.0:19159->19159/tcp   biliup
+xxxxxxxxxxxx   biliup/biliup:latest  Up 4 seconds  0.0.0.0:19159->19159/tcp   biliup
 ```
 
 ---
 
 ## 访问 WebUI
 
-浏览器访问 `http://<你的服务器IP>:19159`，用户名为 `biliup`，密码为 `--password` 设置的值。
+浏览器访问 `http://<你的服务器IP>:19159`，首次访问会进入注册页面，需创建管理员账号（用户名与密码自定义）。
 
 ---
 
@@ -85,7 +85,7 @@ docker exec -it biliup /bin/sh
 ## 更新镜像
 
 ```bash
-docker pull ghcr.io/biliup/caution:latest
+docker pull biliup/biliup:latest
 docker stop biliup
 docker rm biliup
 # 重新执行 docker run 命令（数据在挂载目录中不变）
