@@ -3,9 +3,6 @@ import { defineConfig } from "vitepress";
 import { set_sidebar } from "../guide/set_sidebar.mjs";
 
 export default defineConfig({
-  // 自定义域名下站点在根目录 / 提供服务，base 必须为根路径。
-  // 若以后不用自定义域名、改回 GitHub 默认地址 aluneu.github.io/biliup-docs/，
-  // 则需把这里改回 "/biliup-docs/"。
   base: "/",
   title: "BiliuP",
   lang: "zh-CN",
