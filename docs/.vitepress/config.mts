@@ -34,7 +34,7 @@ export default defineConfig({
       { text: "指引", link: "/guide/getting-started/上手/", activeMatch: "/guide/getting-started/" },
       { text: "工作原理", link: "/guide/workflow-demo/", activeMatch: "/guide/workflow-demo/" },
       { text: "WebUI", link: "/guide/webui/usage", activeMatch: "/guide/webui/" },
-      { text: "文档", link: "/guide/docs/doc", activeMatch: "/guide/docs/" },
+      { text: "文档", link: "/guide/docs/命令行参数详解", activeMatch: "/guide/docs/" },
       { text: "API", link: "/guide/api/rest-api", activeMatch: "/guide/api/" },
       { text: "CLI", link: "/guide/configs/config", activeMatch: "/guide/configs/" },
       { text: "Skill", link: "/guide/skill/", activeMatch: "/guide/skill/" },
