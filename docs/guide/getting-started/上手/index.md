@@ -33,7 +33,7 @@ title: 上手
 
 <span class="gs-arrow">→</span>
 
-<a href="../上手/get-start.html" class="gs-step"><span class="gs-num">2</span><b>快速入门</b><small>跑通一次录制</small></a>
+<a href="/guide/workflow-demo/#录制你的第一个主播" class="gs-step"><span class="gs-num">2</span><b>快速入门</b><small>跑通一次录制</small></a>
 
 <span class="gs-arrow">→</span>
 
