@@ -1,160 +1,43 @@
 ---
-title: biliup 工作流程（演示页）
+title: biliup 工作原理与快速引导
 ---
 
-# biliup 工作流程
+# biliup 工作原理与快速引导
 
-> 本页为演示页，未加入侧边栏导航，仅供预览树状图效果（纯 HTML/CSS 实现，不依赖 Mermaid 插件）。
+biliup 把直播和本地视频推送到 B 站等平台，同时提供一个 WebUI 管理界面。下面先说明一次完整的处理流程，再带你跑通第一个录制任务。
 
-<style>
-.wf-tree {
-  display: flex;
-  gap: 0;
-  margin: 28px 0;
-  font-size: 14px;
-}
-.wf-root {
-  flex: 0 0 130px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.wf-root .box {
-  background: linear-gradient(135deg, #6366f1, #fb7299);
-  color: #fff;
-  font-weight: 700;
-  font-size: 15px;
-  text-align: center;
-  line-height: 1.4;
-  padding: 16px 14px;
-  border-radius: 12px;
-  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
-}
-.wf-spine {
-  flex: 0 0 28px;
-  position: relative;
-  border-left: 2px solid var(--vp-c-divider);
-  margin-left: 6px;
-}
-.wf-branches {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding-left: 6px;
-}
-.wf-branch {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-}
-.wf-spine::before {
-  content: "";
-  position: absolute;
-  left: -2px;
-  top: 22px;
-  width: 14px;
-  height: 2px;
-  background: var(--vp-c-divider);
-}
-.wf-cat {
-  flex: 0 0 132px;
-  font-weight: 600;
-  color: var(--vp-c-text-1);
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid transparent;
-  text-align: center;
-}
-.wf-items {
-  flex: 1;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding-top: 4px;
-}
-.wf-item {
-  font-size: 13px;
-  color: var(--vp-c-text-2);
-  background: var(--vp-c-bg-soft);
-  border: 1px solid var(--vp-c-divider);
-  padding: 5px 12px;
-  border-radius: 999px;
-}
-.c1 { background: #E6F1FB; border-color: #185FA5; color: #103A63; }
-.c2 { background: #E1F5EE; border-color: #0F6E56; color: #0A4636; }
-.c3 { background: #FAEEDA; border-color: #854F0B; color: #5E3706; }
-.c4 { background: #FAECE7; border-color: #993C1D; color: #5E2412; }
-.c5 { background: #FBEAF0; border-color: #993556; color: #5E2033; }
-.c6 { background: #EAF3DE; border-color: #3B6D11; color: #274A0A; }
-.c7 { background: #F1EFE8; border-color: #5F5E5A; color: #3A3935; }
-.dark .wf-item { background: rgba(40,40,55,0.5); }
-</style>
+## 一次处理经历哪些环节
 
-<div class="wf-tree">
-  <div class="wf-root"><div class="box">biliup<br>工作流程</div></div>
-  <div class="wf-spine"></div>
-  <div class="wf-branches">
+<WorkflowDiagram />
 
-    <div class="wf-branch">
-      <div class="wf-cat c1">素材获取</div>
-      <div class="wf-items">
-        <span class="wf-item">直播链路</span>
-        <span class="wf-item">本地链路</span>
-      </div>
-    </div>
+> 链路随来源切换：直播走「直播链路」，本地文件走「本地链路」；输出目标通常是 B站投稿，也可配置为只录制不上传。
 
-    <div class="wf-branch">
-      <div class="wf-cat c2">媒体预处理</div>
-      <div class="wf-items">
-        <span class="wf-item">FFmpeg 转码压缩</span>
-        <span class="wf-item">封面、字幕处理</span>
-        <span class="wf-item">文件完整性校验</span>
-      </div>
-    </div>
+## 录制你的第一个主播
 
-    <div class="wf-branch">
-      <div class="wf-cat c3">B站鉴权</div>
-      <div class="wf-items">
-        <span class="wf-item">读取本地登录凭证</span>
-        <span class="wf-item">凭证失效终止任务</span>
-      </div>
-    </div>
+下面以 Docker 部署为例，串起从安装到看到录制文件的完整路径。其他安装方式见[安装部署](/guide/getting-started/安装部署/docker.html)。
 
-    <div class="wf-branch">
-      <div class="wf-cat c4">分片上传调度</div>
-      <div class="wf-items">
-        <span class="wf-item">任务队列限流排队</span>
-        <span class="wf-item">文件分片上传</span>
-        <span class="wf-item">断点续传</span>
-        <span class="wf-item">分片合并请求</span>
-      </div>
-    </div>
+1. **启动服务并开启认证**
+   运行 `biliup server --auth`。`--auth` 是开关，不接收密码；首次访问 WebUI 时注册管理员账号并设置密码。
+   参考：[Docker 安装指引](/guide/getting-started/安装部署/docker.html)
 
-    <div class="wf-branch">
-      <div class="wf-cat c5">稿件提交</div>
-      <div class="wf-items">
-        <span class="wf-item">填充投稿参数</span>
-        <span class="wf-item">调用稿件审核接口</span>
-      </div>
-    </div>
+2. **登录 B站账号**
+   在 WebUI 中扫码或填入 Cookie 完成登录，登录状态保存在本地。
+   参考：[B站账号登录](/guide/getting-started/配置/login.html)
 
-    <div class="wf-branch">
-      <div class="wf-cat c6">运行容错机制</div>
-      <div class="wf-items">
-        <span class="wf-item">录制断线重连</span>
-        <span class="wf-item">接口报错自动重试</span>
-        <span class="wf-item">全流程日志记录</span>
-      </div>
-    </div>
+3. **添加主播**
+   在 WebUI「录播管理」中填入直播间链接，保存后即开始监控。
+   参考：[WebUI 使用指南](/guide/webui/usage.html)
 
-    <div class="wf-branch">
-      <div class="wf-cat c7">任务收尾</div>
-      <div class="wf-items">
-        <span class="wf-item">记录上传状态</span>
-        <span class="wf-item">可选自动归档本地视频</span>
-      </div>
-    </div>
+4. **等待录制与上传**
+   开播后 biliup 自动录制，是否上传、转码或仅本地保存由全局设置决定。
+   参考：[全局配置](/guide/getting-started/配置/global-config.html)
 
-  </div>
-</div>
+5. **查看结果**
+   在 WebUI「录播管理」查看进度与历史，文件默认存于 `recordings/`。
+
+## 下一步
+
+- 了解每个配置项：[全局配置](/guide/getting-started/配置/global-config.html)
+- 按平台微调参数：[平台配置](/guide/getting-started/平台配置/哔哩哔哩.html)
+- 使用命令行而非界面：[命令行参考](/guide/configs/config.html)
+- 遇到问题：[常见问题 Q&A](/guide/getting-started/帮助/faq.html)

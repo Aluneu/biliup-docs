@@ -12,7 +12,7 @@
 ## 拉取镜像
 
 ```bash
-docker pull biliup/biliup:latest
+docker pull ghcr.io/biliup/caution:latest
 ```
 
 ---
@@ -25,7 +25,7 @@ docker run -d \
   --restart unless-stopped \
   -p 0.0.0.0:19159:19159 \
   -v /path/to/save_folder:/opt \
-  biliup/biliup:latest \
+  ghcr.io/biliup/caution:latest \
   --auth
 ```
 
@@ -50,7 +50,7 @@ docker ps -a
 输出示例：
 ```
 CONTAINER ID   IMAGE                          STATUS        PORTS                      NAMES
-xxxxxxxxxxxx   biliup/biliup:latest  Up 4 seconds  0.0.0.0:19159->19159/tcp   biliup
+xxxxxxxxxxxx   ghcr.io/biliup/caution:latest  Up 4 seconds  0.0.0.0:19159->19159/tcp   biliup
 ```
 
 ---
@@ -85,7 +85,7 @@ docker exec -it biliup /bin/sh
 ## 更新镜像
 
 ```bash
-docker pull biliup/biliup:latest
+docker pull ghcr.io/biliup/caution:latest
 docker stop biliup
 docker rm biliup
 # 重新执行 docker run 命令（数据在挂载目录中不变）

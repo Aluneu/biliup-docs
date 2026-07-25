@@ -61,7 +61,7 @@ docker run -d \
   --restart unless-stopped \
   -p 0.0.0.0:19159:19159 \
   -v /path/to/save_folder:/opt \
-  biliup/biliup:latest \
+  ghcr.io/biliup/caution:latest \
   --auth
 ```
 

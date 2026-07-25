@@ -89,7 +89,7 @@ Skill 依赖 biliup CLI 本身，请确保环境中已安装 biliup：
 |---|---|
 | Linux / macOS | `uv tool install biliup` |
 | Windows | `winget install biliup` 或下载 [Releases](https://github.com/biliup/biliup/releases/latest) 预编译二进制 |
-| Docker | 使用官方镜像 `biliup/biliup:latest` |
+| Docker | 使用镜像 `ghcr.io/biliup/caution:latest` |
 
 安装后验证：
 
@@ -103,7 +103,7 @@ biliup --version
 
 - Skill 本身不存储 B站账号信息，登录状态保存在 `cookies.json` 中
 - 上传前请确保已通过 `biliup login` 或 WebUI 完成登录
-- 使用 `server --auth` 启动服务时，请设置强密码，避免未授权访问
+- 使用 `server --auth` 启动服务会开启登录认证，首次访问 WebUI 时需注册管理员账号并设置密码，建议使用强密码避免未授权访问。
 - 详细 CLI 参数请参阅 [命令行参考](/guide/configs/config.html)
 
 ---

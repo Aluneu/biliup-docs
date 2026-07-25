@@ -32,6 +32,7 @@ export default defineConfig({
     },
     nav: [
       { text: "指引", link: "/guide/getting-started/上手/", activeMatch: "/guide/getting-started/" },
+      { text: "工作原理", link: "/guide/workflow-demo/", activeMatch: "/guide/workflow-demo/" },
       { text: "WebUI", link: "/guide/webui/usage", activeMatch: "/guide/webui/" },
       { text: "文档", link: "/guide/docs/doc", activeMatch: "/guide/docs/" },
       { text: "API", link: "/guide/api/rest-api", activeMatch: "/guide/api/" },
@@ -54,6 +55,7 @@ export default defineConfig({
       "/guide/api/": set_sidebar('/guide/api', false, false),
       "/guide/changelog/": set_sidebar('/guide/changelog', false, false),
       "/guide/skill/": set_sidebar('/guide/skill', false, false),
+      "/guide/workflow-demo/": set_sidebar('/guide/workflow-demo', false, false),
       "/guide/开发指南/": set_sidebar('/guide/开发指南', false, false),
     }
   },

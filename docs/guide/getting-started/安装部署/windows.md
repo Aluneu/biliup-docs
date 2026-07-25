@@ -32,7 +32,7 @@ Windows 11 运行 `.exe` 后可能弹出防火墙窗口，请点击「允许」�
 即使是 `.exe` 文件，也可以通过命令行传递参数：
 
 ```powershell
-# 使用绝对路径，设置 WebUI 密码
+# 启动 WebUI（--auth 开启登录认证，首次访问时注册管理员账号）
 D:\biliup\biliup.exe server --auth
 ```
 

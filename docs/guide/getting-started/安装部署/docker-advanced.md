@@ -14,8 +14,8 @@
 docker run -d \
   --name biliup \
   -p 19159:19159 \
-  -v $(pwd)/data:/app/data \
-  biliup/biliup:latest
+  -v $(pwd)/data:/opt \
+  ghcr.io/biliup/caution:latest
 ```
 
 ---
@@ -32,13 +32,13 @@ version: "3.8"
 
 services:
   biliup:
-    image: biliup/biliup:latest
+    image: ghcr.io/biliup/caution:latest
     container_name: biliup
     restart: unless-stopped
     ports:
       - "19159:19159"
     volumes:
-      - ./data:/app/data
+      - ./data:/opt
     command: >
       biliup server
       --auth
@@ -55,7 +55,7 @@ version: "3.8"
 
 services:
   biliup:
-    image: biliup/biliup:latest
+    image: ghcr.io/biliup/caution:latest
     container_name: biliup
     restart: unless-stopped
     # 资源限制（防止 OOM）
@@ -69,9 +69,9 @@ services:
       - "127.0.0.1:19159:19159"  # 仅绑定本地，由反向代理转发
     volumes:
       # 数据持久化（数据库、配置、录制文件）
-      - ./data:/app/data
+      - ./data:/opt
       # 如需自定义 WebUI，挂载自定义前端目录
-      # - ./custom-ui:/app/custom-ui
+      # - ./custom-ui:/opt/custom-ui
     environment:
       # 时区设置（录制文件名时间戳用）
       - TZ=Asia/Shanghai
@@ -103,7 +103,7 @@ networks:
 
 ### 目录结构
 
-`./data` 目录挂载到容器内的 `/app/data`，包含：
+`./data` 目录挂载到容器内的 `/opt`，包含：
 
 ```
 data/
@@ -115,16 +115,16 @@ data/
 
 ### 重要提醒
 
-> ⚠️ **必须挂载 `/app/data` 卷**，否则容器重启后所有配置（账号登录状态、主播列表、投稿模板）会全部丢失。
+> ⚠️ **必须挂载 `/opt` 卷**，否则容器重启后所有配置（账号登录状态、主播列表、投稿模板）会全部丢失。
 
 ### 自定义录制文件存放路径
 
-默认录制文件保存在容器内的 `/app/data/recordings`，映射到宿主机：
+默认录制文件保存在容器内的 `/opt/recordings`，映射到宿主机：
 
 ```yaml
 volumes:
   # 将录制文件存放到宿主机的指定路径
-  - /mnt/large-disk/biliup-data:/app/data
+  - /mnt/large-disk/biliup-data:/opt
 ```
 
 或在「空间配置 → 全局设置」中修改录制文件保存路径（需挂载对应路径）。
@@ -136,11 +136,10 @@ volumes:
 | 环境变量 | 说明 | 默认值 |
 |---|---|---|
 | `TZ` | 时区（影响文件名时间戳） | `UTC` |
-| `BILIUP_AUTH` | 认证凭据（格式：`user:pass`） | - |
 | `BILIUP_PORT` | 服务端口 | `19159` |
 | `BILIUP_CONFIG` | 自定义配置文件路径 | - |
 
-> 💡 推荐使用启动参数而非环境变量配置认证信息，避免环境变量泄露风险。
+> 💡 认证通过 `--auth` 参数开启，首次访问 WebUI 时注册管理员账号并设置密码，无需额外环境变量。
 
 ---
 
@@ -200,13 +199,17 @@ Caddy 会自动申请和续期 Let's Encrypt 证书，无需额外配置。
 
 ## 安全加固
 
-### 1. 设置强密码
+### 1. 开启登录认证并设置密码
+
+`docker-compose.yml` 的 `command` 中已包含 `--auth` 参数（见上方基础配置）。`--auth` 仅控制是否开启登录认证，不接收密码；服务启动后**首次访问 WebUI 时需注册管理员账号**，用户名与密码由你自行设定。
+
+可用以下命令生成高强度密码备用：
 
 ```bash
-# 生成随机强密码
 openssl rand -base64 16
-# 在 --auth 参数中使用
 ```
+
+注册完成后，之后每次访问 WebUI 都需先登录。
 
 ### 2. 不要将端口直接暴露到公网
 
@@ -246,7 +249,7 @@ docker compose up -d --force-recreate
 
 ```bash
 # 拉取最新镜像
-docker pull biliup/biliup:latest
+docker pull ghcr.io/biliup/caution:latest
 
 # 停止并删除旧容器（数据卷不受影响）
 docker stop biliup
@@ -256,8 +259,8 @@ docker rm biliup
 docker run -d \
   --name biliup \
   -p 19159:19159 \
-  -v $(pwd)/data:/app/data \
-  biliup/biliup:latest \
+  -v $(pwd)/data:/opt \
+  ghcr.io/biliup/caution:latest \
   biliup server --auth --port 19159
 ```
 
