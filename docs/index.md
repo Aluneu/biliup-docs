@@ -16,7 +16,7 @@ hero:
       text: GitHub
       link: https://github.com/biliup/biliup
   image:
-    src: /home.png
+    src: /home.webp
     alt: BiliuP Logo
 
 features:
