@@ -419,3 +419,21 @@
   background: rgba(40, 40, 55, 0.6);
   border-color: rgba(99, 102, 241, 0.25);
 }
+
+/* ========== 首页 Hero mascot 放大 ========== */
+.VPHero .VPImage.image-src {
+  max-width: 420px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .VPHero .VPImage.image-src {
+    max-width: 280px;
+  }
+}
+
+@media (max-width: 540px) {
+  .VPHero .VPImage.image-src {
+    max-width: 220px;
+  }
+}
