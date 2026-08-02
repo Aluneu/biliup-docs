@@ -1,3 +1,7 @@
+---
+description: biliup REST API 与日志 WebSocket：路由、认证、手动上传示例（含必填 id/template_name）与日志频道（upload.log），基于 v1.2.2 核对。
+---
+
 # REST API 文档
 
 biliup 启动 Web 服务后会在 `19159` 端口暴露一组 REST 风格的 HTTP API，既给 WebUI 前端用，也支持外部程序直接拿 HTTP 调。
@@ -27,6 +31,8 @@ biliup server --auth
 1. 首次启动没用户时，WebUI 出注册页，用 `POST /v1/users/register` 建管理员；
 2. 之后用 `POST /v1/users/login` 登录，基于 Session（Cookie），登录后浏览器自动带 Session ID；
 3. 退出调 `GET /v1/logout` 销毁会话。
+
+> ⚠️ WebUI 管理员账号的用户名**固定为 `biliup`**，注册 / 登录时该用户名不可修改，你只需设置密码。它与用于投稿的 B站账号（扫码 / Cookie 添加，对应 `/v1/users/biliup` 之外的 B站账号体系）是两套不同身份，请勿混淆。
 
 > 没开 `--auth` 时接口没有任何保护，生产环境别直接把端口暴露出去。
 
@@ -62,7 +68,6 @@ biliup server --auth
 |---|---|---|
 | GET | `/v1/upload/streamers` | 获取上传模板列表 |
 | POST | `/v1/upload/streamers` | 添加上传模板 |
-| PUT | `/v1/upload/streamers` | 更新上传模板 |
 | GET | `/v1/upload/streamers/{id}` | 获取单个上传模板 |
 | DELETE | `/v1/upload/streamers/{id}` | 删除上传模板 |
 
@@ -116,7 +121,11 @@ biliup server --auth
 |---|---|
 | `ds_update.log` | 直播检测 / 开播更新 |
 | `download.log` | 下载 / 录制 |
-| `postprocessor` | 上传 / 后处理 |
+| `upload.log` | 上传 / 后处理 |
+
+::: warning
+`/v1/ws/logs` 的鉴权边界：即使启用了 `--auth`，该 WebSocket 日志端点**仍位于登录守卫之外**，连接时不会要求会话认证，日志中可能包含文件名、路径等敏感信息。请勿在公网不经反向代理 / 访问控制直接暴露该端口；如需保护，请在反向代理层对 `/v1/ws/logs` 额外加鉴权。
+:::
 
 ```javascript
 const ws = new WebSocket('ws://localhost:19159/v1/ws/logs');
@@ -166,12 +175,16 @@ curl -X DELETE http://localhost:19159/v1/streamers/1
 
 ### 手动上传
 
+> `POST /v1/uploads` 的 `params` 在服务端会被反序列化为上传模板模型，**必须包含 `id` 与 `template_name`**，否则请求在进入上传逻辑前就会失败。
+
 ```bash
 curl -X POST http://localhost:19159/v1/uploads \
   -H "Content-Type: application/json" \
   -d '{
     "files": ["/opt/录播/video.flv"],
     "params": {
+      "id": 1,
+      "template_name": "默认投稿",
       "title": "手动上传",
       "tid": 171,
       "tags": ["直播录制"],
@@ -179,6 +192,8 @@ curl -X POST http://localhost:19159/v1/uploads \
     }
   }'
 ```
+
+> 示例中的 `id` 与 `template_name` 需替换为你实际已创建的投稿模板的值（可通过 `GET /v1/upload/streamers` 获取）。如果开启了 `--auth`，上述 `curl` 还需携带会话 Cookie（先 `POST /v1/users/login` 登录并保存 Cookie 后再请求）。
 
 ### 监听日志（Python）
 

@@ -24,7 +24,6 @@
 | Bigo | 无需特殊配置 | [Bigo 配置](/guide/getting-started/平台配置/Bigo.html) |
 | AcFun | - | [AcFun 配置](/guide/getting-started/平台配置/acfun.html) |
 | AfreecaTV | - | [AfreecaTV 配置](/guide/getting-started/平台配置/afreecaTV.html) |
-| FlexTV | - | [FlexTV 配置](/guide/getting-started/平台配置/flextv.html) |
 | NicoNico | - | [NicoNico 配置](/guide/getting-started/平台配置/nico.html) |
 | YY 语音 | - | [YY 语音配置](/guide/getting-started/平台配置/YY语音.html) |
 | 克拉克拉 | - | [克拉克拉配置](/guide/getting-started/平台配置/克拉克拉.html) |
@@ -135,7 +134,7 @@ Cookie 文件放置路径：
 | `huya_imgplus` | 二次编码 |
 | `huya_codec` | 编码选择（264/265） |
 | `huya_mobile_api` | 移动端 API |
-| `huya_use_wup` | WUP 协议 |
+| `huya_use_wup` | 使用 WUP 协议获取直播流（WebUI 中默认开启，用于解决部分直播分区 2 分钟分段问题；配置文件中的该字段以后端实现为准） |
 
 ---
 

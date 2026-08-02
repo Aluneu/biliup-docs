@@ -49,7 +49,7 @@ biliup server --auth
 biliup server --port 8080 --auth
 ```
 
-启动后在浏览器访问 `http://<你的服务器IP>:19159`，用户名为 `biliup`，密码为 `--auth` 启动时终端输出的密码。
+启动后在浏览器访问 `http://<你的服务器IP>:19159`，管理员用户名为 `biliup`，首次访问时在注册页自行设置密码（开启 `--auth` 后密码不再由终端生成）。
 
 如需后台运行：
 ```bash

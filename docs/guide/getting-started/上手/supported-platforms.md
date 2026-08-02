@@ -18,12 +18,15 @@
 | BIGO | 直播 | `https://www.bigo.tv/123456` | — |
 | Picarto | 直播 | — | — |
 | afreecaTV | 直播 | `https://play.afreecatv.com/biliup123/123456` | 部分需登录 |
-| flextv | 直播 | `https://www.flextv.co.kr/channels/123456/live` | — |
 | nico | 直播 | `https://live.nicovideo.jp/watch/lv123456` | 可配置登录信息 |
 | TwitCasting | 直播 | `https://twitcasting.tv/username` | 可录制弹幕/支持密码房 |
 | TTingLive | 直播 | — | — |
 | Twitch | 直播 / VOD | `https://www.twitch.tv/biliup123` | 可配置登录/支持弹幕/推荐录回放 |
 | YouTube | 直播 / VOD | `https://www.youtube.com/@biliup123/videos` | 可配置登录/支持回放下载日期/可录制弹幕 |
+
+::: tip
+**WebUI 配置表单**：哔哩哔哩、斗鱼、抖音、虎牙、网易CC、克拉克拉、TwitCasting、Twitch、YouTube 在 WebUI「主播编辑 → 各平台设置」中提供配置表单；其余平台（快手、映客、猫耳FM、YY语音、AcFun、AfreecaTV、Bigo、Nico、Picarto、TTingLive）暂未提供 WebUI 表单，可通过配置文件或「空间配置」中对应平台页的参数说明进行设置。
+::: 
 
 ---
 

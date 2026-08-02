@@ -53,7 +53,7 @@ biliup --version
 biliup server --auth
 ```
 
-启动后在手机浏览器访问 `http://localhost:19159`，用户名为 `biliup`，密码为终端输出的密码。
+启动后在手机浏览器访问 `http://localhost:19159`，管理员用户名为 `biliup`，首次访问时在注册页自行设置密码。
 
 > ⚠️ Termux 会话在应用被系统回收后会中断。如需长期后台运行：
 > - 开启 Termux 的「唤醒锁」：`termux-wake-lock`

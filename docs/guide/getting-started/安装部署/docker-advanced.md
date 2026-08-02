@@ -1,3 +1,7 @@
+---
+description: Docker 进阶部署基线：Compose、反向代理、健康检查、资源限制、备份与升级，基于 v1.2.2 核对，含安全清理注意事项。
+---
+
 # Docker 进阶部署指南
 
 本文档面向需要在生产环境部署 biliup 的用户，覆盖 `docker-compose` 完整配置、数据持久化、反向代理、HTTPS 等进阶场景。
@@ -15,7 +19,8 @@ docker run -d \
   --name biliup \
   -p 19159:19159 \
   -v $(pwd)/data:/opt \
-  ghcr.io/biliup/caution:latest
+  ghcr.io/biliup/caution:latest \
+  server
 ```
 
 ---
@@ -40,7 +45,7 @@ services:
     volumes:
       - ./data:/opt
     command: >
-      biliup server
+      server
       --auth
       --port 19159
 ```
@@ -76,7 +81,7 @@ services:
       # 时区设置（录制文件名时间戳用）
       - TZ=Asia/Shanghai
     command: >
-      biliup server
+      server
       --auth
       --port 19159
     logging:
@@ -139,7 +144,11 @@ volumes:
 | `BILIUP_PORT` | 服务端口 | `19159` |
 | `BILIUP_CONFIG` | 自定义配置文件路径 | - |
 
-> 💡 认证通过 `--auth` 参数开启，首次访问 WebUI 时注册管理员账号并设置密码，无需额外环境变量。
+::: warning
+截至本文撰写版本，源码中**未确认** `BILIUP_PORT` / `BILIUP_CONFIG` 这两个环境变量被服务端实际读取。请优先使用命令行参数（`--port`）与 WebUI「空间配置」来设置端口与配置，不要依赖环境变量生效；如后续版本支持，以该版本的发布说明为准。
+:::
+
+> 💡 认证通过 `--auth` 参数开启，首次访问 WebUI 时管理员用户名固定为 `biliup` 并设置密码，无需额外环境变量。
 
 ---
 
@@ -201,7 +210,9 @@ Caddy 会自动申请和续期 Let's Encrypt 证书，无需额外配置。
 
 ### 1. 开启登录认证并设置密码
 
-`docker-compose.yml` 的 `command` 中已包含 `--auth` 参数（见上方基础配置）。`--auth` 仅控制是否开启登录认证，不接收密码；服务启动后**首次访问 WebUI 时需注册管理员账号**，用户名与密码由你自行设定。
+`docker-compose.yml` 的 `command` 中已包含 `--auth` 参数（见上方基础配置）。`--auth` 仅控制是否开启登录认证，不接收密码；服务启动后**首次访问 WebUI 时，管理员用户名固定为 `biliup`**，请设置密码，之后使用同一用户名（`biliup`）与密码登录。
+
+> ⚠️ WebUI 管理员账号（固定用户名 `biliup`）与用于投稿的 B站账号（扫码 / Cookie 添加）是两套不同身份，请勿混淆。
 
 可用以下命令生成高强度密码备用：
 
@@ -222,8 +233,9 @@ openssl rand -base64 16
 #!/bin/bash
 BACKUP_DIR=/opt/backups/biliup
 mkdir -p $BACKUP_DIR
-tar -czf $BACKUP_DIR/biliup-data-$(date +%Y%m%d).tar.gz /opt/biliup/data
-# 保留最近 7 天的备份
+# 备份数据库、配置与 Cookie（不含录制文件本身，录制文件通常很大，请按需单独归档）
+tar -czf $BACKUP_DIR/biliup-data-$(date +%Y%m%d).tar.gz /opt/data /opt/cookies
+# 仅清理过期的「备份压缩包」，不影响任何录制文件
 find $BACKUP_DIR -name "biliup-data-*.tar.gz" -mtime +7 -delete
 ```
 
@@ -261,7 +273,7 @@ docker run -d \
   -p 19159:19159 \
   -v $(pwd)/data:/opt \
   ghcr.io/biliup/caution:latest \
-  biliup server --auth --port 19159
+  server --auth --port 19159
 ```
 
 > ⚠️ 升级前建议备份 `./data` 目录，尤其是跨大版本升级时（如 0.4.x → 1.x）。
@@ -281,14 +293,25 @@ docker inspect biliup | grep -A 10 "Mounts"
 
 ### 录制文件占用过多磁盘空间
 
-biliup 不会自动清理已上传的视频文件。建议：
+biliup 不会自动清理已上传的视频文件。
 
-1. 在「空间配置 → 全局设置」中启用「上传后删除本地文件」（如已上传完成）
-2. 或设置定期清理脚本：
+::: danger
+**请勿使用按文件年龄批量删除的脚本。** 例如下面的命令只会按修改时间删除目录内所有超过 7 天的 `.flv`，**完全不检查该文件是否已经上传 / 投稿完成**，可能导致尚未上传的录像被误删：
 
 ```bash
-# 删除 7 天前已上传完成的录制文件（谨慎使用）
+# ❌ 危险：会删除所有超过 7 天的 FLV，包括尚未上传的录像
 find /path/to/recordings -name "*.flv" -mtime +7 -delete
+```
+:::
+
+推荐做法：
+
+1. 优先在「空间配置 → 全局设置」中，对**已确认上传完成**的主播配置安全的保留 / 删除策略（如保留 N 份或仅删除已投稿文件）。
+2. 若必须脚本清理，请基于 biliup 的任务 / 上传状态生成「待清理清单」，并先 **dry-run** 人工确认，再执行删除；删除前务必已完成一次有效备份。
+
+```bash
+# ✅ 安全示例：仅列出 7 天前的 FLV，先人工核对，绝不自动 -delete
+find /path/to/recordings -name "*.flv" -mtime +7 -print
 ```
 
 ### 端口冲突

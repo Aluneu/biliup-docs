@@ -149,7 +149,6 @@
 - 💡 核心下载引擎部分迁移至 Rust（`biliup-rs` 合并）
 - 💡 新增 `server` 子命令，一站式启动录制服务 + Web 管理界面（WebUI 由 biliup-app 仓库提供）
 - 💡 数据库取代配置文件（自动从旧版 YAML 配置迁移）
-- 💡 数据库取代配置文件（自动从旧版 YAML 配置迁移）
 - ⚠️ 升级前请备份旧版 `config.yaml` / `config.toml`
 
 ---

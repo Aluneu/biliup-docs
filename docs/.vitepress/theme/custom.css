@@ -437,3 +437,320 @@
     max-width: 220px;
   }
 }
+
+/* ========== 无障碍修复（P1-07 / WCAG 2.2 AA） ========== */
+
+/* 首页主按钮（VitePress 默认 .VPButton.brand 用 brand-3 浅靛蓝作底色，
+   白字对比度仅 1.99:1）。改为更深的品牌色，白字对比度 ≥6.3:1。 */
+.VPButton.brand,
+.VPButton.brand:hover {
+  background-color: var(--vp-c-brand-1);
+  border-color: var(--vp-c-brand-1);
+  color: #fff;
+}
+.VPButton.brand:hover {
+  background-color: var(--vp-c-brand-darker);
+  border-color: var(--vp-c-brand-darker);
+}
+
+/* 正文链接：原 #6366f1 仅 4.47:1，改用 #4f46e5（≥6.3:1） */
+.vp-doc a {
+  color: #4f46e5;
+  text-decoration-color: rgba(79, 70, 229, 0.35);
+}
+.vp-doc a:hover { color: var(--vp-c-brand-dark); }
+.vp-doc a > code { color: #4f46e5; }
+
+/* 三步上手横幅的主按钮也使用深品牌色 */
+.gs-btn.primary { background: var(--vp-c-brand-1); }
+.gs-btn.primary:hover { opacity: 0.88; }
+
+/* 次要说明文字：原使用 --vp-c-text-3（浅灰 ~3.1:1），改用次级文本色以满足对比度 */
+.gs-note { color: var(--vp-c-text-2); }
+
+/* 宽表横向滚动：原 .vp-doc table 被 overflow:hidden 裁切，
+   在窄屏/高缩放下会丢失内容。恢复为可横向滚动（报告 10.4）。 */
+.vp-doc table {
+  display: block;
+  width: max-content;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* ============ 上手页设计（qs- 前缀，仅"上手 biliup"页使用） ============ */
+.vp-doc > h1:first-of-type { display: none; }
+
+.vp-doc .qs-hero {
+  position: relative;
+  border: 1px solid var(--vp-c-border);
+  border-radius: 18px;
+  padding: 48px 36px 36px;
+  text-align: center;
+  background:
+    radial-gradient(900px 340px at 50% -12%, var(--vp-c-brand-soft), transparent 72%),
+    linear-gradient(180deg, var(--vp-c-bg-soft), var(--vp-c-bg));
+  margin: 8px 0 28px;
+}
+.qs-logo {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  margin: 0 auto 18px;
+  display: block;
+  box-shadow:
+    0 0 0 1px var(--vp-c-border),
+    0 8px 28px color-mix(in srgb, var(--vp-c-brand-1) 22%, transparent);
+  animation: qs-float 5s ease-in-out infinite;
+}
+@keyframes qs-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+.qs-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--vp-c-brand-1);
+  background: var(--vp-c-brand-soft);
+  border: 1px solid color-mix(in srgb, var(--vp-c-brand-1) 28%, transparent);
+  border-radius: 999px;
+  padding: 4px 14px;
+}
+.qs-hero h1 {
+  font-size: 42px;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  margin: 18px 0 12px;
+  background: linear-gradient(115deg, var(--vp-c-text-1) 30%, var(--vp-c-brand-1));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.qs-hero .qs-sub {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--vp-c-text-2);
+  max-width: 520px;
+  margin: 0 auto;
+}
+.qs-cmd {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 26px auto 0;
+  max-width: 580px;
+  background: #16181d;
+  border: 1px solid #2e323a;
+  border-radius: 12px;
+  padding: 13px 12px 13px 18px;
+  text-align: left;
+}
+.qs-cmd code {
+  flex: 1;
+  color: #e6edf3;
+  font-family: var(--vp-font-family-mono);
+  font-size: 13px;
+  white-space: nowrap;
+  overflow-x: auto;
+  background: transparent;
+  padding: 0;
+}
+.qs-cmd code::-webkit-scrollbar { height: 4px; }
+.qs-copy {
+  flex-shrink: 0;
+  border: 1px solid #3d444d;
+  background: #21262d;
+  color: #e6edf3;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.qs-copy:hover { background: #30363d; }
+.qs-actions { display: flex; gap: 10px; justify-content: center; margin-top: 26px; }
+.qs-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 32px;
+  padding-top: 22px;
+  border-top: 1px solid var(--vp-c-divider);
+}
+.qs-metric b {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--vp-c-text-1);
+  letter-spacing: -0.01em;
+}
+.qs-metric span {
+  display: block;
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--vp-c-text-3);
+}
+.qs-btn {
+  display: inline-block;
+  border-radius: 10px;
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid var(--vp-c-border);
+  color: var(--vp-c-text-1);
+  background: var(--vp-c-bg-soft);
+  text-decoration: none;
+  transition: border-color 0.2s, transform 0.2s, background 0.2s;
+}
+.qs-btn:hover { border-color: var(--vp-c-brand-1); transform: translateY(-1px); text-decoration: none; }
+.qs-btn-primary {
+  background: var(--vp-c-brand-1);
+  border-color: var(--vp-c-brand-1);
+  color: #fff;
+}
+.qs-btn-primary:hover { background: var(--vp-c-brand-2); border-color: var(--vp-c-brand-2); color: #fff; }
+
+.qs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+  gap: 12px;
+  margin: 16px 0 8px;
+}
+.qs-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px 18px 16px;
+  border: 1px solid var(--vp-c-border);
+  border-radius: 12px;
+  background: var(--vp-c-bg-soft);
+  text-decoration: none;
+  color: var(--vp-c-text-1);
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.qs-card:hover {
+  border-color: var(--vp-c-brand-1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--vp-c-brand-1) 14%, transparent);
+  text-decoration: none;
+  color: var(--vp-c-text-1);
+}
+.qs-card .qs-icon { font-size: 22px; line-height: 1; }
+.qs-card b { font-size: 14px; font-weight: 600; }
+.qs-card small { font-size: 12px; line-height: 1.5; color: var(--vp-c-text-2); }
+.qs-arrow {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-size: 13px;
+  color: var(--vp-c-text-3);
+  opacity: 0.6;
+  transition: transform 0.2s, color 0.2s, opacity 0.2s;
+}
+.qs-card:hover .qs-arrow {
+  opacity: 1;
+  color: var(--vp-c-brand-1);
+  transform: translate(2px, -2px);
+}
+.qs-card:focus-visible,
+.qs-step-card:focus-visible,
+.qs-btn:focus-visible {
+  outline: 2px solid var(--vp-c-brand-1);
+  outline-offset: 2px;
+}
+
+/* 从零到第一条视频：与卡片网格风格统一的步骤卡片 */
+.qs-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin: 16px 0 8px;
+}
+.qs-step-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 44px 16px 18px;
+  border: 1px solid var(--vp-c-border);
+  border-radius: 12px;
+  background: var(--vp-c-bg-soft);
+  text-decoration: none;
+  color: var(--vp-c-text-1);
+  text-align: center;
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.qs-step-card:hover {
+  border-color: var(--vp-c-brand-1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--vp-c-brand-1) 12%, transparent);
+  text-decoration: none;
+  color: var(--vp-c-text-1);
+}
+.qs-step-card .qs-step-num {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--vp-c-brand-1);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 0 0 4px var(--vp-c-bg-soft);
+}
+.qs-step-card b { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.qs-step-card small { font-size: 12px; line-height: 1.5; color: var(--vp-c-text-2); }
+
+details.qs-collapse {
+  border: 1px solid var(--vp-c-border);
+  border-radius: 12px;
+  background: var(--vp-c-bg-soft);
+  padding: 12px 18px;
+  margin: 16px 0;
+}
+details.qs-collapse summary {
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--vp-c-text-1);
+  list-style: none;
+}
+details.qs-collapse summary::-webkit-details-marker { display: none; }
+details.qs-collapse[open] summary { margin-bottom: 12px; }
+details.qs-collapse ol { margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.9; color: var(--vp-c-text-2); }
+details.qs-collapse ol li { margin: 4px 0; }
+
+.qs-footnote {
+  margin-top: 24px;
+  font-size: 12px;
+  color: var(--vp-c-text-3);
+  text-align: center;
+}
+
+@media (max-width: 960px) {
+  .qs-steps-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .vp-doc .qs-hero { padding: 38px 20px 28px; border-radius: 14px; }
+  .qs-hero h1 { font-size: 32px; }
+  .qs-cmd { padding-left: 14px; }
+  .qs-metric b { font-size: 15px; }
+  .qs-steps-grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qs-logo { animation: none; }
+  .qs-card, .qs-step-card, .qs-btn, .qs-arrow, .qs-ext { transition: none; }
+}
+
