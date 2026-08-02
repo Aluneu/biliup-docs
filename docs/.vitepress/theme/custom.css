@@ -593,7 +593,7 @@
   font-size: 12px;
   color: var(--vp-c-text-3);
 }
-.qs-btn {
+.vp-doc .qs-btn {
   display: inline-block;
   border-radius: 10px;
   padding: 10px 22px;
@@ -605,13 +605,13 @@
   text-decoration: none;
   transition: border-color 0.2s, transform 0.2s, background 0.2s;
 }
-.qs-btn:hover { border-color: var(--vp-c-brand-1); transform: translateY(-1px); text-decoration: none; }
-.qs-btn-primary {
+.vp-doc .qs-btn:hover { border-color: var(--vp-c-brand-1); transform: translateY(-1px); text-decoration: none; }
+.vp-doc .qs-btn-primary {
   background: var(--vp-c-brand-1);
   border-color: var(--vp-c-brand-1);
   color: #fff;
 }
-.qs-btn-primary:hover { background: var(--vp-c-brand-2); border-color: var(--vp-c-brand-2); color: #fff; }
+.vp-doc .qs-btn-primary:hover { background: var(--vp-c-brand-2); border-color: var(--vp-c-brand-2); color: #fff; }
 
 .qs-grid {
   display: grid;
@@ -656,9 +656,9 @@
   color: var(--vp-c-brand-1);
   transform: translate(2px, -2px);
 }
-.qs-card:focus-visible,
-.qs-step-card:focus-visible,
-.qs-btn:focus-visible {
+.vp-doc .qs-card:focus-visible,
+.vp-doc .qs-step-card:focus-visible,
+.vp-doc .qs-btn:focus-visible {
   outline: 2px solid var(--vp-c-brand-1);
   outline-offset: 2px;
 }

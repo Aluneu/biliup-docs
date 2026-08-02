@@ -108,10 +108,10 @@ title: 上手
 
 <div class="qs-grid">
 
-<a href="../安装部署/docker.html" class="qs-card">
-  <span class="qs-icon">🐳</span>
-  <b>Docker 一键部署</b>
-  <small>官方镜像，一条命令拉起服务</small>
+<a href="../../configs/config.html" class="qs-card">
+  <span class="qs-icon">⌨️</span>
+  <b>命令行参考</b>
+  <small>参数说明与常用命令速查</small>
   <span class="qs-arrow">→</span>
 </a>
 
