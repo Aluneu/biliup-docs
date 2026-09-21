@@ -1,5 +1,5 @@
 ---
-description: 在 Docker 中部署 biliup WebUI：正确的启动命令（server --auth）、端口映射、持久化卷与认证开启，基于 v1.2.2 核对。
+description: 在 Docker 中部署 biliup WebUI：正确的启动命令（容器内需 --bind 0.0.0.0）、端口映射、持久化卷与认证开启，基于 v1.2.6 核对。
 ---
 
 # Docker 部署
@@ -30,11 +30,23 @@ docker run -d \
   -p 0.0.0.0:19159:19159 \
   -v /path/to/save_folder:/opt \
   ghcr.io/biliup/caution:latest \
-  server --auth
+  server --bind 0.0.0.0 --auth
 ```
 
+::: warning 容器内必须加 `--bind 0.0.0.0`
+CLI 的 `--bind` 默认是 `127.0.0.1`（只监听本机）。在容器里这意味着服务只监听容器自身的回环地址，**宿主机的端口映射转发不进去，WebUI 会打不开**。
+
+所以只要显式写了 `command` / 镜像名后的参数覆盖了镜像默认 `CMD`，就必须补上 `--bind 0.0.0.0`：
+
+```bash
+... ghcr.io/biliup/caution:latest server --bind 0.0.0.0 --auth
+```
+
+镜像默认的 `CMD` 已经是 `["server", "--bind", "0.0.0.0", "--auth"]`，完全不写参数时不受影响。
+:::
+
 ::: warning
-镜像已将 `biliup` 设为入口命令（ENTRYPOINT），因此镜像名之后**只需追加子命令与参数**，不要重复写 `biliup`。正确形式是 `... caution:latest server --auth`；写成 `... caution:latest --auth`（缺少 `server`）或 `command: biliup server --auth`（重复入口）都会导致启动失败。
+镜像已将 `biliup` 设为入口命令（ENTRYPOINT），因此镜像名之后**只需追加子命令与参数**，不要重复写 `biliup`。正确形式是 `... caution:latest server --bind 0.0.0.0 --auth`；写成 `... caution:latest --auth`（缺少 `server`）或 `command: biliup server --auth`（重复入口）都会导致启动失败。
 :::
 
 参数说明：
@@ -46,6 +58,7 @@ docker run -d \
 | `-p 0.0.0.0:19159:19159` | 端口映射（可改主机端口） |
 | `-v /path/to/save_folder:/opt` | 录播文件存储路径挂载 |
 | `server` | 启动 WebUI 服务的子命令（镜像已含 `biliup` 入口，此处只需子命令） |
+| `--bind 0.0.0.0` | 容器内监听所有地址，端口映射才能转发进来（**不可省略**） |
 | `--auth` | 开启 WebUI 登录认证（首次访问时用户名为固定 `biliup`，请设置管理员密码） |
 
 ---

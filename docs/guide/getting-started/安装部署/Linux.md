@@ -127,7 +127,7 @@ pip3 uninstall biliup
 ```bash
 # 示例：x86_64 架构
 cd /tmp
-wget https://github.com/biliup/biliup/releases/download/v1.2.1/biliupR-v1.2.1-x86_64-linux.tar.xz
+wget https://github.com/biliup/biliup/releases/download/v1.2.6/biliupR-v1.2.6-x86_64-linux.tar.xz
 ```
 
 ### 2. 解压并安装

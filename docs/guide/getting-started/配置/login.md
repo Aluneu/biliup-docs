@@ -1,5 +1,5 @@
 ---
-description: biliup 登录方式：B站账号扫码/Cookie 与 WebUI 管理员账号（固定 biliup）的区别，认证开启与密码设置，基于 v1.2.2 核对。
+description: biliup 登录方式：B站账号扫码/Cookie 与 WebUI 管理员账号（固定 biliup）的区别，认证开启与密码设置，基于 v1.2.6 核对。
 ---
 
 # 登录方式详解
@@ -159,6 +159,51 @@ biliup 支持两种 Cookie 文件格式：
    - Linux/macOS：`~/.config/biliup/cookies.json`
 2. 在 WebUI「空间配置」→「哔哩哔哩」中指定 Cookie 文件路径
 3. 保存后重启 biliup 生效
+
+---
+
+## 其他平台的凭据配置
+
+上面几种方式都只针对 **B 站投稿账号**。部分**录制平台**在拉流时也需要凭据（登录才能拿到高画质/受限流），它们是另一套字段，位于配置文件的 `user` 段（WebUI「空间配置 → 用户配置」）。
+
+| 平台 | 配置字段 | 说明 |
+|---|---|---|
+| 抖音 | `douyin_cookie` | 风控严格，多数直播需要 Cookie 才能拉到流 |
+| Twitch | `twitch_cookie` | 录制会员专属流或规避部分限制 |
+| TwitCasting | `twitcasting_cookie`、`twitcasting_password` | 密码房录制 |
+| YouTube | `youtube_cookie` | Cookie **文件路径**（与上面几个不同，这里填路径不是字符串） |
+| niconico | `niconico-email`、`niconico-password`、`niconico-user-session`、`niconico-purge-credentials` | 账号密码登录；`niconico-purge-credentials` 用于清除已存凭据 |
+| AfreecaTV | `afreecatv_username`、`afreecatv_password` | 账号密码登录 |
+
+配置示例：
+
+```yaml
+user:
+  # B 站投稿账号（二选一）
+  bili_cookie: "SESSDATA=xxxx; bili_jct=xxxx"
+  # bili_cookie_file: /path/to/cookies.json
+
+  # 录制平台凭据
+  douyin_cookie: "..."
+  twitch_cookie: "..."
+  youtube_cookie: /path/to/youtube-cookies.txt
+  niconico-email: "you@example.com"
+  niconico-password: "..."
+  afreecatv_username: "..."
+  afreecatv_password: "..."
+```
+
+::: info 快手例外
+快手的 `kuaishou_cookie` 不在 `user` 段，而是位于**各平台设置**下（与 `douyu_cdn`、`huya_cdn` 同级）。详见[各平台设置](/guide/getting-started/配置/live-config.html)。
+:::
+
+::: tip 主播级覆盖
+如果不同主播要用不同的平台凭据，可在该主播的配置里用 `user_cookie` 单独指定，覆盖全局 `user` 中的同名项。
+:::
+
+::: warning
+平台 Cookie 与 B 站投稿 Cookie 是两套东西，不要混填。平台 Cookie 过期会导致**录制失败或画质下降**，B 站 Cookie 过期会导致**投稿失败**。
+:::
 
 ---
 

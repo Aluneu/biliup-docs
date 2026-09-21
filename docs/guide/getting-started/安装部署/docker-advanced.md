@@ -1,5 +1,5 @@
 ---
-description: Docker 进阶部署基线：Compose、反向代理、健康检查、资源限制、备份与升级，基于 v1.2.2 核对，含安全清理注意事项。
+description: Docker 进阶部署基线：Compose、反向代理、健康检查、资源限制、备份与升级，基于 v1.2.6 核对，含安全清理注意事项。
 ---
 
 # Docker 进阶部署指南
@@ -46,6 +46,7 @@ services:
       - ./data:/opt
     command: >
       server
+      --bind 0.0.0.0
       --auth
       --port 19159
 ```
@@ -82,6 +83,7 @@ services:
       - TZ=Asia/Shanghai
     command: >
       server
+      --bind 0.0.0.0
       --auth
       --port 19159
     logging:
@@ -273,7 +275,7 @@ docker run -d \
   -p 19159:19159 \
   -v $(pwd)/data:/opt \
   ghcr.io/biliup/caution:latest \
-  server --auth --port 19159
+  server --bind 0.0.0.0 --auth --port 19159
 ```
 
 > ⚠️ 升级前建议备份 `./data` 目录，尤其是跨大版本升级时（如 0.4.x → 1.x）。

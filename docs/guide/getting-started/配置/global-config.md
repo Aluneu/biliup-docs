@@ -1,5 +1,5 @@
 ---
-description: biliup 全局配置参考：下载器、分段规则、delay 默认值（300 秒）、上传器与已知未生效字段，基于 v1.2.2 核对。
+description: biliup 全局配置参考：下载器、分段规则、delay 默认值（300 秒）、上传器与已知未生效字段，基于 v1.2.6 核对。
 ---
 
 # 全局设置
@@ -46,13 +46,19 @@ description: biliup 全局配置参考：下载器、分段规则、delay 默认
 :::
 
 
+### mesio（Rust 原生管线）
+
+- 进程内实现的 FLV / HLS 下载与修复管线，**不依赖外部进程**。
+- 无需安装 FFmpeg 或 streamlink，部署更轻。
+- 适合希望减少外部依赖、或外部下载器在本机表现不稳定的场景。
+
 ### ytarchive（仅 YouTube Live）
 
 - 专为 YouTube 直播设计的下载器。
 - 支持从直播开始自动录制，无需等待开播。
 - 需单独安装 [ytarchive](https://github.com/Kofuua/ytarchive)。
 
-### ffmpeg（外部分段） / ffmpeg（内部分段）
+### ffmpeg 外部分段 / 内部分段
 
 - 使用 FFmpeg 进行分段录制，分为外部和内部分段两种模式。
 - 适用于需要 FFmpeg 特定参数的场景。
@@ -145,11 +151,15 @@ description: biliup 全局配置参考：下载器、分段规则、delay 默认
 | 值 | 说明 |
 |---|---|
 | `AUTO`（默认） | 自动选择最优线路 |
+| `bldsa` / `cnbldsa` | BLDSA 线路（常规 / 国内） |
+| `andsa` / `atdsa` | ANDSA 线路（海外） |
+| `bda2` / `cnbd` / `anbd` / `atbd` | 百度线路（常规 / 国内 / 海外） |
+| `tx` / `cntx` / `antx` / `attx` | 腾讯云线路（常规 / 国内 / 海外） |
+| `txa` | 腾讯云备用线路 |
 | `alia` | 阿里云线路 |
-| `bda2` / `bda` | 百度线路 |
-| `bldsa` | BLDSA 线路 |
-| `qn` | 七牛云线路 |
-| `tx` / `txa` | 腾讯云线路 |
+| `estx` / `akbd` | 其他线路 |
+
+> 上表与 CLI `--line` 的可选值一致（[命令行参考](/guide/configs/config.html)），区别只是全局配置额外接受 `AUTO`。原文档中列出的 `bda`、`qn`（七牛云）在当前版本的线路枚举中已不存在，请勿再使用。
 
 ### 上传线程池大小（pool2_size）
 

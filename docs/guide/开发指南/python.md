@@ -189,6 +189,6 @@ maturin develop
 
 ## 下一步
 
-- [前端开发（Next.js）](/guide/开发指南/frontend)
-- [Rust CLI 开发](/guide/开发指南/rust-cli)
-- [钩子系统（Hooks）](/guide/getting-started/配置/developer-options)
+- [前端开发（Next.js）](/guide/开发指南/frontend.html)
+- [Rust CLI 开发](/guide/开发指南/rust-cli.html)
+- [钩子系统（Hooks）](/guide/getting-started/配置/developer-options.html)

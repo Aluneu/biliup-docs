@@ -130,7 +130,7 @@ pip3 uninstall biliup                        # 卸载
 ```bash
 # 示例：Apple Silicon
 cd ~/Downloads
-curl -L -O https://github.com/biliup/biliup/releases/download/v1.2.1/biliupR-v1.2.1-aarch64-macos.tar.xz
+curl -L -O https://github.com/biliup/biliup/releases/download/v1.2.6/biliupR-v1.2.6-aarch64-macos.tar.xz
 ```
 
 ### 2. 解压并安装

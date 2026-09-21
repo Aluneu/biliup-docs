@@ -10,11 +10,11 @@ biliup 采用混合架构，你可以只搭建需要开发的那一层：
 
 | 开发目标 | 需要搭建的环境 | 参考章节 |
 |---|---|---|
-| 修改 WebUI 前端页面 | Node.js ≥ 18 | [前端开发](/guide/开发指南/frontend) |
-| 修改 Python 脚本/钩子 | Python 3.9+ | [Python 开发](/guide/开发指南/python) |
-| 修改核心下载/上传逻辑 | Rust + maturin | [Python 开发](/guide/开发指南/python) |
-| 修改 CLI / Web API | Rust (cargo) | [Rust CLI 开发](/guide/开发指南/rust-cli) |
-| 修改弹幕功能 | Rust (cargo) | [Rust CLI 开发](/guide/开发指南/rust-cli) |
+| 修改 WebUI 前端页面 | Node.js ≥ 18 | [前端开发](/guide/开发指南/frontend.html) |
+| 修改 Python 脚本/钩子 | Python 3.9+ | [Python 开发](/guide/开发指南/python.html) |
+| 修改核心下载/上传逻辑 | Rust + maturin | [Python 开发](/guide/开发指南/python.html) |
+| 修改 CLI / Web API | Rust (cargo) | [Rust CLI 开发](/guide/开发指南/rust-cli.html) |
+| 修改弹幕功能 | Rust (cargo) | [Rust CLI 开发](/guide/开发指南/rust-cli.html) |
 | 完整本地开发（全栈） | Node.js + Python + Rust | 全部章节 |
 
 ---
@@ -55,6 +55,6 @@ cd biliup
 
 根据你的开发目标，选择对应章节：
 
-- [前端开发（Next.js）](/guide/开发指南/frontend)
-- [Python 开发](/guide/开发指南/python)
-- [Rust CLI 开发](/guide/开发指南/rust-cli)
+- [前端开发（Next.js）](/guide/开发指南/frontend.html)
+- [Python 开发](/guide/开发指南/python.html)
+- [Rust CLI 开发](/guide/开发指南/rust-cli.html)

@@ -4,25 +4,26 @@
 
 | 直播平台 | 支持类型 | 链接示例 | 备注 |
 |----------|----------|----------|------|
-| 哔哩哔哩 | 直播 | `https://live.bilibili.com/123456` | HLS分区需streamlink/可录制弹幕 |
+| 哔哩哔哩 | 直播 | `https://live.bilibili.com/123456`、`https://b23.tv/xxxx` | HLS分区需streamlink/可录制弹幕 |
 | 斗鱼 | 直播 | `https://www.douyu.com/123456` | 可录制弹幕 |
 | 虎牙 | 直播 | `https://www.huya.com/123456` | 可录制弹幕 |
 | 抖音 | 直播 | `https://live.douyin.com/123456` | 可录制弹幕/主页/风控需Cookie |
-| 快手 | 直播 | `https://live.kuaishou.com/u/biliup123` | 需大陆家宽/风控严格 |
+| 快手 | 直播 | `https://live.kuaishou.com/u/biliup123`、`https://live.chenzhongtech.com/...` | 需大陆家宽/风控严格 |
 | 网易CC | 直播 | `https://cc.163.com/123456` | — |
 | YY语音 | 直播 | `https://www.yy.com/123456` | — |
 | 映客 | 直播 | `https://www.inke.cn/liveroom/index.html?uid=123456` | — |
 | 猫耳FM | 直播 | `https://fm.missevan.com/live/123456` | 纯音频流 |
 | acfun | 直播 | `https://live.acfun.cn/live/123456` | — |
-| 克拉克拉 | 直播 | `https://live.kilakila.cn/PcLive/index/detail?id=123456` | HLS/FLV |
+| 克拉克拉 / 红豆 FM | 直播 | `https://live.kilakila.cn/PcLive/index/detail?id=123456`、`https://www.hongdoufm.com/...` | HLS/FLV |
 | BIGO | 直播 | `https://www.bigo.tv/123456` | — |
-| Picarto | 直播 | — | — |
+| Picarto | 直播 | `https://picarto.tv/频道名` | 无内置弹幕 |
 | afreecaTV | 直播 | `https://play.afreecatv.com/biliup123/123456` | 部分需登录 |
 | nico | 直播 | `https://live.nicovideo.jp/watch/lv123456` | 可配置登录信息 |
 | TwitCasting | 直播 | `https://twitcasting.tv/username` | 可录制弹幕/支持密码房 |
-| TTingLive | 直播 | — | — |
+| TTingLive | 直播 | `https://www.ttinglive.com/channels/123456/live` | — |
 | Twitch | 直播 / VOD | `https://www.twitch.tv/biliup123` | 可配置登录/支持弹幕/推荐录回放 |
 | YouTube | 直播 / VOD | `https://www.youtube.com/@biliup123/videos` | 可配置登录/支持回放下载日期/可录制弹幕 |
+| 通用适配器 | 直播 / 点播 | 任意 `http(s)` 地址 | 内置平台未匹配时，交给本机 yt-dlp / streamlink 处理 |
 
 ::: tip
 **WebUI 配置表单**：哔哩哔哩、斗鱼、抖音、虎牙、网易CC、克拉克拉、TwitCasting、Twitch、YouTube 在 WebUI「主播编辑 → 各平台设置」中提供配置表单；其余平台（快手、映客、猫耳FM、YY语音、AcFun、AfreecaTV、Bigo、Nico、Picarto、TTingLive）暂未提供 WebUI 表单，可通过配置文件或「空间配置」中对应平台页的参数说明进行设置。

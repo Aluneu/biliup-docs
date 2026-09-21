@@ -1,5 +1,5 @@
 ---
-description: biliup REST API 与日志 WebSocket：路由、认证、手动上传示例（含必填 id/template_name）与日志频道（upload.log），基于 v1.2.2 核对。
+description: biliup REST API 与日志 WebSocket：路由、认证、手动上传示例（含必填 id/template_name）与日志频道（upload.log），基于 v1.2.6 核对。
 ---
 
 # REST API 文档
@@ -77,7 +77,9 @@ biliup server --auth
 |---|---|---|
 | GET | `/v1/users` | 获取用户列表 |
 | POST | `/v1/users` | 添加用户 |
+| GET | `/v1/users/{id}` | 获取指定用户信息 |
 | DELETE | `/v1/users/{id}` | 删除用户 |
+| GET | `/v1/users/{id}/archives` | 获取指定用户的稿件列表 |
 | POST | `/v1/users/login` | WebUI 用户登录 |
 | POST | `/v1/users/register` | WebUI 用户注册 |
 | GET | `/v1/users/biliup` | 检查默认用户是否已存在 |
@@ -104,8 +106,8 @@ biliup server --auth
 | 方法 | 路径 | 说明 |
 |---|---|---|
 | GET | `/bili/archive/pre` | B 站投稿预处理（代理）|
-| GET | `/bili/space/myinfo` | 获取 B 站账号信息（代理）|
-| GET | `/bili/proxy` | B 站 API 通用代理 |
+
+> 当前版本仅注册上面这一条 `/bili/*` 路由。早期文档中出现的 `/bili/space/myinfo`、`/bili/proxy` 在源码中并不存在，调用会返回 404。
 
 ### 静态资源
 
@@ -123,8 +125,10 @@ biliup server --auth
 | `download.log` | 下载 / 录制 |
 | `upload.log` | 上传 / 后处理 |
 
-::: warning
-`/v1/ws/logs` 的鉴权边界：即使启用了 `--auth`，该 WebSocket 日志端点**仍位于登录守卫之外**，连接时不会要求会话认证，日志中可能包含文件名、路径等敏感信息。请勿在公网不经反向代理 / 访问控制直接暴露该端口；如需保护，请在反向代理层对 `/v1/ws/logs` 额外加鉴权。
+::: tip `/v1/ws/logs` 的鉴权边界
+该端点与普通 REST 路由一起受登录守卫保护：开启 `--auth` 后，未携带有效会话的连接会被拒绝；未开启 `--auth` 时则完全开放（服务端源码中有对应的行为测试）。
+
+日志内容包含文件名、路径等敏感信息，公网暴露仍建议走反向代理并终结 TLS。
 :::
 
 ```javascript

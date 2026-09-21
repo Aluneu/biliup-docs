@@ -1,35 +1,48 @@
 # 生产部署基线
 
-本页提供一套**可供复现、可审核**的长期运行部署基线，适用于 NAS / VPS / 服务器场景。内容基于 biliup **v1.2.2** 编写，命令已对照当前镜像入口（`ENTRYPOINT ["biliup"]`）核对。
+本页提供一套**可供复现、可审核**的长期运行部署基线，适用于 NAS / VPS / 服务器场景。内容基于 biliup **v1.2.6** 编写，命令已对照当前镜像入口（`ENTRYPOINT ["biliup"]`）核对。
 
 ::: warning 适用范围与前提
 - 本文是**部署基线建议**，不是法律或安全承诺；涉及镜像 digest、SBOM、签名等供应链细节以官方 Release 与镜像仓库为准。
-- 公网暴露前，请先阅读[安全与运维手册](/guide/getting-started/帮助/security-ops)。
+- 公网暴露前，请先阅读[安全与运维手册](/guide/getting-started/帮助/security-ops.html)。
 - 升级前务必备份数据（见下文）。
 :::
 
 ## 1. 固定版本（不要使用 latest）
 
-生产环境应固定具体版本，避免 `latest` 在不知情时引入破坏性变更：
+::: warning 镜像标签现状
+官方镜像 `ghcr.io/biliup/caution` **目前不提供与 CLI 版本号对应的标签**（如 `1.2.6`）。镜像仓库实际可用的标签为 `latest`、`master` 和 `sha-<commit>`，历史版本标签只到 `v0.4.x`。
+
+因此写成 `image: ghcr.io/biliup/caution:1.2.6` 会直接拉取失败（manifest unknown）。生产环境请按下面的方式用 **digest 固定**：
+:::
 
 ```bash
-# 推荐固定主版本/具体版本，并记录 digest 以便回滚
-docker pull ghcr.io/biliup/caution:1.2.2
-# 进一步固定 digest（示例，请替换为官方发布的实际 digest）
-# docker pull ghcr.io/biliup/caution:1.2.2@sha256:<digest>
+# 1. 拉取当前 latest，并记下它的 digest
+docker pull ghcr.io/biliup/caution:latest
+
+# 2. 取出该镜像的 digest（复制输出中 @sha256: 开头的部分）
+docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/biliup/caution:latest
+# 输出形如：ghcr.io/biliup/caution@sha256:1a2b3c...
+
+# 3. 在 Compose 中改用 digest 固定，避免 latest 静默变更
+#    image: ghcr.io/biliup/caution@sha256:1a2b3c...
 ```
+
+> 💡 CLI 版本号（`biliup --version`）与镜像标签不是一套编号。镜像内包含的 CLI 版本以 `docker run --rm ghcr.io/biliup/caution:latest --version` 为准。
 
 ## 2. 基础 Compose（持久化 + 健康检查）
 
 ```yaml
-# docker-compose.yml —— biliup v1.2.2 生产基线
+# docker-compose.yml —— biliup 生产基线
 services:
   biliup:
-    image: ghcr.io/biliup/caution:1.2.2
+    # 把 <digest> 换成第 1 步拿到的实际 digest；临时部署可先用 :latest
+    image: ghcr.io/biliup/caution@sha256:<digest>
     container_name: biliup
     restart: unless-stopped
     # 镜像 ENTRYPOINT 已是 biliup，这里只追加子命令与参数
-    command: server --auth --port 19159
+    # --bind 0.0.0.0 不可省：CLI 默认只监听 127.0.0.1，容器内不改写端口映射就转发不进来
+    command: server --bind 0.0.0.0 --auth --port 19159
     ports:
       - "127.0.0.1:19159:19159"   # 仅监听本机，由反代对外暴露
     volumes:
@@ -53,7 +66,7 @@ services:
       start_period: 20s
 ```
 
-> 💡 `command` 只需 `server --auth --port 19159`。**不要**写成 `biliup server ...`（会与镜像入口重复）或只写 `--auth`（缺少 `server` 子命令）。
+> 💡 `command` 写 `server --bind 0.0.0.0 --auth --port 19159`。**不要**写成 `biliup server ...`（会与镜像入口重复）或只写 `--auth`（缺少 `server` 子命令），也不要漏掉 `--bind 0.0.0.0`（端口映射会失效）。
 
 ## 3. 反向代理与 TLS（必做）
 
@@ -119,15 +132,20 @@ echo "备份完成：$BACKUP_DIR"
 ## 5. 升级与回滚
 
 ```bash
-# 1) 升级前先按第 4 节备份
-# 2) 拉取新版本（固定版本号）
-docker pull ghcr.io/biliup/caution:<新版本>
-# 3) 修改 compose 中的 image 版本后重启
+# 1) 升级前先按第 4 节备份，并记下当前运行的 digest 以便回滚
+docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/biliup/caution:latest > image-digest.bak
+
+# 2) 拉取新镜像并取到新的 digest
+docker pull ghcr.io/biliup/caution:latest
+docker inspect --format='{{index .RepoDigests 0}}' ghcr.io/biliup/caution:latest
+
+# 3) 把 compose 中的 image 改成新的 digest 后重启
 docker compose up -d
+
 # 4) 验证：健康检查通过、能登录、账号/模板/任务数据仍在
 ```
 
-**回滚：** 把 `image` 改回旧版本（保留旧镜像或重新 pull 旧 digest），用同一 `data` 卷重启即可恢复数据。涉及不可逆数据迁移时，请先从备份恢复对应卷。
+**回滚：** 把 `image` 改回第 1 步记录的旧 digest（旧镜像若已删除则重新 pull 该 digest），用同一 `data` 卷重启即可恢复数据。涉及不可逆数据迁移时，请先从备份恢复对应卷。
 
 ## 6. 验收清单（部署后）
 

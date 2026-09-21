@@ -1,5 +1,5 @@
 ---
-description: Windows 上运行 biliup：桌面应用、预编译 CLI 与 uv 安装方式，Rust CLI 需 server 子命令启动 WebUI，基于 v1.2.2 核对。
+description: Windows 上运行 biliup：桌面应用、预编译 CLI 与 uv 安装方式，Rust CLI 需 server 子命令启动 WebUI，基于 v1.2.6 核对。
 ---
 
 # Windows 安装教程

@@ -240,7 +240,7 @@ biliup/
 
 ## 延伸阅读
 
-- [开发指南（前端）](/guide/开发指南/frontend)
-- [开发指南（Python）](/guide/开发指南/python)
-- [开发指南（Rust CLI）](/guide/开发指南/rust-cli)
-- [REST API 文档](/guide/api/rest-api)
+- [开发指南（前端）](/guide/开发指南/frontend.html)
+- [开发指南（Python）](/guide/开发指南/python.html)
+- [开发指南（Rust CLI）](/guide/开发指南/rust-cli.html)
+- [REST API 文档](/guide/api/rest-api.html)

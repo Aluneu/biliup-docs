@@ -16,6 +16,98 @@
 
 ---
 
+## v1.2.6
+
+> 发布时间：2026-09-21
+
+- 🔧 启动时对齐被改写过的迁移校验和，v1.2.4 及更早的旧库不再无法启动 [@ransxd]
+- 💡 前端整体重设计与统一 [@ransxd]
+
+[完整对比 v1.2.5 → v1.2.6](https://github.com/biliup/biliup/compare/v1.2.5...v1.2.6)
+
+---
+
+## v1.2.5
+
+> 发布时间：2026-09-20
+
+- 💡 恢复边录边传（`sync-downloader`）流式上传管线 [@ransxd]
+- 💡 投稿支持新版分区 ID `tid_v2` [@ransxd]
+- 🔧 上传标题保留文件名中的特殊字符 [@yjywybb]
+- 🔧 测速时单条线路失败不再中断整体测速 [@ransxd]
+- 🔧 稿件分页查询复用登录客户端，不再每页新建连接 [@ransxd]
+- 🔧 使用 `write_all` 保证 FLV 标签与 JSON 输出完整写入 [@ransxd]
+- 🔧 注册提交前执行表单校验，确认密码规则不再被绕过 [@ransxd]
+- 🔧 B站弹幕数据包解析不再对畸形输入 panic，解码异常不再终结录制 [@ransxd]
+- 🔧 虎牙弹幕从用户结构体读取昵称和正文 [@ransxd]
+- 🔧 下载器命令行日志脱敏 Cookie 与 OAuth 信息 [@ransxd]
+- 🔧 定时发布把延迟秒数换成 Unix 时间戳 [@ransxd]
+- 🔧 文件名含点时不再截断扩展名或死循环 [@ransxd]
+- 🔧 保存配置覆写时保留投稿模板关联 [@ransxd]
+- 🔧 数据库迁移将空 `tags` 写成 `[]` 而不是 `NULL` [@ransxd]
+- 🔧 斗鱼兼容空的 PlayResponse 数据，并使用服务端时间 [@ransxd]
+- 🔧 移除斗鱼错误的 `video_loop` 检查，避免跳过直播流 [@lplalbert]
+- 🔧 Docker 中 FFmpeg 固定到 BtbN 月末 autobuild [@ransxd]
+- 🔧 streamlink 为 FLV 添加 httpstream 前缀与错误退避 [@ransxd]
+- 🔧 修复发布与 CI 工作流的权限、死代码及供应链问题 [@ransxd]
+- 🔧 依据代码实现重写 README，迁移弃用域名并修正失效信息 [@ransxd]
+
+**新贡献者：** @yjywybb, @lplalbert
+
+[完整对比 v1.2.4 → v1.2.5](https://github.com/biliup/biliup/compare/v1.2.4...v1.2.5)
+
+---
+
+## v1.2.4
+
+> 发布时间：2026-08-23
+
+- 🔧 stream-gears 登录函数释放 GIL 后再执行阻塞网络请求 [@ransxd]
+- 🔧 会话 Cookie 不再强制 `Secure`，修复 HTTP 远程访问登录后无法保持登录态 [@ransxd]
+
+[完整对比 v1.2.3 → v1.2.4](https://github.com/biliup/biliup/compare/v1.2.3...v1.2.4)
+
+---
+
+## v1.2.3
+
+> 发布时间：2026-08-22
+
+- 💡 完善账号管理、稿件查询与安全边界 [@MostlyHarmlessxyz]
+
+  > ⚠️ 该改动将 `server --bind` 的默认值由 `0.0.0.0` 改为 `127.0.0.1`（默认只监听本机）。如需从其他设备访问，请改用 `biliup server --bind 0.0.0.0 --auth`。
+
+- 🔧 HLS 拉取视频时默认选取最高画质的流 [@Micuks]
+- 🔧 更新上传线路列表 [@dreammu]
+- 🔧 限速锁错误信息中包含锁文件路径 [@vector0902]
+- 🔧 纯视频流分段时避免序列头 `expect` 导致的 panic [@ransxd]
+- 🔧 按 `target_duration` 轮询播放列表，处理 `ENDLIST` 并传播解析错误 [@ransxd]
+- 🔧 修复抖音下播后回放房间仍被误判为直播中 [@cls3389]
+- 🔧 `Data` 声明 `desc_v2` 字段，避免提交时被静默丢弃 [@ransxd]
+- 🔧 修复 README 中失效的 star history 图表 [@PingouinFerreux]
+
+**新贡献者：** @PingouinFerreux, @vector0902, @MostlyHarmlessxyz, @cls3389
+
+[完整对比 v1.2.2 → v1.2.3](https://github.com/biliup/biliup/compare/v1.2.2...v1.2.3)
+
+---
+
+## v1.2.2
+
+> 发布时间：2026-07-10
+
+- 🔧 转载来源留空时回退到直播间地址 [@dplei]
+- 💡 斗鱼强制 hs 流时构造 huos 链接 [@xxxxuanran]
+- 🔧 让 `submit_api=web` 走 Web 投稿接口 [@Micuks]
+- 💡 为 Python 3.14t 构建 free-threaded wheel [@ForgQi]
+- 🔧 更新 `CHANGELOG.md` [@Aluneu]
+
+**新贡献者：** @dplei, @Aluneu
+
+[完整对比 v1.2.1 → v1.2.2](https://github.com/biliup/biliup/compare/v1.2.1...v1.2.2)
+
+---
+
 ## v1.2.1
 
 > 发布时间：2026-06-05

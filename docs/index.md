@@ -7,7 +7,7 @@ titleTemplate: 高性能直播录制与视频投稿工具
 hero:
   name: biliup
   text: 高性能直播录制与视频投稿工具
-  tagline: CLI + WebUI 交互，支持 20+ 直播平台自动录制与 B站投稿
+  tagline: CLI + WebUI 交互，支持 19 个直播平台自动录制与 B站投稿
   actions:
     - theme: brand
       text: 开始安装
@@ -22,7 +22,7 @@ hero:
 features:
   - icon: 🎬
     title: 直播录制
-    details: 自动检测开播并录制，支持 20+ 主流直播平台。斗鱼、虎牙、B站、抖音、Twitch、YouTube 全覆盖。
+    details: 自动检测开播并录制，内置 19 个直播平台解析。斗鱼、虎牙、B站、抖音、Twitch、YouTube 全覆盖，未匹配的地址交给通用适配器处理。
   - icon: ⚡
     title: 高性能架构
     details: 核心基于 Rust 构建，异步 IO 多线程，CPU 和内存占用低。具体并发数取决于直播码率与硬件，请以实际压测为准。

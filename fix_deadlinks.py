@@ -1,6 +1,6 @@
 import os, re
 
-REPO = r"C:\Users\77281\Desktop\文档站\biliup-docs"
+REPO = os.path.dirname(os.path.abspath(__file__))
 GUIDE = os.path.join(REPO, "docs", "guide")
 
 OLD2NEW = {

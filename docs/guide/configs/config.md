@@ -46,15 +46,16 @@ biliup server [OPTIONS]
 
 | 参数 | 说明 | 默认值 |
 |------|------|--------|
-| `-b, --bind` | 绑定地址 | `0.0.0.0` |
+| `-b, --bind` | 绑定地址。`127.0.0.1` 仅本机可访问，`0.0.0.0` 允许局域网 / 公网访问 | `127.0.0.1` |
 | `-p, --port` | 端口号 | `19159` |
 | `--auth` | 开启 WebUI 登录认证（布尔开关，不接收参数） | 关闭 |
+| `--secure-session-cookie` | 为会话 Cookie 附加 `Secure` 属性。**仅当通过 HTTPS 反向代理访问时开启**，直接 HTTP 远程访问时开启会导致浏览器丢弃登录态 | 关闭 |
 | `-c, --config` | 使用 biliup 1.0.7 风格配置文件启动录制 | — |
 | `-h, --help` | 打印帮助 | — |
 
 示例：
 ```bash
-# 基础启动
+# 基础启动（仅本机可访问 http://127.0.0.1:19159）
 biliup server
 
 # 开启认证（首次启动需在 WebUI 注册账号）
@@ -63,12 +64,32 @@ biliup server --auth
 # 指定端口
 biliup server --port 8080 --auth
 
+# 允许其他设备访问（必须同时加 --auth，否则拒绝启动）
+biliup server --bind 0.0.0.0 --auth
+
+# HTTPS 反向代理后
+biliup server --bind 0.0.0.0 --auth --secure-session-cookie
+
 # 使用旧版 YAML 配置文件启动
 biliup server --config /path/to/config.yaml
 ```
 
+::: warning 默认只监听本机
+自 v1.2.3（[#1660](https://github.com/biliup/biliup/pull/1660)）起，`--bind` 的默认值由 `0.0.0.0` 改为 `127.0.0.1`。直接 `biliup server` 启动后，**局域网或公网设备无法访问**，这是有意为之的安全默认。
+
+如果需要从其他设备访问，必须显式指定 `--bind 0.0.0.0` 并同时开启 `--auth`：
+
+```bash
+biliup server --bind 0.0.0.0 --auth
+```
+
+若绑定了非本机地址却**没有** `--auth`，服务会直接拒绝启动并提示 `refusing to expose the unauthenticated Web API`。
+
+> 🐳 **Docker 用户注意**：镜像默认 `CMD` 已带 `--bind 0.0.0.0 --auth`，不写参数时正常。但一旦你显式写了 `command:` 或镜像名后的参数（覆盖默认 `CMD`），**必须自己补上 `--bind 0.0.0.0`**，否则容器内只监听回环地址，端口映射转不进去，WebUI 打不开。详见 [Docker 部署](/guide/getting-started/安装部署/docker.html)。
+:::
+
 ::: tip
-`--auth` 是布尔开关，不接收 `user:pass` 参数。开启后首次访问 WebUI 会进入注册页面，需创建管理账号。详见 [WebUI 认证](/guide/api/rest-api.html#认证说明)。
+`--auth` 是布尔开关，不接收 `user:pass` 参数。开启后首次访问 WebUI 会进入注册页面，需创建管理账号（用户名固定为 `biliup`）。详见 [WebUI 认证](/guide/api/rest-api.html#认证说明)。
 :::
 
 
@@ -118,19 +139,32 @@ biliup upload [OPTIONS] [VIDEO_PATH]...
 | `--dynamic` | `String` | 空间动态内容 | — |
 | `--tag` | `String` | 视频标签（逗号分隔） | — |
 | `--dtime` | `u32` | 延时发布时间戳（距提交需 >4h） | — |
+| `--tid-v2` | `u32` | 新版分区 ID（不设置时不提交该字段） | — |
 | `--interactive` | `u8` | 互动视频：`0`=关闭 `1`=开启 | `0` |
-| `--missionid` | `u32` | 活动 ID | — |
-| `--dolby` | `u8` | 杜比音效：`0`=关闭 `1`=开启 | — |
+| `--mission-id` | `u32` | 活动 ID | — |
+| `--dolby` | `u8` | 杜比音效：`0`=关闭 `1`=开启 | `0` |
+| `--hires` | `u8` | Hi-Res 无损音质：`0`=关闭 `1`=开启 | `0` |
+| `--no-reprint` | `u8` | 转载权限：`0`=允许转载 `1`=禁止转载 | `0` |
+| `--charging-pay` | `u8` | 开启充电：`0`=关闭 `1`=开启 | `0` |
+| `--is-only-self` | `u8` | 仅自己可见 | — |
+| `--up-selection-reply` | 开关 | 开启精选评论（仅 `--submit app` 可用） | 关闭 |
+| `--up-close-reply` | 开关 | 关闭评论（仅 `--submit app` 可用） | 关闭 |
+| `--up-close-danmu` | 开关 | 关闭弹幕（仅 `--submit app` 可用） | 关闭 |
+| `--extra-fields` | JSON 字符串 | 自定义提交参数，按 JSON 追加到提交请求 | — |
 
 **`--line` 可选值：**
 
 | 值 | 说明 |
 |---|---|
-| `bldsa` / `cnbldsa` | BLDSA 线路（国内/海外） |
+| `bldsa` / `cnbldsa` | BLDSA 线路（常规 / 国内） |
 | `andsa` / `atdsa` | ANDSA 线路（海外） |
-| `bda2` / `cnbd` / `anbd` / `atbd` | 百度线路（国内/海外） |
-| `tx` / `cntx` / `antx` / `attx` | 腾讯云线路（国内/海外） |
-| `bda` / `txa` / `alia` | 百度 / 腾讯 / 阿里云线路 |
+| `bda2` / `cnbd` / `anbd` / `atbd` | 百度线路（常规 / 国内 / 海外） |
+| `tx` / `cntx` / `antx` / `attx` | 腾讯云线路（常规 / 国内 / 海外） |
+| `txa` | 腾讯云备用线路 |
+| `alia` | 阿里云线路 |
+| `estx` / `akbd` | 其他线路 |
+
+> `--line` 只接受上表中的具体线路名，不接受 `AUTO`；`AUTO`（自动选择）是全局配置 `lines` 的取值，详见[全局设置](/guide/getting-started/配置/global-config.html)。若某条线路上传失败，换一条重试即可。
 
 示例：
 ```bash
@@ -243,7 +277,7 @@ biliup list --pubed --max-pages 5
 
 ---
 
-## comments — 下载视频评论
+## comments — 查看视频评论
 
 ```bash
 biliup comments [OPTIONS] <VID>

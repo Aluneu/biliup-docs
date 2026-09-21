@@ -1,6 +1,6 @@
 import mdItCustomAttrs from "markdown-it-custom-attrs";
 import { defineConfig } from "vitepress";
-import { set_sidebar } from "../guide/set_sidebar.mjs";
+import { set_sidebar } from "../guide/set_sidebar.mts";
 
 export default defineConfig({
   base: "/",
@@ -14,6 +14,8 @@ export default defineConfig({
   ],
   markdown: {
     mermaid: true,
+    // Caddyfile 不在 shiki 预置语言内，映射到 nginx 以获得可用的指令高亮
+    languageAlias: { caddyfile: "nginx" },
     config: (md) => md.use(mdItCustomAttrs, "image", { "data-fancybox": "gallery" }),
   },
   lastUpdated: true,
