@@ -36,7 +36,7 @@ Options:
 
 ---
 
-## server — 启动录制服务
+## server - 启动录制服务
 
 这是最常用的命令，用于启动 WebUI 和录制/上传服务。
 
@@ -95,7 +95,7 @@ biliup server --bind 0.0.0.0 --auth
 
 ---
 
-## login — 登录B站
+## login - 登录B站
 
 ```bash
 biliup login
@@ -107,7 +107,7 @@ biliup login
 
 ---
 
-## renew — 刷新登录信息
+## renew - 刷新登录信息
 
 ```bash
 biliup renew
@@ -117,7 +117,7 @@ biliup renew
 
 ---
 
-## upload — 上传视频
+## upload - 上传视频
 
 ```bash
 biliup upload [OPTIONS] [VIDEO_PATH]...
@@ -183,7 +183,7 @@ biliup upload -c config.yaml
 
 ---
 
-## append — 追加视频到已有稿件
+## append - 追加视频到已有稿件
 
 ```bash
 biliup append [OPTIONS] --vid <VID> <VIDEO_PATH>...
@@ -209,7 +209,7 @@ biliup append --vid BV1xx411x7xx part1.mp4 part2.mp4
 
 ---
 
-## show — 查看视频详情
+## show - 查看视频详情
 
 ```bash
 biliup show <VID>
@@ -225,7 +225,7 @@ biliup show av12345678
 
 ---
 
-## download — 下载视频/直播
+## download - 下载视频/直播
 
 ```bash
 biliup download [OPTIONS] <URL>
@@ -252,7 +252,7 @@ biliup download --split-size 4G https://live.bilibili.com/123456
 
 ---
 
-## list — 列出已上传视频
+## list - 列出已上传视频
 
 ```bash
 biliup list [OPTIONS]
@@ -277,7 +277,7 @@ biliup list --pubed --max-pages 5
 
 ---
 
-## comments — 查看视频评论
+## comments - 查看视频评论
 
 ```bash
 biliup comments [OPTIONS] <VID>
@@ -301,7 +301,7 @@ biliup comments --sort 2 --ps 50 BV1xx411x7xx
 
 ---
 
-## reply — 回复视频评论
+## reply - 回复视频评论
 
 ```bash
 biliup reply [OPTIONS] <VID> <RPID> <MESSAGE>
@@ -327,7 +327,7 @@ biliup reply --execute BV1xx411x7xx 123456789 "感谢评论"
 
 ---
 
-## dump-flv — 输出 FLV 元数据
+## dump-flv - 输出 FLV 元数据
 
 ```bash
 biliup dump-flv <FILE_NAME>

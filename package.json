@@ -4,7 +4,7 @@
   "description": "biliup 文档站（VitePress）",
   "author": "biliup contributors",
   "license": "MIT",
-  "homepage": "https://aluneu.github.io/biliup-docs/",
+  "homepage": "https://doc.biliup.rs/",
   "repository": {
     "type": "git",
     "url": "https://github.com/aluneu/biliup-docs.git"
@@ -15,7 +15,8 @@
   "scripts": {
     "docs:dev": "vitepress dev docs --host",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:preview": "vitepress preview docs",
+    "docs:check-anchors": "node check_anchors.mjs"
   },
   "devDependencies": {
     "@types/node": "^20.11.29",

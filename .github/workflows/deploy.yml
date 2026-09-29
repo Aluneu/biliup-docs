@@ -35,6 +35,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Check internal anchors
+        run: npm run docs:check-anchors
+
       - name: Build
         run: npm run docs:build
 
