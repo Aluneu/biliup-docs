@@ -76,15 +76,12 @@ biliup server --auth
 | GET | `/v1/sessions/{id}/thumb` | 会话缩略图 |
 | GET | `/v1/sessions/{id}/danmaku-density` | 弹幕密度曲线（10 秒一桶，含基线与高峰） |
 
-### 标记与候选
+### 标记
 
 | 方法 | 路径 | 说明 |
 |---|---|---|
 | GET / POST | `/v1/sessions/{id}/markers` | 列出 / 新建标记（看直播时打点） |
 | PATCH / DELETE | `/v1/sessions/{id}/markers/{mid}` | 更新 / 删除标记 |
-| GET | `/v1/sessions/{id}/suggestions` | 自动切片候选列表 |
-| POST | `/v1/sessions/{id}/suggestions/{sid}/accept` | 接受候选（生成切片草稿） |
-| POST | `/v1/sessions/{id}/suggestions/{sid}/dismiss` | 丢弃候选 |
 
 ### 切片与导出
 
@@ -107,15 +104,6 @@ biliup server --auth
 | POST | `/v1/publish-jobs/resume` | 恢复发布队列 |
 | POST | `/v1/publish-jobs/{jid}/retry` | 重试某条发布任务 |
 | DELETE | `/v1/publish-jobs/{jid}` | 移除某条发布任务 |
-
-### 自动切片（实验）
-
-| 方法 | 路径 | 说明 |
-|---|---|---|
-| POST | `/v1/auto-clip/test` | 模型接口连通性测试 |
-| GET | `/v1/auto-clip/status` | 自动切片状态 |
-| GET | `/v1/auto-clip/jobs` | 多场各自的最近任务（剪辑台一页一次请求） |
-| GET / POST / DELETE | `/v1/sessions/{id}/auto-clip` | GET 看任务与用量预估；POST 先预估、确认后入队；DELETE 取消 |
 
 ### 全局配置
 

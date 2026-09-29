@@ -5,3 +5,4 @@ docs/.vitepress/.temp/
 docs/.vitepress/*.timestamp-*.mjs
 *.log
 .DS_Store
+.build-check/

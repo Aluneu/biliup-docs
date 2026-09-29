@@ -8,7 +8,7 @@ biliup 采用 **Rust 后端 + Python 包 + Vite 前端** 的混合架构，各�
 
 ```mermaid
 graph TB
-    UI[Vite WebUI]
+    UI[WebUI Next.js]
     CLI[biliup-cli]
     CORE[biliup 核心库]
     DANMAKU[danmaku 弹幕库]
@@ -40,13 +40,13 @@ graph TB
 
 ## 各层说明
 
-### 前端层（Vite + React）
+### 前端层（Next.js + React）
 
 | 项目 | 说明 |
 |---|---|
-| 技术栈 | React + TypeScript + [Semi Design](https://semi.design/)（字节跳动开源组件库） |
-| 构建工具 | Vite |
-| 运行端口 | 开发端口 `1420` / 生产 `19159`（由 Rust 后端托管） |
+| 技术栈 | Next.js + React 19 + TypeScript + [Semi Design](https://semi.design/)（字节跳动开源组件库） |
+| 构建工具 | Next.js（`npm run build`，静态导出到 `out/`） |
+| 运行端口 | 开发端口 `3000` / 生产 `19159`（由 Rust 后端托管静态产物） |
 | 职责 | 提供 WebUI 管理界面，通过 REST API 与后端通信 |
 | 源码位置 | `app/` 目录（主项目） |
 
@@ -55,8 +55,10 @@ graph TB
 ```bash
 npm i
 npm run dev
-# 访问 http://localhost:1420
+# 访问 http://localhost:3000
 ```
+
+> ⚠️ `biliup-cli` 通过 `rust-embed` 内嵌前端产物目录 `out/`，因此在执行 `cargo build` / `cargo test` 之前**必须先跑一次 `npm run build`**，否则编译会因 `out/` 不存在而失败。
 
 ### Rust 后端（`crates/`）
 
@@ -87,13 +89,15 @@ Rust 后端的优势：
 | `ffmpeg`（内部分段） | FFmpeg 内部分段模式 |
 | `yt-dlp` | 使用 yt-dlp 作为后端 |
 
-### Python 包（`biliup/`）
+### Python 包（`crates/stream-gears/biliup/`）
+
+> v1.2.9 起 Python 包从仓库根目录的 `biliup/` 移到了 `crates/stream-gears/biliup/`，由该 crate 一并构建发布。
 
 | 模块 | 说明 |
 |---|---|
-| `biliup.__main__` | 最小入口，调用 `stream-gears` 启动主循环 |
-| `bili_webup` | B站投稿库，可被外部 Python 项目 import 使用 |
-| `bili_webup_sync` | 同步版投稿库 |
+| `biliup.__main__` | 最小入口，调用 `stream_gears.main_loop` 启动主循环 |
+| `biliup.plugins.bili_webup` | B站投稿库，可被外部 Python 项目 import 使用 |
+| `biliup.plugins.bili_webup_sync` | 同步版投稿库 |
 
 Python 包的存在意义：
 - 兼容旧版脚本和自动化流程
@@ -137,6 +141,15 @@ Python 包的存在意义：
 | `streamerinfo` | 录制记录 |
 | `filelist` | 录制文件列表 |
 | `configuration` | 全局配置和 Cookie 存储 |
+| `web_users` | WebUI 登录账号与角色（v1.2.8 新增） |
+| `segments` | 录制分段与关键帧索引（v1.2.9 新增） |
+| `segment_pins` | 分段引用固定，保护被切片工作台引用的分段不被清理（v1.2.9 新增） |
+| `markers` | 看直播时打的标记（v1.2.9 新增） |
+| `clips` | 切片与导出记录（v1.2.9 新增） |
+| `auto_clip_jobs` | 自动切片任务（v1.2.10 新增，该功能尚未正式发布） |
+| `clip_suggestions` | 自动切片候选（v1.2.10 新增，同上） |
+
+> 结构以 `crates/biliup-cli/migrations/` 下的迁移文件为准，当前共 14 个迁移。
 
 ---
 
@@ -185,9 +198,9 @@ biliup 提供基于 [Tauri](https://tauri.app/) 的桌面应用版本：
 
 | 项目 | 说明 |
 |---|---|
-| 技术栈 | Tauri (Rust) + Vite (前端) |
-| 后端机制 | 通过 sidecar 运行 `biliup.exe`，使用 GBK 编码解码输出 |
-| 进程管理 | 退出时 `taskkill /F /T` 强制杀死进程树 |
+| 技术栈 | Tauri (Rust) + Vue 3 + Element Plus |
+| 后端机制 | **进程内运行 `biliup server`**（v1.2.9 起，不再使用 PyInstaller sidecar） |
+| 内置依赖 | 安装包自带 FFmpeg，外部工具调用不再弹出控制台窗口 |
 | 前端端口 | `1420` |
 | 源码位置 | [biliup-app-new](https://github.com/biliup/biliup-app-new) 独立仓库 |
 
@@ -209,10 +222,12 @@ biliup 提供基于 [Tauri](https://tauri.app/) 的桌面应用版本：
 | 组件 | 最低版本 | 推荐版本 |
 |---|---|---|
 | Rust（编译 CLI） | 1.75 | stable |
-| Node.js（前端开发） | 18 | 20 LTS |
-| Python（Python 包） | 3.9 | 3.12 |
+| Node.js（前端开发） | 20.9 | 22 LTS |
+| Python（Python 包 / 通过 PyPI 安装时编译） | 3.9 | 3.12 |
 | npm | 9 | 10 |
 | maturin（Python/Rust 桥接） | 1.0 | latest |
+
+> Node.js 20.9 是 Next.js 16 的最低要求；若只使用 npm 分发的 CLI（`@biliup/cli`），Node.js 18+ 即可。
 
 ---
 
@@ -220,21 +235,22 @@ biliup 提供基于 [Tauri](https://tauri.app/) 的桌面应用版本：
 
 ```
 biliup/
-├── crates/              # Rust 核心库
+├── crates/              # Rust 工作区成员
 │   ├── biliup/          # 核心：直播解析、下载、上传
 │   ├── biliup-cli/      # 命令行与 Web API
 │   ├── danmaku/         # 弹幕客户端
-│   └── stream-gears/    # PyO3 Python 绑定
-├── app/                 # Vite 前端（WebUI）
-├── biliup/              # Python 包
-├── docs/                # 文档源文件
+│   └── stream-gears/    # PyO3 绑定 + Python 包（含 biliup/ 子目录）
+├── app/                 # Next.js 前端（WebUI）
+├── npm/                 # npm 分发的包装包（@biliup/cli 等）
 ├── public/              # 前端静态资源
+├── tauri-app/           # 桌面端外壳（实验性）
+├── docs/                # 文档源文件
 ├── Cargo.toml           # Rust 工作区配置
-├── package.json         # Node.js 依赖
-└── pyproject.toml       # Python 包配置
+├── package.json         # 前端依赖与构建脚本
+└── tsconfig.json
 ```
 
-> 📦 WebUI 与桌面端（biliup-app）为[独立仓库](https://github.com/biliup/biliup-app-new)维护，不在主仓库内。
+> 📦 WebUI 源码在主仓库的 `app/`；正式发布的桌面客户端（biliup-app）在[独立仓库](https://github.com/biliup/biliup-app-new)维护，主仓库里的 `tauri-app/` 是实验性外壳。
 
 ---
 

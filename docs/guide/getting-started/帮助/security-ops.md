@@ -75,10 +75,14 @@ biliup 涉及三类身份，请勿混淆：
 
 | 项目 | 状态 | 说明 |
 |---|---|---|
-| 内置 metrics / 健康端点 | ❓ 待确认 | 未见结构化 metrics；可依赖容器健康检查与 WebUI 日志 |
-| 结构化日志 / 轮转 | ⚠️ 部分 | Docker 进阶页有日志轮转建议；级别可在全局配置调整 |
-| 告警阈值 | ❓ 待确认 | 磁盘将满、Cookie 失效、上传失败等建议结合外部监控 |
+| 专用健康检查端点 | ❌ 无 | 没有 `/health`、`/readyz` 这类端点。存活探测可指向 `/v1/status` 或 `/v1/system-stats` |
+| 结构化 metrics | ❌ 无 | 没有 Prometheus / OpenMetrics 导出。运行数据只能通过 `/v1/system-stats`（CPU / 内存 / 磁盘 / 网速）读取 |
+| 审计日志 | ❌ 无 | 不记录管理员操作与配置变更。需要留痕请在反向代理层记录访问日志 |
+| 结构化日志 / 轮转 | ⚠️ 部分 | 应用输出普通文本日志，级别可在全局配置调整；轮转需 Docker 日志驱动或 logrotate，见 [Docker 进阶部署](/guide/getting-started/安装部署/docker-advanced.html) |
+| 告警阈值 | ❌ 无内置 | 磁盘将满、Cookie 失效、上传失败等均无内置告警，需结合外部监控轮询接口或日志 |
 | 升级 / 回滚 | ✅ 可操作 | 见[生产部署基线](/guide/getting-started/安装部署/production-base.html)第 5 节 |
+
+> biliup 是自托管工具，本身不提供监控与告警能力。上面几项"无"是设计取舍而非缺陷——生产环境请把这部分接到你自己的监控体系（可用 `/v1/system-stats` 做数据源）。
 
 ## 8. 支持与责任边界
 
