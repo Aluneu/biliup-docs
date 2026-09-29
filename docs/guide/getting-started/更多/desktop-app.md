@@ -40,36 +40,51 @@ biliup-app 是**投稿与稿件管理客户端**（[独立仓库](https://github
 
 ## 安装（预编译包）
 
-安装包随主仓库一起发布，前往 [biliup Releases](https://github.com/biliup/biliup/releases/latest) 下载。
+桌面端有两个发布渠道，**包名不一样**，注意区分：
+
+| 渠道 | 版本号体系 | 平台覆盖 | 包名 |
+|---|---|---|---|
+| [主项目 Releases](https://github.com/biliup/biliup/releases/latest) | `0.1.x` | 仅 Windows | `biliup_0.1.0_x64-setup.exe`、`biliup_0.1.0_x64_en-US.msi` |
+| [桌面端仓库 Releases](https://github.com/biliup/biliup-app-new/releases) | `1.2.x`（`app-v*` 标签） | Windows / macOS / Linux | `biliup-app_<版本>_<平台>` |
+
+两端版本号互不相同，也都不跟随 CLI 版本号，下载时以 Releases 页面实际列出的文件名为准。
 
 ### Windows
 
-1. 下载 `bbup-app_<版本>_x64-setup.exe`（或 `bbup-app_<版本>_x64_en-US.msi`）
-2. 运行安装程序，按提示完成安装
-3. 从开始菜单或桌面快捷方式启动
+**方式 A：主项目 Releases（版本较新，步骤最少）**
+
+1. 前往 [biliup Releases](https://github.com/biliup/biliup/releases/latest)
+2. 下载 `biliup_0.1.0_x64-setup.exe`（或 `biliup_0.1.0_x64_en-US.msi`）
+3. 运行安装程序，按提示完成安装
+
+**方式 B：桌面端仓库 Releases**
+
+1. 前往 [biliup-app-new Releases](https://github.com/biliup/biliup-app-new/releases)
+2. 下载 `biliup-app_<版本>_x64-setup.exe`（中文界面选 `_x64_zh-CN.msi`）
+3. 运行安装程序完成安装
 
 ### macOS
 
-1. 下载对应架构的 `.dmg`
-2. 打开 `.dmg`，将应用拖入"应用程序"文件夹
-3. 首次启动需在"系统设置 → 隐私与安全"中允许运行
+1. 前往 [biliup-app-new Releases](https://github.com/biliup/biliup-app-new/releases)
+2. 下载 `biliup-app_<版本>_x64.dmg`
+3. 打开 `.dmg`，将应用拖入"应用程序"文件夹
+4. 首次启动需在"系统设置 → 隐私与安全"中允许运行
 
 ### Linux
 
-1. 下载对应架构的 `.deb` 或 `.AppImage`
-2. 安装：
+1. 前往 [biliup-app-new Releases](https://github.com/biliup/biliup-app-new/releases)
+2. 按发行版下载：
    ```bash
-   # Debian/Ubuntu
-   sudo dpkg -i bbup-app_<版本>_amd64.deb
+   # Debian / Ubuntu
+   sudo dpkg -i biliup-app_<版本>_amd64.deb
 
-   # 或运行 AppImage
-   chmod +x bbup-app_<版本>.AppImage
-   ./bbup-app_<版本>.AppImage
+   # Fedora / openSUSE（RPM）
+   sudo rpm -i biliup-app-<版本>-1.x86_64.rpm
+
+   # 或直接运行 AppImage
+   chmod +x biliup-app_<版本>_amd64.AppImage
+   ./biliup-app_<版本>_amd64.AppImage
    ```
-
-::: tip 注意包名
-发布包名前缀是 **`bbup-app`**，不是 `biliup-app`。桌面端版本号与 CLI 版本号相互独立（例如 CLI 为 v1.2.6 时，桌面端可能是 0.1.x），下载时以 Releases 页面实际列出的为准。
-:::
 
 ---
 

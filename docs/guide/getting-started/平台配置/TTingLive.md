@@ -5,7 +5,7 @@
 
 
 ::: tip
-* 如遇无法录制或花屏，可尝试将下载器切换为 `streamlink` 或 `ffmpeg`，详见[下载器的选择](../配置/global-config.html#下载插件-downloader)。
+* 如遇无法录制或花屏，可尝试将下载器切换为 `streamlink` 或 `ffmpeg`，详见[下载器的选择](../配置/global-config.html#下载器)。
 * 理论上 `streamlink` 与 `yt-dlp` 支持的平台均可下载，详见[其他兼容平台](../上手/supported-platforms.html#其他兼容平台)。
 :::
 

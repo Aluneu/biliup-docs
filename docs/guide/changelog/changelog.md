@@ -16,6 +16,97 @@
 
 ---
 
+## v1.2.11
+
+> 发布时间：2026-09-28
+
+- 💡 **通过 npm 分发预编译二进制**：`npx @biliup/cli` / `npm i -g @biliup/cli`，按 `os` / `cpu` / `libc` 自动选择平台子包 [@ransxd]
+- 💡 新增 Android (aarch64) 原生二进制，Termux 无需再本机编译
+- ⚠️ **移除 wheel 分发**：PyPI 改为只发布源码包，`pip install biliup` 需要本机 Rust 工具链现场编译 [@Heporis]
+- 💡 主备（fleet）模式：主备配对与按会话的上传仲裁 [@ransxd]
+- 💡 主备模式支持双向同步设置与 Cookie [@ransxd]
+- 💡 可在 Web UI 中配置并启动主备节点 [@ransxd]
+- 🔧 `--auth` 下整包 JSON 响应恢复 `Content-Length`，不再走 chunked [@ransxd]
+- 🔧 关键帧索引移出录制目录，并批量写入 [@ransxd]
+- 🔧 主备切换后正确上传主节点已录制的后半部分 [@ransxd]
+
+> ⚠️ 从本版本起推荐使用 npm 安装，详见[安装部署](/guide/getting-started/安装部署/Linux.html)。
+
+[完整对比 v1.2.10 → v1.2.11](https://github.com/biliup/biliup/compare/v1.2.10...v1.2.11)
+
+---
+
+## v1.2.10
+
+> 发布时间：2026-09-27
+
+- 💡 **自动剪辑（auto-clip）**：模型 API 配置与连通性测试、任务队列、静音跳过与转写 [@ransxd]
+- 💡 自动剪辑：弹幕密度分析、缩略图与剪辑建议 [@ransxd]
+- 💡 回放页展示自动剪辑建议 [@ransxd]
+- 💡 主备模式支持分层配置 [@ransxd]
+- 💡 主备模式新增节点标签、告警与控制台汇总 [@ransxd]
+- 💡 主备控制器可作为本地节点录制直播间 [@ransxd]
+- 🔧 自动剪辑的成本估算缓存、批量任务状态与自动运行开关 [@ransxd]
+- 🔧 桌面端 `Cargo.lock` 与工作区同步，并在 CI 中校验 [@ransxd]
+
+[完整对比 v1.2.9 → v1.2.10](https://github.com/biliup/biliup/compare/v1.2.9...v1.2.10)
+
+---
+
+## v1.2.9
+
+> 发布时间：2026-09-26
+
+本系列改动最多的一个版本，主要围绕录制管线重构与新功能落地。
+
+- ⚠️ **默认下载器改为 `mesio`**（原默认 `stream-gears` 会在收尾时丢流尾） [@ransxd]
+- 💡 录制会话（session）、分段表与关键帧索引 [@ransxd]
+- 💡 API 支持会话列表与可拖动进度的 DVR 媒体流 [@ransxd]
+- 💡 存储：引用中的分段固定保留 + 过期清理 [@ransxd]
+- 💡 合集（season）管理 API 与 `biliup season` 子命令 [@ransxd]
+- 💡 剪辑：预览打点、剪辑表与导出 API、发布队列 [@ransxd]
+- 💡 主备（fleet）模式：控制器、节点加入与 iroh 心跳 [@ransxd]
+- 💡 控制台展示系统状态，并支持运行时调整线程池大小 [@ransxd]
+- 💡 桌面端进程内运行 `biliup server`，不再依赖 PyInstaller sidecar [@ransxd]
+- 💡 桌面端内置 FFmpeg，外部工具调用不再弹控制台窗口 [@ransxd]
+- 💡 斗鱼 App API 支持 [@xxxxuanran]
+- 🔧 弹幕：mesio 滚动文件时保留每段的弹幕 XML [@ransxd]
+- 🔧 投稿模板的合作者信息转为 `desc_v2` 中的 @ 提及 [@ransxd]
+- 🔧 预览：通过页面租约结束幽灵中转预览，并加淘汰与寿命上限兜底 [@ransxd]
+- 🔧 清理遗留的 Python 打包相关代码 [@ransxd]
+
+[完整对比 v1.2.8 → v1.2.9](https://github.com/biliup/biliup/compare/v1.2.8...v1.2.9)
+
+---
+
+## v1.2.8
+
+> 发布时间：2026-09-23
+
+- 💡 **用户管理与分级权限**：超级管理员 / 操作员 / 只读观察者 [@ransxd]
+- 💡 直播预览：录制中房间实时码率折线图 [@ransxd]
+- 🔧 直播预览中转模式在有 RTT 的链路上频繁缓冲：旁路移到解析点、掉队原地续播、缓冲分低延迟 2s / 流畅 5s 两档 [@ransxd]
+- 🔧 `live-url` 同房间 5 秒去抖（失败重取带 `fresh=1`）；斗鱼网宿直链追加 `expire=0`，不再每 5 分钟断流 [@ransxd]
+- 🔧 斗鱼：ffmpeg / mesio / streamlink / 边录边传同样使用 `expire=0`，并加 HEAD 探测与 403 退回 [@ransxd]
+- 🔧 Twitch 直连原因改为实测结论（Origin 白名单）；弹幕 SSE 测试隔离 [@ransxd]
+
+[完整对比 v1.2.7 → v1.2.8](https://github.com/biliup/biliup/compare/v1.2.7...v1.2.8)
+
+---
+
+## v1.2.7
+
+> 发布时间：2026-09-22
+
+- 💡 直播预览（阶段一 / 二）：录制中房间显示封面、头像与实时码率；内置播放器复用录制流 [@ransxd]
+- 🔧 修复新 UI 侧栏被顶出与平台设置页导航重复 [@ransxd]
+- 🔧 升级前端三方依赖至最新稳定版并适配 [@ransxd]
+- 🔧 修复 React Compiler lint 命中并恢复规则为 error [@ransxd]
+
+[完整对比 v1.2.6 → v1.2.7](https://github.com/biliup/biliup/compare/v1.2.6...v1.2.7)
+
+---
+
 ## v1.2.6
 
 > 发布时间：2026-09-21

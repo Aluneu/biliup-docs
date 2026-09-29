@@ -1,5 +1,5 @@
 ---
-description: Docker 进阶部署基线：Compose、反向代理、健康检查、资源限制、备份与升级，基于 v1.2.6 核对，含安全清理注意事项。
+description: Docker 进阶部署基线：Compose、反向代理、健康检查、资源限制、备份与升级，基于 v1.2.11 核对，含安全清理注意事项。
 ---
 
 # Docker 进阶部署指南

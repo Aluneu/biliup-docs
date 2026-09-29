@@ -84,7 +84,7 @@ Cookie 文件放置路径：
 - Windows：`%APPDATA%\biliup\cookies.json`
 - Linux / macOS：`~/.config/biliup/cookies.json`
 
-格式支持 Netscape Cookie 文件或 JSON 数组，详见[登录方式详解 - Cookie 文件登录](/guide/getting-started/配置/login.html#方式五网页-cookie-文件登录)。
+格式支持 Netscape Cookie 文件或 JSON 数组，详见[登录方式详解 - Cookie 文件登录](/guide/getting-started/配置/login.html#方式五-网页-cookie-文件登录)。
 
 ### 下载器选择
 

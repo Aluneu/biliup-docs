@@ -1,5 +1,5 @@
 ---
-description: 在 Docker 中部署 biliup WebUI：正确的启动命令（容器内需 --bind 0.0.0.0）、端口映射、持久化卷与认证开启，基于 v1.2.6 核对。
+description: 在 Docker 中部署 biliup WebUI：正确的启动命令（容器内需 --bind 0.0.0.0）、端口映射、持久化卷与认证开启，基于 v1.2.11 核对。
 ---
 
 # Docker 部署

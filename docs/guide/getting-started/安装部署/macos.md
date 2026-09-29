@@ -2,47 +2,60 @@
 
 ::: info
 - 测试环境为 macOS 12 (Monterey) 及以上，Apple Silicon（M 系列）与 Intel 均支持。
-- 推荐 Python 版本 3.11 及以上。
-- macOS 与 Linux 共用同一套 `uv` 安装流程，区别仅在 ffmpeg 的安装方式（Homebrew）。
+- **npm 与预编译二进制两种方式都不需要 Python 环境**。
 :::
-
 
 ---
 
-## 方法一：使用 uv 安装（推荐）
+## 安装方式怎么选
 
-`uv` 是 Python 生态的现代化包管理工具，也是 biliup 官方推荐的安装方式。
+| 方式 | 需要预装 | 说明 |
+|---|---|---|
+| **npm**（推荐） | Node.js 18+ | 自动匹配平台预编译二进制，装完即用 |
+| 预编译二进制 | 无 | 手动下载解压 |
+| uv / pip | Python + Rust 工具链 | PyPI 只发源码包，安装时需现场编译 |
+
+> 三种方式装出来的都是同一个 Rust CLI，`biliup --help` 输出的参数完全一致。
+
+---
+
+## 方法一：使用 npm 安装（推荐）
+
+官方通过 npm 分发**预编译二进制**，安装时会根据你的系统与 CPU 自动选择对应的子包（Intel / Apple Silicon），不需要 Python，也不需要本机编译。
 
 ### 1. 安装 Homebrew 与 ffmpeg
-
-biliup 录制/处理视频依赖 `ffmpeg`，macOS 需通过 Homebrew 安装：
 
 ```bash
 # 安装 Homebrew（如已安装可跳过）
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# 安装 ffmpeg（录制与转码必需）
+# 安装 ffmpeg（改用 ffmpeg 下载器或配置后处理时才需要，见文末「外部依赖说明」）
 brew install ffmpeg
 ```
 
 > 💡 Apple Silicon 的 Homebrew 默认装在 `/opt/homebrew`，Intel Mac 装在 `/usr/local`。终端能直接调用 `ffmpeg` 即安装成功。
 
-### 2. 安装 uv
+### 2. 安装 Node.js 18+
 
 ```bash
-# 官方安装脚本（推荐）
-curl -LsSf https://astral.sh/uv/install.sh | sh
+# 使用 Homebrew
+brew install node
 
-# 如使用 Homebrew
-brew install uv
+# 确认版本 >= 18
+node --version
 ```
-
-安装后重新打开终端，或执行 `source ~/.bashrc` / `source ~/.zshrc` 使 `uv` 生效。
 
 ### 3. 安装 biliup
 
 ```bash
-uv tool install biliup
+# 全局安装，之后直接用 biliup 命令
+npm i -g @biliup/cli
+```
+
+不想全局安装，也可以每次直接运行：
+
+```bash
+npx @biliup/cli server --auth
 ```
 
 ### 4. 验证安装
@@ -80,43 +93,16 @@ biliup server --auth
 ### 7. 更新与卸载
 
 ```bash
-# 更新
-uv tool install --reinstall biliup
+# 更新到最新版
+npm i -g @biliup/cli@latest
 
 # 卸载
-uv tool uninstall biliup
+npm uninstall -g @biliup/cli
 ```
 
 ---
 
-## 方法二：使用 pip 安装（备选）
-
-```bash
-# 确保已有 Python 3.11+
-python3 --version
-
-# 安装 biliup
-pip3 install biliup
-
-# 国内镜像加速（清华源）
-pip3 install biliup -i https://pypi.tuna.tsinghua.edu.cn/simple
-```
-
-验证与启动同方法一。
-
-更新与卸载：
-
-```bash
-pip3 install -U biliup                       # 更新
-pip3 install -U biliup -i https://pypi.tuna.tsinghua.edu.cn/simple  # 镜像更新
-pip3 uninstall biliup                        # 卸载
-```
-
----
-
-## 方法三：预编译二进制（无需 Python 环境）
-
-适用于不希望安装 Python / uv 的纯净环境。
+## 方法二：预编译二进制（无需 Node / Python）
 
 ### 1. 下载
 
@@ -130,7 +116,7 @@ pip3 uninstall biliup                        # 卸载
 ```bash
 # 示例：Apple Silicon
 cd ~/Downloads
-curl -L -O https://github.com/biliup/biliup/releases/download/v1.2.6/biliupR-v1.2.6-aarch64-macos.tar.xz
+curl -L -O https://github.com/biliup/biliup/releases/download/v1.2.11/biliupR-v1.2.11-aarch64-macos.tar.xz
 ```
 
 ### 2. 解压并安装
@@ -139,7 +125,7 @@ curl -L -O https://github.com/biliup/biliup/releases/download/v1.2.6/biliupR-v1.
 # 解压
 tar -xJf biliupR-*.tar.xz
 
-# 移动到 PATH 目录（需要 ffmpeg，请先 brew install ffmpeg）
+# 移动到 PATH 目录
 sudo mv biliup /usr/local/bin/
 
 # 验证
@@ -154,10 +140,77 @@ biliup server --auth
 
 > ⚠️ macOS 首次运行未签名二进制可能报「无法打开」，请在「系统设置 → 隐私与安全性」中点击「仍要打开」，或执行 `xattr -d com.apple.quarantine /usr/local/bin/biliup` 移除隔离标志。
 
+### 4. 更新
+
+重新下载新版本压缩包，覆盖 `/usr/local/bin/biliup` 即可。
+
+---
+
+## 方法三：使用 uv / pip 安装
+
+::: warning PyPI 只发布源码包
+PyPI 上的 `biliup` **只有源码包（sdist），没有预编译 wheel**。因此 `uv tool install biliup` 和 `pip install biliup` 都会在**本机现场编译**，需要提前装好：
+
+- Python 3.9+（推荐 3.11 及以上）
+- **Rust 工具链**（`brew install rust` 或 [rustup.rs](https://rustup.rs/)），编译耗时较长
+
+如果你只是想装好就能用，请优先选择 [方法一（npm）](#方法一-使用-npm-安装-推荐) 或 [方法二（预编译二进制）](#方法二-预编译二进制-无需-node-python)。
+:::
+
+### uv 方式
+
+```bash
+# 安装 uv
+brew install uv
+# 或：curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# 安装 Rust 工具链（编译必需）
+brew install rust
+
+# 安装 biliup
+uv tool install biliup
+```
+
+更新与卸载：
+
+```bash
+uv tool install --reinstall biliup   # 更新
+uv tool uninstall biliup             # 卸载
+```
+
+### pip 方式
+
+```bash
+# 确保已有 Python 3.11+
+python3 --version
+
+# 安装 biliup
+pip3 install biliup
+```
+
+更新与卸载：
+
+```bash
+pip3 install -U biliup               # 更新
+pip3 uninstall biliup                # 卸载
+```
+
+---
+
+## 外部依赖说明
+
+biliup 本体已包含下载器，多数场景**开箱即用**，以下依赖按需安装：
+
+| 依赖 | 什么时候需要 |
+|---|---|
+| — | 默认下载器 `stream-gears` 由 Rust 实现，**无需任何外部依赖** |
+| `ffmpeg` | 改用 `ffmpeg` 下载器，或配置了压制 / remux 等后处理 |
+| `yt-dlp` / `streamlink` | 录制 YouTube、niconico 等平台，或使用通用适配器处理非内置平台的地址 |
+
 ---
 
 ## 下一步
 
-- 运行你的第一个录制任务：参见 [快速入门](/guide/getting-started/上手/get-start.html)
-- 调整各平台参数：参见 [全局设置](../配置/global-config.html)
-- 登录 B 站账号：参见 [登录方式](../配置/login.html)
+- 运行你的第一个录制任务：参见[工作原理与快速引导](/guide/workflow-demo/)
+- 调整各平台参数：参见[全局设置](../配置/global-config.html)
+- 登录 B 站账号：参见[登录方式](../配置/login.html)

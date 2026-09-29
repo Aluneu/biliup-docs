@@ -7,14 +7,14 @@ description: biliup 上手指南：安装方式、首次录制投稿路径、常
 
 <img class="qs-logo" src="/icon.png" alt="biliup" width="72" height="72" />
 
-<span class="qs-badge">v1.2.6 · 开源免费</span>
+<span class="qs-badge">v1.2.11 · 开源免费</span>
 
 <h1>上手 biliup</h1>
 
 <p class="qs-sub">直播录制、自动投稿、WebUI 管理 —— 一个命令行工具，几分钟跑通第一条视频。</p>
 
 <div class="qs-cmd">
-<code id="qs-hero-cmd">docker run -d --name biliup --restart unless-stopped -p 19159:19159 -v "$PWD/data":/opt ghcr.io/biliup/caution:latest server --bind 0.0.0.0 --auth</code>
+<code id="qs-hero-cmd">npx @biliup/cli server --auth</code>
 <button class="qs-copy" onclick="navigator.clipboard.writeText(document.getElementById('qs-hero-cmd').textContent.trim());this.textContent='已复制';setTimeout(()=>this.textContent='复制',1500)">复制</button>
 </div>
 
@@ -26,7 +26,7 @@ description: biliup 上手指南：安装方式、首次录制投稿路径、常
 </div>
 
 <details class="qs-collapse">
-<summary>⚠️ 首次使用必读（3 条高频踩坑）</summary>
+<summary>⚠️ 首次使用必读（4 条高频踩坑）</summary>
 <ol>
 <li><b>默认只录不传，且可能删除录像</b>：新建主播默认上传器为 <code>Noop</code>（只录制不上传），且默认带 <code>rm</code> 后处理。直接用默认配置，录完的文件可能被删除，请先跟着<a href="/guide/workflow-demo/">首次录制并投稿</a>建好投稿模板再正式使用。</li>
 <li><b>默认只监听本机</b>：<code>biliup server</code> 的 <code>--bind</code> 默认是 <code>127.0.0.1</code>，其他设备访问不了。需要远程访问请用 <code>biliup server --bind 0.0.0.0 --auth</code>（不加 <code>--auth</code> 会拒绝启动）。</li>
@@ -37,19 +37,36 @@ description: biliup 上手指南：安装方式、首次录制投稿路径、常
 
 ## 安装方式 {#qs-install}
 
+::: tip 最省事的方式：npm
+有 Node.js 18+ 就行，一行命令直接跑（会自动拉取对应平台的预编译二进制，**不需要 Python，也不需要本机编译**）：
+
+```bash
+npx @biliup/cli server --auth
+```
+
+想长期使用就全局装：`npm i -g @biliup/cli`，之后直接用 `biliup server --auth`。详见 [Linux](../安装部署/Linux.html) / [macOS](../安装部署/macos.html) / [Windows](../安装部署/windows.html) 各页的「方法一」。
+:::
+
 <div class="qs-grid">
 
 <a href="../安装部署/Linux.html" class="qs-card">
   <span class="qs-icon">🐧</span>
   <b>Linux</b>
-  <small>uv 一键安装，可注册 systemd 服务</small>
+  <small>npm / 预编译二进制 / Docker</small>
   <span class="qs-arrow">→</span>
 </a>
 
 <a href="../安装部署/windows.html" class="qs-card">
   <span class="qs-icon">🪟</span>
   <b>Windows</b>
-  <small>下载 exe 直接运行</small>
+  <small>npm / 解压即用 / 桌面客户端</small>
+  <span class="qs-arrow">→</span>
+</a>
+
+<a href="../安装部署/macos.html" class="qs-card">
+  <span class="qs-icon">🍎</span>
+  <b>macOS</b>
+  <small>npm / 预编译二进制，支持 Apple Silicon</small>
   <span class="qs-arrow">→</span>
 </a>
 
@@ -57,13 +74,6 @@ description: biliup 上手指南：安装方式、首次录制投稿路径、常
   <span class="qs-icon">🐳</span>
   <b>Docker</b>
   <small>官方镜像，一键起服务</small>
-  <span class="qs-arrow">→</span>
-</a>
-
-<a href="../安装部署/macos.html" class="qs-card">
-  <span class="qs-icon">🍎</span>
-  <b>macOS</b>
-  <small>uv 安装，支持 Apple Silicon</small>
   <span class="qs-arrow">→</span>
 </a>
 
@@ -204,4 +214,4 @@ description: biliup 上手指南：安装方式、首次录制投稿路径、常
 </ol>
 </details>
 
-<p class="qs-footnote">本文档对应 biliup <b>v1.2.6</b>，更新可能不及时，请以 <a href="https://github.com/biliup/biliup">biliup 主仓库</a>实际代码为准 · 桌面客户端（biliup-app）在<a href="https://github.com/biliup/biliup-app-new">独立仓库</a>维护</p>
+<p class="qs-footnote">本文档对应 biliup <b>v1.2.11</b>，更新可能不及时，请以 <a href="https://github.com/biliup/biliup">biliup 主仓库</a>实际代码为准 · 桌面客户端（biliup-app）在<a href="https://github.com/biliup/biliup-app-new">独立仓库</a>维护</p>

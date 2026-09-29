@@ -1,5 +1,5 @@
 ---
-description: biliup 全局配置参考：下载器、分段规则、delay 默认值（300 秒）、上传器与已知未生效字段，基于 v1.2.6 核对。
+description: biliup 全局配置参考：下载器、分段规则、delay 默认值（300 秒）、上传器与已知未生效字段，基于 v1.2.11 核对。
 ---
 
 # 全局设置
@@ -13,11 +13,18 @@ description: biliup 全局配置参考：下载器、分段规则、delay 默认
 
 ## 下载器
 
-### stream-gears（默认）
+### mesio（默认）
 
-- 默认下载器，无需安装 FFmpeg。
+- **当前版本的默认下载器**，v1.2.9 起取代 `stream-gears`。
+- 进程内实现的 FLV / HLS 下载与修复管线，**不依赖任何外部进程**。
+- 无需安装 FFmpeg 或 streamlink，部署最轻。
+
+### stream-gears
+
+- 上一版本的默认下载器，无需安装 FFmpeg。
 - 自动处理主播 PK 等导致的分辨率变化，防止视频花屏。
 - 不支持 HLS 流（如 B站 APEX 分区），此类流需改用 `streamlink`。
+- ⚠️ 已知问题：收尾时可能丢失流尾，这也是默认下载器改为 `mesio` 的原因。若你手动指定了它并遇到录像结尾缺失，请换回 `mesio`。
 
 ### streamlink
 
@@ -45,12 +52,6 @@ description: biliup 全局配置参考：下载器、分段规则、delay 默认
 并非所有平台都支持此功能，具体请自行测试。
 :::
 
-
-### mesio（Rust 原生管线）
-
-- 进程内实现的 FLV / HLS 下载与修复管线，**不依赖外部进程**。
-- 无需安装 FFmpeg 或 streamlink，部署更轻。
-- 适合希望减少外部依赖、或外部下载器在本机表现不稳定的场景。
 
 ### ytarchive（仅 YouTube Live）
 

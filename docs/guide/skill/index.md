@@ -87,9 +87,12 @@ Skill 依赖 biliup CLI 本身，请确保环境中已安装 biliup：
 
 | 环境 | 安装方式 |
 |---|---|
-| Linux / macOS | `uv tool install biliup` |
-| Windows | `winget install biliup` 或下载 [Releases](https://github.com/biliup/biliup/releases/latest) 预编译二进制 |
+| 通用（推荐） | `npx @biliup/cli` 直接运行，或 `npm i -g @biliup/cli` 全局安装（需 Node.js 18+，装的是预编译二进制） |
+| Windows | `npm i -g @biliup/cli`，或下载 [Releases](https://github.com/biliup/biliup/releases/latest) 预编译二进制解压即用 |
 | Docker | 使用镜像 `ghcr.io/biliup/caution:latest` |
+| uv / pip | `uv tool install biliup`。注意 PyPI 只发源码包，本机需有 **Rust 工具链**现场编译 |
+
+> npm 方式与直接下载预编译二进制得到的是同一个 CLI，命令行参数完全一致。
 
 安装后验证：
 

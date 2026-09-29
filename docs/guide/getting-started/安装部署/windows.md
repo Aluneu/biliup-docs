@@ -1,5 +1,5 @@
 ---
-description: Windows 上运行 biliup：桌面应用、预编译 CLI 与 uv 安装方式，Rust CLI 需 server 子命令启动 WebUI，基于 v1.2.6 核对。
+description: Windows 上安装 biliup：npm 预编译二进制、手动下载 CLI、桌面客户端，Rust CLI 需 server 子命令启动 WebUI，基于 v1.2.11 核对。
 ---
 
 # Windows 安装教程
@@ -9,16 +9,79 @@ description: Windows 上运行 biliup：桌面应用、预编译 CLI 与 uv 安�
 - 不推荐使用主力机进行操作，你永远不知道 Windows 为什么会杀掉你的进程。
 :::
 
+---
+
+## 安装方式怎么选
+
+| 方式 | 需要预装 | 说明 |
+|---|---|---|
+| **npm**（推荐） | Node.js 18+ | 自动匹配平台预编译二进制，装完即用 |
+| 手动下载 CLI | 无 | 下载解压即用，适合不想装 Node 的用户 |
+| 桌面客户端 | 无 | `biliup`，图形界面，适合主要做投稿的用户 |
+| uv | Python + Rust 工具链 | PyPI 只发源码包，安装时需现场编译 |
+
+> 前三种方式装出来的命令行工具是同一个 Rust CLI，`biliup --help` 输出的参数完全一致。
+
+::: warning Rust CLI 必须带子命令运行
+命令行版本**不会**双击启动。直接双击 `biliup.exe` 窗口会一闪而过，必须通过终端执行 `biliup server --auth`。
+
+想要「双击即运行」的体验，请使用[桌面客户端](#方法三-桌面客户端-biliup)。
+:::
 
 ---
 
-## 方法一：运行预编译 CLI（Rust 构建，无需 Python）
+## 方法一：使用 npm 安装（推荐）
 
-biliup 在 Releases 的 Assets 中提供预编译的 Rust CLI 压缩包，**无需安装 Python**。
+官方通过 npm 分发**预编译二进制**，安装时会根据你的系统与 CPU 自动选择对应的子包，不需要 Python，也不需要本机编译。
 
-::: warning
-Rust CLI 是一个命令行程序，**必须带子命令运行**。直接双击 `biliup.exe` 不会自动启动 WebUI（窗口会一闪而过）。请通过终端执行 `biliup.exe server` 启动服务，详见下方「3. 使用参数启动」。若想要「双击即运行」的体验，请改用[方法四：biliup-app 桌面应用](/guide/getting-started/更多/desktop-app.html) 或[方法三：uv 安装](/guide/getting-started/安装部署/windows.html#方法三使用-uv-安装)。
+### 1. 安装 Node.js 18+
+
+```powershell
+# 使用 winget（Windows 11 自带）
+winget install OpenJS.NodeJS.LTS
+
+# 或从官网下载安装包：https://nodejs.org/
+
+# 确认版本 >= 18（可能需要重开终端）
+node --version
+```
+
+### 2. 安装 biliup
+
+```powershell
+# 全局安装，之后直接用 biliup 命令
+npm i -g @biliup/cli
+```
+
+不想全局安装，也可以每次直接运行：
+
+```powershell
+npx @biliup/cli server --auth
+```
+
+### 3. 启动 WebUI
+
+```powershell
+# --auth 开启登录认证；首次访问时管理员用户名固定为 biliup，请设置密码
+biliup server --auth
+```
+
+启动后浏览器访问 `http://localhost:19159`。
+
+::: info
+Windows 首次运行可能弹出防火墙窗口，请点击「允许」放行对应端口（默认 19159）。
 :::
+
+### 4. 更新与卸载
+
+```powershell
+npm i -g @biliup/cli@latest     # 更新
+npm uninstall -g @biliup/cli    # 卸载
+```
+
+---
+
+## 方法二：手动下载预编译 CLI（无需 Node / Python）
 
 ### 1. 下载
 
@@ -27,95 +90,85 @@ Rust CLI 是一个命令行程序，**必须带子命令运行**。直接双击 
 - **x64（大多数 PC）**：`biliupR-v1.x.x-x86_64-windows.zip`
 - **ARM64（Surface Pro X 等）**：`biliupR-v1.x.x-aarch64-windows.zip`
 
-解压后得到 `biliup.exe`（Rust 命令行可执行文件）。
+解压后得到 `biliup.exe`。
 
 ### 2. 放置
 
-将解压出的 `biliup.exe` 放在一个**独立文件夹**内（如 `D:\biliup\`）。
+将 `biliup.exe` 放在一个**独立文件夹**内（如 `D:\biliup\`）。
 
 ::: info
 `biliup.exe` 所在的目录就是录播文件、配置文件的默认存储目录。
 :::
 
-### 3. 使用参数启动
+### 3. 启动
 
 在 `biliup.exe` 所在目录打开终端（PowerShell / CMD），执行：
 
 ```powershell
-# 启动 WebUI（--auth 开启登录认证；首次访问时管理员用户名固定为 biliup，请设置密码）
 D:\biliup\biliup.exe server --auth
 ```
 
-启动后浏览器访问 `http://localhost:19159`。
+### 4. 更新
 
-::: info
-Windows 11 运行 `biliup.exe` 后可能弹出防火墙窗口，请点击「允许」放行对应端口（默认 19159）。
-:::
+重新下载新版本压缩包，覆盖原来的 `biliup.exe` 即可。
 
 ---
 
-## 方法二：使用 winget 安装（Windows 11）
+## 方法三：桌面客户端（biliup）
 
-Windows 11 用户可通过系统自带的 `winget` 包管理器一键安装命令行版本：
+如果你主要需求是**把本地视频投稿到 B 站并管理稿件**，而不是自动录播，可以直接用图形客户端，无需命令行。
+
+1. 前往 [Releases](https://github.com/biliup/biliup/releases/latest)
+2. 下载 `biliup_<版本>_x64-setup.exe`（或 `biliup_<版本>_x64_en-US.msi`）
+3. 运行安装程序，按提示完成安装
+4. 从开始菜单或桌面快捷方式启动
+
+> 详细说明请参阅[桌面客户端文档](/guide/getting-started/更多/desktop-app.html)。
+>
+> ⚠️ 桌面客户端是**投稿与稿件管理工具**，不负责直播录制。需要自动录播请用上面的命令行版本。
+
+---
+
+## 方法四：使用 uv 安装
+
+::: warning PyPI 只发布源码包
+PyPI 上的 `biliup` **只有源码包（sdist），没有预编译 wheel**。因此 `uv tool install biliup` 会在**本机现场编译**，需要提前装好 Python 3.11+ 与 **Rust 工具链**（[rustup.rs](https://rustup.rs/)），编译耗时较长。
+
+如果你只是想装好就能用，请优先选择 [方法一（npm）](#方法一-使用-npm-安装-推荐)。
+:::
+
+```powershell
+# 安装 uv
+powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# 安装 Rust 工具链（编译必需）
+# 从 https://rustup.rs/ 下载 rustup-init.exe 运行
+
+# 安装 biliup
+uv tool install biliup
+
+# 启动
+biliup server --auth
+```
+
+更新与卸载：
+
+```powershell
+uv tool install --reinstall biliup   # 更新
+uv tool uninstall biliup             # 卸载
+```
+
+---
+
+## 其他方式：winget
+
+部分 Windows 11 环境可尝试：
 
 ```powershell
 winget install biliup
 ```
 
-安装后验证：
-
-```powershell
-biliup --version
-```
-
-> 💡 `winget` 安装的是命令行版本（Rust CLI），启动同样需要 `server` 子命令：`biliup server --auth`。如需图形界面请使用[方法四（biliup-app 桌面应用）](/guide/getting-started/更多/desktop-app.html)。
-
----
-
-## 方法三：使用 uv 安装
-
-先安装 Python（推荐 3.11+），然后：
-
-```powershell
-# 安装 uv（PowerShell）
-powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
-
-# 安装 biliup
-uv tool install biliup
-
-# 启动（uv 安装的入口会自动补 server 子命令，直接 biliup 即可；显式写法为 biliup server --auth）
-biliup server --auth
-```
-
----
-
-## 方法四：biliup-app（Tauri 桌面应用，推荐小白用户）
-
-biliup-app 将 WebUI 打包为原生桌面客户端，打开即运行，无需命令行操作。
-
-1. 前往 [Releases](https://github.com/biliup/biliup/releases/latest)
-2. 下载 `bbup-app_x.y.z_x64-setup.exe`（或 `.msi`）
-3. 运行安装程序，按提示完成安装
-4. 从开始菜单或桌面快捷方式启动
-
-> 详细使用说明请参阅 [biliup-app 文档](/guide/getting-started/更多/desktop-app.html)。
-
----
-
-## 方法五：预编译二进制（高级用户）
-
-适用于不希望安装 `uv` 或 `winget` 的场景（本质上与方法一相同的 Rust CLI）。
-
-1. 前往 [Releases](https://github.com/biliup/biliup/releases/latest)
-2. 根据 CPU 架构下载对应文件：
-   - **x64（大多数 PC）**：`biliupR-v1.x.x-x86_64-windows.zip`
-   - **ARM64（Surface Pro X 等）**：`biliupR-v1.x.x-aarch64-windows.zip`
-3. 解压到任意目录（如 `D:\biliup\`）
-4. 通过终端启动（**不要直接双击**，Rust CLI 需子命令）：
-
-```powershell
-D:\biliup\biliup.exe server --auth
-```
+> ⚠️ winget 源中是否收录该包**以实际搜索结果为准**：先执行 `winget search biliup` 确认。如果搜不到或安装报错，请改用 [方法一（npm）](#方法一-使用-npm-安装-推荐)。
 
 ---
 
