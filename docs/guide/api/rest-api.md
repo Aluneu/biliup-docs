@@ -48,6 +48,75 @@ biliup server --auth
 | DELETE | `/v1/streamers/{id}` | 删除主播 |
 | PUT | `/v1/streamers/{id}/pause` | 暂停/恢复主播录制 |
 
+### 直播预览与实时数据
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| GET | `/v1/streamers/{id}/cover` | 正在录制直播间的封面。服务端带 `Referer` 转发，避开图片 CDN 防盗链 |
+| GET | `/v1/streamers/{id}/avatar` | 主播头像（同上处理） |
+| GET | `/v1/streamers/{id}/live` | 直播预览流：复用正在录制的那一路（chunked FLV / MPEG-TS） |
+| DELETE / POST | `/v1/streamers/{id}/live` | 释放预览。POST 供 `navigator.sendBeacon` 在播放器销毁时调用 |
+| GET | `/v1/streamers/{id}/live-url` | 浏览器直连模式：当前录制中那条流的 CDN 直链 |
+| GET | `/v1/streamers/{id}/danmaku` | 预览播放器的实时弹幕（SSE） |
+| GET | `/v1/danmaku` | 多路复用的弹幕（SSE），监视器一次订阅多个房间 |
+| GET | `/v1/live-rates` | 录制中各房间的写盘速率（HTTP 版，供回退 / curl 使用） |
+| GET | `/v1/ws/live-rates` | 同上，WebSocket 每秒推一帧，用于画实时码率曲线 |
+
+> 上述预览相关端点与普通接口一样**在登录校验之内**。`/v1/ws/live-rates` 是每秒推送的高频端点，不要为了它去调快 `/v1/streamers` 的轮询。
+
+### 录制会话 / 切片工作台
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| GET | `/v1/sessions` | 列出录制会话（场次） |
+| GET | `/v1/sessions/{id}` | 获取单个会话 |
+| PATCH | `/v1/sessions/{id}` | 更新会话，用于「保留这场」（改 `retain_until`） |
+| GET | `/v1/sessions/{id}/keyframes` | 可落刀位置（关键帧） |
+| GET | `/v1/sessions/{id}/media` | DVR 回看流，拖动进度 |
+| GET | `/v1/sessions/{id}/thumb` | 会话缩略图 |
+| GET | `/v1/sessions/{id}/danmaku-density` | 弹幕密度曲线（10 秒一桶，含基线与高峰） |
+
+### 标记与候选
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| GET / POST | `/v1/sessions/{id}/markers` | 列出 / 新建标记（看直播时打点） |
+| PATCH / DELETE | `/v1/sessions/{id}/markers/{mid}` | 更新 / 删除标记 |
+| GET | `/v1/sessions/{id}/suggestions` | 自动切片候选列表 |
+| POST | `/v1/sessions/{id}/suggestions/{sid}/accept` | 接受候选（生成切片草稿） |
+| POST | `/v1/sessions/{id}/suggestions/{sid}/dismiss` | 丢弃候选 |
+
+### 切片与导出
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| GET / POST | `/v1/sessions/{id}/clips` | 列出 / 新建切片 |
+| PATCH / DELETE | `/v1/sessions/{id}/clips/{cid}` | 更新 / 删除切片 |
+| GET | `/v1/clips/{cid}` | 获取切片详情 |
+| GET / PUT / DELETE | `/v1/clips/{cid}/cover` | 读取 / 上传 / 删除切片封面（JPEG，有大小上限） |
+| POST | `/v1/clips/{cid}/export` | 导出切片 |
+| GET | `/v1/clips/{cid}/download` | 下载切片文件 |
+| POST | `/v1/clips/{cid}/publish` | 发布：导出 → 上传 → 投稿。一律按转载提交，来源默认直播间地址 |
+
+### 发布队列
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| GET / POST | `/v1/publish-jobs` | 列出发布任务 / 批量发布 |
+| POST | `/v1/publish-jobs/preview` | 发布预览 |
+| POST | `/v1/publish-jobs/resume` | 恢复发布队列 |
+| POST | `/v1/publish-jobs/{jid}/retry` | 重试某条发布任务 |
+| DELETE | `/v1/publish-jobs/{jid}` | 移除某条发布任务 |
+
+### 自动切片（实验）
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| POST | `/v1/auto-clip/test` | 模型接口连通性测试 |
+| GET | `/v1/auto-clip/status` | 自动切片状态 |
+| GET | `/v1/auto-clip/jobs` | 多场各自的最近任务（剪辑台一页一次请求） |
+| GET / POST / DELETE | `/v1/sessions/{id}/auto-clip` | GET 看任务与用量预估；POST 先预估、确认后入队；DELETE 取消 |
+
 ### 全局配置
 
 | 方法 | 路径 | 说明 |
@@ -70,6 +139,13 @@ biliup server --auth
 | POST | `/v1/upload/streamers` | 添加上传模板 |
 | GET | `/v1/upload/streamers/{id}` | 获取单个上传模板 |
 | DELETE | `/v1/upload/streamers/{id}` | 删除上传模板 |
+
+### 系统与工具
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| GET | `/v1/system-stats` | 控制台首页系统状态（CPU / 内存 / 录制目录磁盘 / 网速）。带 `?since=` 时只取增量 |
+| GET | `/v1/tools` | FFmpeg 是否可用、版本与许可 |
 
 ### 用户与认证
 

@@ -11,14 +11,17 @@ Commands:
   login      登录B站并保存登录信息
   renew      手动验证并刷新登录信息
   upload     上传视频
-  append     对某稿件追加视频
+  append     是否要对某稿件追加视频
   show       打印视频详情
+  comments   查看视频评论
+  reply      回复视频评论，默认只打印将要回复的内容
   dump-flv   输出flv元数据
   download   下载视频
   server     启动web服务，默认端口19159
+  season     管理自己的合集：列合集、查小节、加入 / 移出稿件、排序
+  user       管理 Web 界面的登录用户
+  node       把这台机器加入 Fleet 控制面或退出
   list       列出所有已上传的视频
-  comments   批量下载视频评论
-  reply      回复视频评论
   help       Print this message or the help of the given subcommand(s)
 
 Options:
@@ -51,6 +54,9 @@ biliup server [OPTIONS]
 | `--auth` | 开启 WebUI 登录认证（布尔开关，不接收参数） | 关闭 |
 | `--secure-session-cookie` | 为会话 Cookie 附加 `Secure` 属性。**仅当通过 HTTPS 反向代理访问时开启**，直接 HTTP 远程访问时开启会导致浏览器丢弃登录态 | 关闭 |
 | `-c, --config` | 使用 biliup 1.0.7 风格配置文件启动录制 | — |
+| `--controller` | 以 Fleet 控制面运行：接受其他 biliup 节点加入并显示它们的状态（数据在 `data/fleet.sqlite3`） | 关闭 |
+| `--relay-listen` | 控制面内嵌 relay 的 TCP 监听地址，节点必须能连到它；填 `off` 表示不起内嵌 relay（此时必须用 `--relay-url` 指定外部 relay）。**仅在 `--controller` 时生效** | `0.0.0.0:19160` |
+| `--relay-url` | 写进加入票据的 relay 地址，可重复指定；不填时自动列出本机网卡地址。用于域名、端口转发、反向代理或外部 relay。**仅在 `--controller` 时生效** | 自动检测 |
 | `-h, --help` | 打印帮助 | — |
 
 示例：
@@ -338,4 +344,98 @@ biliup dump-flv <FILE_NAME>
 示例：
 ```bash
 biliup dump-flv recording_20260101.flv
+```
+
+---
+
+## season - 管理合集
+
+管理自己 B 站账号下的合集（Season）：列出合集、查看小节、加入 / 移出稿件、调整顺序。
+
+```bash
+biliup season [--json] <SUBCOMMAND>
+```
+
+| 子命令 | 说明 |
+|---|---|
+| `list` | 列出自己的合集及其小节 |
+| `sections <SEASON_ID>` | 查看合集的各个小节和其中的稿件（输出里的 episode id 用于 `remove` / `sort`） |
+| `add --vid <VID>... <SECTION_ID>` | 把稿件加入小节，cid 与标题自动获取；`--vid` 可重复指定以一次加入多个 |
+| `remove <EPISODE_ID>` | 从合集移出一个稿件（注意是 **episode id，不是 aid**，见 `sections` 的输出） |
+| `sort <SECTION_ID> [EPISODE_IDS...]` | 重排小节里的稿件：列出的 episode id 按给定顺序排在最前，其余保持原有顺序 |
+
+全局标志 `--json` 以 JSON 输出，便于脚本处理。
+
+`sort` 的附加参数：
+
+| 参数 | 说明 |
+|---|---|
+| `--reverse` | 把现有顺序整体倒过来（与列出 episode id 的用法互斥） |
+| `--season-id <ID>` | 合集 ID；仅在 B 站返回的小节信息里没有该字段时才需要指定 |
+
+示例：
+```bash
+# 列出自己的合集
+biliup season list
+
+# 查看 12345 号合集的各个小节
+biliup season sections 12345
+
+# 把两个稿件加入 678 号小节
+biliup season add --vid BV1xx411x7xx --vid av12345678 678
+
+# 从合集移出一个稿件
+biliup season remove 999
+
+# 调整 678 号小节里的顺序
+biliup season sort 678 999 1000
+```
+
+---
+
+## user - 管理 Web 登录用户
+
+管理登录 biliup 管理界面的用户。**必须在 biliup 服务的工作目录下执行**（命令直接读写 `data/data.sqlite3`）。
+
+```bash
+biliup user <SUBCOMMAND>
+```
+
+| 子命令 | 说明 |
+|---|---|
+| `list` | 列出所有 Web 用户 |
+| `reset-password <USERNAME>` | 重置某个用户的密码并让其所有会话失效；新密码从终端提示输入，或从标准输入读一行 |
+
+::: warning 这是 WebUI 账号，不是 B 站投稿账号
+`user` 管理的是登录 biliup 管理界面用的账号（v1.2.8 起支持多用户与分级权限）。B 站投稿账号通过扫码或 Cookie 添加，与这套账号体系无关，别弄混。
+:::
+
+示例：
+```bash
+cd /opt/data                    # 切到 biliup 服务的工作目录
+biliup user list
+biliup user reset-password operator
+```
+
+---
+
+## node - Fleet 节点管理
+
+把本机加入 Fleet 控制面或退出。**必须在 biliup 服务的工作目录下执行**（命令读写 `data/node.json`）。
+
+| 子命令 | 说明 |
+|---|---|
+| `join <TICKET> [--allow-hooks]` | 用控制面「添加节点」给出的票据加入；成功后需要重启 `biliup server` 才生效 |
+| `leave` | 通知控制面移除本节点，并删除本地凭据 |
+| `status` | 查看本机的节点凭据（不连控制面） |
+
+::: danger --allow-hooks 是安全敏感开关
+`join --allow-hooks` 允许控制面下发的房间使用钩子（各 `*processor`），**等于允许控制面在这台机器上执行命令**。只在你完全信任该控制面时才开启。
+:::
+
+示例：
+```bash
+biliup node join bfleet_xxxxxxxx
+biliup node status
+biliup node leave
 ```

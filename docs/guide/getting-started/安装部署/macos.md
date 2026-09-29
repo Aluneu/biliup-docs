@@ -203,7 +203,7 @@ biliup 本体已包含下载器，多数场景**开箱即用**，以下依赖按
 
 | 依赖 | 什么时候需要 |
 |---|---|
-| — | 默认下载器 `stream-gears` 由 Rust 实现，**无需任何外部依赖** |
+| — | 默认下载器 `mesio` 由 Rust 实现，**无需任何外部依赖** |
 | `ffmpeg` | 改用 `ffmpeg` 下载器，或配置了压制 / remux 等后处理 |
 | `yt-dlp` / `streamlink` | 录制 YouTube、niconico 等平台，或使用通用适配器处理非内置平台的地址 |
 

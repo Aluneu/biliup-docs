@@ -3,7 +3,7 @@
 此页面索引各直播平台的独立配置说明。各平台详细配置请点击对应链接查看。
 
 ::: tip
-大部分平台使用默认 `stream-gears` 下载器即可，无需额外配置。以下仅列出需要特殊配置的平台。
+大部分平台使用默认下载器 `mesio` 即可，无需额外配置。以下仅列出需要特殊配置的平台。
 :::
 
 
@@ -68,7 +68,7 @@
 
 ## Bigo 配置
 
-Bigo 平台无需特殊配置，使用默认 `stream-gears` 下载器即可。
+Bigo 平台无需特殊配置，使用默认下载器 `mesio` 即可。
 
 链接示例：`https://www.bigo.tv/123456`
 
@@ -92,11 +92,14 @@ Cookie 文件放置路径：
 
 | 下载器 | 适用平台 | 说明 |
 |---|---|---|
-| `stream-gears`（默认） | 大部分平台 | 不支持 HLS 流 |
+| `mesio`（默认） | 大部分平台 | Rust 实现，进程内下载与修复，无外部依赖 |
+| `stream-gears` | 大部分平台 | 上一版本的默认下载器；不支持 HLS 流，且收尾可能丢流尾 |
 | `streamlink` | B站（HLS）、YouTube、Twitch | 需安装 FFmpeg |
 | `ffmpeg` | 全部平台 | 通用但资源占用较高 |
 | `sync-downloader` | 支持边录边传的平台 | 需稳定上行带宽 |
 | `ytarchive` | YouTube Live | 专为 YouTube 直播设计 |
+
+完整清单与说明见[全局设置 - 下载器](./global-config.html#下载器)。
 
 ### 境外服务器录制 B站
 
@@ -142,7 +145,29 @@ Cookie 文件放置路径：
 
 | 配置项 | 说明 |
 |---|---|
-| `douyu_disable_interactive_game` | 跳过互动游戏 |
+| `douyu_force_hs` | 强制 hs 流使用构造链接 |
+| `douyu_rate` | 码率 |
+| `douyu_codec` | 视频编码：`AVC` 或 `HEVC` |
+| `douyu_device_id` | 对应 Cookie 中 `acf_did` 的值 |
+| `douyu_disable_interactive_game` | 跳过互动游戏（不录制互动游戏画面） |
+
+---
+
+## 网易 CC / 克拉克拉补充配置项
+
+| 配置项 | 说明 |
+|---|---|
+| `cc_protocol` | 网易 CC 直播协议：`hls` 或 `flv` |
+| `kila_protocol` | 克拉克拉直播协议：`hls` 或 `flv` |
+
+---
+
+## Twitch 补充配置项
+
+| 配置项 | 说明 |
+|---|---|
+| `twitch_danmaku` | 弹幕录制 |
+| `twitch_disable_ads` | 禁用广告 |
 
 ---
 
@@ -152,7 +177,13 @@ Cookie 文件放置路径：
 |---|---|
 | `youtube_prefer_vcodec` | 首选视频编码（`av01`/`vp9`/`avc`） |
 | `youtube_prefer_acodec` | 首选音频编码（`opus`/`mp4a`） |
-| `youtube_danmaku` | 弹幕录制 |
+| `youtube_max_resolution` | 最大分辨率 |
+| `youtube_max_videosize` | 最大视频大小 |
+| `youtube_after_date` | 开始日期，只处理该日期之后的内容 |
+| `youtube_before_date` | 结束日期，只处理该日期之前的内容 |
+| `youtube_enable_download_live` | 启用直播下载 |
+| `youtube_enable_download_playback` | 启用回放下载 |
+| `youtube_danmaku` | 弹幕录制（旧字段 `ytb_danmaku` 仍兼容，作用相同） |
 
 ---
 

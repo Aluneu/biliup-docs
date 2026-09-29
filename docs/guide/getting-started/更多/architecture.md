@@ -78,7 +78,7 @@ Rust 后端的优势：
 
 | 下载器 | 说明 |
 |---|---|
-| `stream-gears`（默认） | Rust 原生下载器，无需 FFmpeg |
+| `mesio`（默认） | Rust 原生下载器，无需 FFmpeg |
 | `streamlink` | HLS 多线程下载，需 FFmpeg |
 | `ffmpeg` | 通用下载器，需 FFmpeg |
 | `sync-downloader` | 边录边传，实时上传 |

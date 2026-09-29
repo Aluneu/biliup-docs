@@ -1,7 +1,7 @@
 # FFmpeg 安装
 
 ::: info
-仅在使用 `streamlink` 或 `ffmpeg` 下载器时需要安装 FFmpeg。默认下载器 `stream-gears` 无需 FFmpeg。
+仅在使用 `streamlink` 或 `ffmpeg` 下载器时需要安装 FFmpeg。默认下载器 `mesio` 无需 FFmpeg。
 :::
 
 

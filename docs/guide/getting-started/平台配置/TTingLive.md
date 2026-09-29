@@ -1,6 +1,6 @@
 ::: info
 * TTingLive 为 biliup 支持的直播平台之一，直播间链接请参照对应平台提供的分享地址。
-* 默认使用 `stream-gears` 下载器即可录制；如不可用，可尝试 `streamlink` 或 `ffmpeg` 下载器。
+* 默认下载器 `mesio` 即可录制；如不可用，可尝试 `streamlink` 或 `ffmpeg` 下载器。
 :::
 
 

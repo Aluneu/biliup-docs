@@ -1,6 +1,6 @@
 ::: info
 * 直播间链接格式（通常为）：`https://picarto.tv/频道名`（频道名为主播用户名）。
-* 默认使用 `stream-gears` 下载器即可录制；如不可用，可尝试 `streamlink` 或 `ffmpeg` 下载器。
+* 默认下载器 `mesio` 即可录制；如不可用，可尝试 `streamlink` 或 `ffmpeg` 下载器。
 :::
 
 
