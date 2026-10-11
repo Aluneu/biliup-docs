@@ -8,13 +8,14 @@
 
 **提示找不到 `biliup` 命令？**
 
-- 检查 uv 是否正确安装：`uv --version`
-- 检查 pip 是否正确安装：`pip3 --version`
+- 通过 npm 安装的，确认 Node.js 的全局 bin 目录在 `PATH` 中：`npm bin -g`（或 `npm config get prefix`）
+- 手动下载二进制的，确认解压目录在 `PATH` 中，或直接用完整路径运行
 - Docker 用户确认容器已启动：`docker ps -a`
 
 **Windows 下 `.exe` 无法运行？**
 
-- 确认下载的是最新版 `biliup.exe`
+- 确认从 [Releases](https://github.com/biliup/biliup/releases/latest) 下载的是当前版本（`biliupR-v*` 压缩包，解压出 `biliup.exe`）
+- 安装包 / 二进制未签名时 Windows SmartScreen 可能拦截：点「更多信息」→「仍要运行」
 - 检查杀毒软件是否拦截
 
 ---
@@ -23,7 +24,7 @@
 
 **只能录制 5 个主播，第 6 个不工作？**
 
-- 默认下载线程池大小为 5。修改「空间配置」→「下载线程池大小 (pool1_size)」后**重启** biliup。
+- 默认下载线程池大小为 5。在「空间配置」中调大「下载线程池大小 (pool1_size)」，**保存后立即生效**，无需重启。
 
 **快手录制不稳定？**
 
@@ -31,7 +32,7 @@
 
 **HLS 流不会录制（如 B站 APEX 分区）？**
 
-- 下载器改为 `streamlink`，安装 FFmpeg，配置 Cookie 和协议为 `hls_fmp4`。
+- 默认下载器 `mesio`（v1.2.9 起）已支持 HLS，含 B站 `hls_fmp4` 与 HEVC，无需额外安装。若仍在用 `stream-gears`（不支持 HLS），改用 `mesio`，或将协议配合 `streamlink` + FFmpeg 使用。
 
 **境外服务器录制 B站？**
 
@@ -46,9 +47,10 @@
 - 检查模板中「上传插件」是否为 `biliup-rs`（非默认的 `Noop`）。
 - 检查文件名模板是否包含 `{streamer}`，缺少此标识符将无法识别。
 
-**上传日志出现 `Retry attempt`？**
+**上传日志出现重试（Retry）相关条目？**
 
-- 调整上传并发数，从 1 开始逐渐增加。
+- 分段因断网、超时、5xx 等**网络类失败**会自动重传整个分段：`max_upload_limit`（全局设置）控制最多传几次（含第一次），不填默认 6 次，两次之间从 30 秒起翻倍等待、最长 5 分钟；次数用完仍失败会跳过该分段并把文件留在本地。
+- B 站限流、风控等**业务拒绝不会重试**，出现这类报错应降低并发（`threads` 从 1 开始加）或更换上传线路，而不是调大重试次数。
 
 **上传速度慢？**
 

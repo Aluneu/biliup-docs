@@ -193,16 +193,16 @@ Cookie 文件放置路径：
 
 1. 确认已添加正确的直播间链接
 2. 检查该平台是否需要 Cookie
-3. 尝试切换下载器（如 `stream-gears` 失败，换 `streamlink`）
+3. 确认下载器：默认 `mesio` 支持大部分平台的 FLV / HLS（含 HEVC 与 B站 `hls_fmp4`）；仍在用 `stream-gears` 的话先换回 `mesio`，特定需求再考虑 `streamlink` / `ffmpeg`
 4. 查看日志（`/logviewer`）确认具体错误
 
 ### 录制文件花屏
 
-通常是下载器不支持该平台的流格式，尝试切换到 `streamlink` 或 `ffmpeg`。
+通常是下载器不支持该平台的流格式，尝试切换到默认 `mesio`，或 `streamlink` / `ffmpeg`。
 
 ### 弹幕录制失败
 
-弹幕录制依赖 FFmpeg，请先完成 [FFmpeg 安装](/guide/getting-started/安装部署/ffmpeg安装.html)，再在主播编辑页面开启「弹幕录制」。
+弹幕录制自 v1.2.0 起由 Rust 弹幕客户端在进程内完成，**不依赖 FFmpeg**，在主播编辑页面开启「弹幕录制」即可。若弹幕缺失，优先检查平台是否需要 Cookie（如 B站、抖音）以及对应平台的弹幕开关字段（如 `bilibili_danmaku`）。
 
 ---
 

@@ -14,7 +14,7 @@ biliup 支持 **5 种 B站账号登录方式**，适用于不同使用场景。�
 本文讲的是**用于投稿的 B站账号**登录方式。它与 **WebUI 管理员账号**是两套完全不同的身份：
 - **WebUI 管理员账号**：用于登录 WebUI 后台，用户名**固定为 `biliup`**，首次访问时设置密码（开启 `--auth` 后）。
 - **B站投稿账号**：通过下方扫码 / Cookie 等方式添加，用于实际录制与投稿。
-请勿把两者混为一谈；忘记 WebUI 管理员密码只能重置数据库用户，详见[WebUI 使用指南 - 忘记密码](/guide/webui/usage.html#忘记-webui-密码)。
+请勿把两者混为一谈；忘记 WebUI 管理员密码无需动数据库，在服务的工作目录执行 `biliup user reset-password <用户名>` 即可重置，详见 [CLI 命令行参考 - user](/guide/configs/config.html#user-管理-web-登录用户) 或 [WebUI 使用指南 - 忘记密码](/guide/webui/usage.html#忘记-webui-密码)。
 :::
 
 

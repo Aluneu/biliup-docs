@@ -16,6 +16,19 @@
 
 ---
 
+## 未发布（v1.2.11 之后）
+
+> 以下变更已合入 master、随下个版本发布；条目按提交整理。
+
+- 💡 **WebUI 页面结构**：Fleet 配置（`/nodes/config`）与 Fleet 模板（`/nodes/template`）从弹窗改为独立页面；节点覆写与本机密钥改为在父页面打开的抽屉（`/dashboard?secrets=1`，旧路径 `/dashboard/secrets` 自动转发）；弹窗 / 抽屉统一走共享的页面外壳 [#1796](https://github.com/biliup/biliup/pull/1796) [#1797](https://github.com/biliup/biliup/pull/1797) [#1798](https://github.com/biliup/biliup/pull/1798) [#1799](https://github.com/biliup/biliup/pull/1799) [#1800](https://github.com/biliup/biliup/pull/1800)
+- 🔧 **投稿接口默认改为 `web`**：服务端自动投稿 / 编辑稿件在未配置 `submit_api` 时默认走 web 接口（原先走 app 接口——app 接口会拿第一个标签自动参加活动，也更容易被风控）[#1801](https://github.com/biliup/biliup/pull/1801)
+- 🔧 **上传网络故障重试**：分段因断网、DNS 失败、超时、5xx 等网络类失败时按 `max_upload_limit` 重传整个分段，该配置项重新生效（不填默认 6 次，含第一次；B 站限流、风控等拒绝不重试）[#1805](https://github.com/biliup/biliup/pull/1805)
+- 🔧 **FLV 下载**：处理非单调 DTS，并安全解析数据包头部 [#1802](https://github.com/biliup/biliup/pull/1802)
+- 🔧 Fleet：修复节点在 select! 分支间丢失已读一半的控制面帧的问题 [#1794](https://github.com/biliup/biliup/pull/1794)
+- 🔧 **npm 发布改用 Trusted Publishing（OIDC）**，不再依赖长期有效的 token [#1795](https://github.com/biliup/biliup/pull/1795)
+
+---
+
 ## v1.2.11
 
 > 发布时间：2026-09-28

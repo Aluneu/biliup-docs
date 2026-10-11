@@ -1,5 +1,5 @@
 ---
-description: biliup REST API 与日志 WebSocket：路由、认证、手动上传示例（含必填 id/template_name）与日志频道（upload.log），基于 v1.2.11 核对。
+description: biliup REST API 与日志 WebSocket：路由、认证与分级权限、B站账号与 WebUI 账号两组用户接口、Fleet 控制面路由、手动上传示例（含必填 id/template_name）与日志频道（upload.log），基于 v1.2.11 与 master 现行代码核对。
 ---
 
 # REST API 文档
@@ -29,12 +29,20 @@ biliup server --auth
 `--auth` 是布尔开关，不接 `user:pass`。流程：
 
 1. 首次启动没用户时，WebUI 出注册页，用 `POST /v1/users/register` 建管理员；
-2. 之后用 `POST /v1/users/login` 登录，基于 Session（Cookie），登录后浏览器自动带 Session ID；
-3. 退出调 `GET /v1/logout` 销毁会话。
+2. 之后用 `POST /v1/users/login` 登录，基于 Session（Cookie，名 `biliup.sid`，**7 天不活动过期**），登录后浏览器自动带会话；
+3. 退出调 `GET /v1/logout`（也接受 POST）销毁会话。
 
-> ⚠️ WebUI 管理员账号的用户名**固定为 `biliup`**，注册 / 登录时该用户名不可修改，你只需设置密码。它与用于投稿的 B站账号（扫码 / Cookie 添加，对应 `/v1/users/biliup` 之外的 B站账号体系）是两套不同身份，请勿混淆。
+开启 `--auth` 后，所有 `/v1/*` 业务路由经过一层**按路由表的权限校验（默认拒绝）**：
 
-> 没开 `--auth` 时接口没有任何保护，生产环境别直接把端口暴露出去。
+- 只读类（`GET` 列表 / 状态 / 媒体等）要求 *查看* 级权限——只读观察者即可访问；
+- 变更类（增删改、暂停、导出等）按操作类型要求 *操作* 或 *配置* 级权限——操作员可日常操作，改全局配置 / 管理 WebUI 用户需超级管理员；
+- 三种角色：`admin`（超级管理员）/ `operator`（操作员）/ `viewer`（只读观察者）；
+- WebSocket / SSE / 直播流等长连接在握手后**每 30 秒复查一次**会话与权限，用户被禁用、改密或强制下线时连接会被切断；
+- 登录相关接口（`/v1/users/login|register|logout|biliup`）与 `/v1/me*` 在权限层之外，只要求（或不要求）登录本身。
+
+> ⚠️ WebUI 管理员账号的用户名**固定为 `biliup`**，注册 / 登录时该用户名不可修改，你只需设置密码。它与用于投稿的 B站账号（扫码 / Cookie 添加）是两套不同身份，接口上也分别对应 `/v1/web-users*` 与 `/v1/users*` 两组路由，请勿混淆。
+
+> 没开 `--auth` 时接口没有任何保护（视同超管），登录与用户管理路由不会挂载，生产环境别直接把端口暴露出去。
 
 ## 接口总览
 
@@ -135,19 +143,41 @@ biliup server --auth
 | GET | `/v1/system-stats` | 控制台首页系统状态（CPU / 内存 / 录制目录磁盘 / 网速）。带 `?since=` 时只取增量 |
 | GET | `/v1/tools` | FFmpeg 是否可用、版本与许可 |
 
-### 用户与认证
+### B站投稿账号
+
+> 这一组管理的是**用于上传与投稿的 B站账号**（扫码 / Cookie 添加），不是 WebUI 登录账号。
 
 | 方法 | 路径 | 说明 |
 |---|---|---|
-| GET | `/v1/users` | 获取用户列表 |
-| POST | `/v1/users` | 添加用户 |
-| GET | `/v1/users/{id}` | 获取指定用户信息 |
-| DELETE | `/v1/users/{id}` | 删除用户 |
-| GET | `/v1/users/{id}/archives` | 获取指定用户的稿件列表 |
+| GET | `/v1/users` | 获取 B站账号列表 |
+| POST | `/v1/users` | 添加 B站账号 |
+| GET | `/v1/users/{id}` | 获取指定 B站账号信息 |
+| DELETE | `/v1/users/{id}` | 删除 B站账号 |
+| GET | `/v1/users/{id}/archives` | 获取指定 B站账号的稿件列表 |
+
+### WebUI 登录用户与权限
+
+> 这一组管理**登录 WebUI 后台的账号**（v1.2.8 起多用户 / 分级权限）。仅 `--auth` 开启时挂载，管理需要超管权限。
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| GET | `/v1/web-users` | 获取 WebUI 用户列表 |
+| POST | `/v1/web-users` | 添加 WebUI 用户 |
+| GET | `/v1/web-users/roles` | 获取可分配的角色（`admin` / `operator` / `viewer`）|
+| PUT | `/v1/web-users/{id}` | 修改用户（角色、禁用等）|
+| DELETE | `/v1/web-users/{id}` | 删除用户 |
+| POST | `/v1/web-users/{id}/logout-all` | 让该用户所有会话下线 |
+| GET | `/v1/me` | 当前登录者身份与权限点（含 Fleet 能力标记，前端据此显隐菜单）|
+| PUT | `/v1/me/password` | 修改自己的密码（会使其他会话失效）|
+
+### 认证与会话
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
 | POST | `/v1/users/login` | WebUI 用户登录 |
-| POST | `/v1/users/register` | WebUI 用户注册 |
-| GET | `/v1/users/biliup` | 检查默认用户是否已存在 |
-| GET | `/v1/logout` | 退出登录 |
+| POST | `/v1/users/register` | WebUI 用户注册（首个账号用户名固定 `biliup`）|
+| GET | `/v1/users/biliup` | 检查默认管理账号是否已存在 |
+| GET / POST | `/v1/logout` | 退出登录，销毁会话 |
 
 ### B站扫码登录
 
@@ -172,6 +202,57 @@ biliup server --auth
 | GET | `/bili/archive/pre` | B 站投稿预处理（代理）|
 
 > 当前版本仅注册上面这一条 `/bili/*` 路由。早期文档中出现的 `/bili/space/myinfo`、`/bili/proxy` 在源码中并不存在，调用会返回 404。
+
+### Fleet 主备接口
+
+> Fleet 控制面（`/v1/fleet/*`）的路由只在 `biliup server --controller` 启动时挂载，普通服务端不注册。节点侧（`/v1/node/*`）只在被控制面托管的节点上存在，受节点凭据保护而非 WebUI 会话。
+
+**控制面 `/v1/fleet/*`：**
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| GET | `/v1/fleet/nodes` | 节点列表与状态 |
+| DELETE | `/v1/fleet/nodes/{id}` | 移除（吊销）节点 |
+| PUT | `/v1/fleet/nodes/{id}/labels` | 设置节点标签 |
+| GET / PUT | `/v1/fleet/nodes/{id}/config` | 查看 / 下发节点配置覆写 |
+| POST | `/v1/fleet/local-node` | 让控制面本机也作为录制节点 |
+| GET / POST | `/v1/fleet/join-tokens` | 加入票据列表 / 新建票据（`bfleet` 开头）|
+| DELETE | `/v1/fleet/join-tokens/{id}` | 删除票据 |
+| GET / POST | `/v1/fleet/rooms` | 托管房间列表 / 新建 |
+| PUT / DELETE | `/v1/fleet/rooms/{id}` | 更新 / 删除房间 |
+| POST | `/v1/fleet/rooms/{id}/assign` | 手动指派房间到节点 |
+| POST | `/v1/fleet/rooms/{id}/force` | 强制释放房间的节点占用 |
+| POST | `/v1/fleet/rooms/{id}/pause` | 暂停 / 恢复房间调度 |
+| GET / POST | `/v1/fleet/templates` | 房间模板列表 / 新建 |
+| PUT / DELETE | `/v1/fleet/templates/{id}` | 更新 / 删除模板 |
+| GET | `/v1/fleet/accounts` | 可下发的 B站账号列表 |
+| GET / PUT | `/v1/fleet/configuration` | 集群全局配置读取 / 下发 |
+| GET | `/v1/fleet/configuration/history` | 配置下发历史 |
+| GET / DELETE | `/v1/fleet/alerts` | 告警列表 / 清空 |
+| DELETE | `/v1/fleet/alerts/{id}` | 确认单条告警 |
+| GET | `/v1/fleet/summary` | 控制台汇总 |
+| GET / PUT / DELETE | `/v1/fleet/ha` | 主备配对状态 / 建立配对 / 解散 |
+| GET | `/v1/fleet/ha/candidates` | 可配对候选 |
+| POST | `/v1/fleet/ha/join` | 接受配对加入 |
+| POST | `/v1/fleet/ha/role` | 切换主备角色 |
+| POST | `/v1/fleet/ha/sessions/{key}/{action}` | 按会话手工仲裁（上传归属）|
+| POST | `/v1/fleet/ha/handback/{kind}/{id}/{action}` | 接管后的回交动作 |
+
+**节点侧 `/v1/node/*`：**
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| GET / PUT | `/v1/node/ha` | 查看 / 配置本机主备参数 |
+| GET | `/v1/node/ha/candidates` | 本机可见的配对候选 |
+| POST | `/v1/node/ha/join` | 从节点侧发起配对 |
+| POST | `/v1/node/ha/role` | 本机角色切换 |
+| POST | `/v1/node/ha/sessions/{key}/{action}` | 会话级手工动作 |
+| DELETE | `/v1/node/revoked` | 确认被移除状态并清理 |
+| POST | `/v1/node/revoked/resume` | 恢复被控制面暂停的受管主播 |
+
+::: info 自动切片（auto-clip）接口未收录
+源码中还有一组 `/v1/auto-clip/*` 与 `/v1/sessions/{id}/suggestions*` 路由（模型 API 驱动的自动切片，实验性质、尚未正式发布），本文暂不收录；接口形态以源码为准，正式发布后另行补文档。
+:::
 
 ### 静态资源
 

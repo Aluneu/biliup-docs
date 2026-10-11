@@ -82,7 +82,7 @@ xxxxxxxxxxxx   ghcr.io/biliup/caution:latest  Up 4 seconds  0.0.0.0:19159->19159
 浏览器访问 `http://<你的服务器IP>:19159`，首次访问会进入登录页。管理员用户名固定为 `biliup`，请设置密码；之后使用同一用户名（`biliup`）与密码登录。
 
 ::: warning
-WebUI 管理员账号（固定用户名 `biliup`）与用于投稿的 B站账号（通过扫码 / Cookie 添加）是**两套不同的身份**，请勿混淆。忘记管理员密码时只能重置数据库中的用户，详见[WebUI 使用指南 - 忘记密码](/guide/webui/usage.html#忘记-webui-密码)。
+WebUI 管理员账号（固定用户名 `biliup`）与用于投稿的 B站账号（通过扫码 / Cookie 添加）是**两套不同的身份**，请勿混淆。忘记管理员密码时进入容器重置即可（`docker exec -w /opt <容器名> biliup user reset-password <用户名>`），不需要动数据库，详见[WebUI 使用指南 - 忘记密码](/guide/webui/usage.html#忘记-webui-密码)。
 :::
 
 ---

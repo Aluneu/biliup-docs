@@ -16,7 +16,7 @@ biliup 提供四个阶段的钩子，支持自定义脚本和外部通知：
 | **录制前** | `preprocessor` | 检测到开播，准备开始录制 | 发送开播通知 |
 | **分段后** | `segment_processor` | 录制文件达到分段条件 | 弹幕压制、格式转换 |
 | **下载完成** | `downloaded_processor` | 直播录制全部完成 | 文件预处理、通知 |
-| **上传后** | `postprocessor` | 上传完成 | 发送通知、删除本地文件、Webhook |
+| **上传后** | `postprocessor` | 上传完成 | 发送通知、删除本地文件 |
 
 ### 钩子步骤类型
 
@@ -57,17 +57,13 @@ postprocessor:
   - run: "sh ./cleanup.sh"
 ```
 
-### Webhook 格式
+### 外部通知（Webhook）
 
-上传完成后发送的 POST 请求包含以下信息：
+当前 Rust 版本**没有内置的 Webhook 功能**（Python 时代的 `Webhook` / `task_queue` 配置未迁移）。要做上传完成通知，在 `postprocessor`（或 `downloaded_processor`）里用 `run` + `curl` 自行实现，钩子数据按上表从 stdin 读入。示例：
 
-```json
-{
-  "title": "视频标题",
-  "bvid": "BVxxxxxxxxxx",
-  "aid": 123456789,
-  "file": "/path/to/video.flv"
-}
+```yaml
+postprocessor:
+  - run: "curl -s -X POST -H 'Content-Type: application/json' -d '{\"file\":\"'$(cat)\"}' https://example.com/notify"
 ```
 
 ---
@@ -120,14 +116,15 @@ ffmpeg -hide_banner -loglevel warning -y \
 
 ### 日志级别
 
-日志级别通过全局配置中的 `LOGGING.root.level` 和 `loggers_level` 设置，而非命令行参数：
+当前 Rust 版本通过全局配置的 `loggers_level` 设置日志过滤，**取值为 RUST_LOG（`EnvFilter`）风格**，在 WebUI 保存后立即生效：
 
-| 配置项 | 说明 | 可选值 |
+| 配置项 | 说明 | 示例值 |
 |---|---|---|
-| `LOGGING.root.level` | ds_update.log 控制台日志级别 | `DEBUG`/`INFO`/`WARNING`/`ERROR`/`CRITICAL` |
-| `loggers_level` | download.log 文件日志级别 | 同上 |
+| `loggers_level` | 服务运行期日志过滤（不设置时读环境变量 `RUST_LOG`，都没有则 `tower_http=debug,info`） | `debug`、`tower_http=debug,info` |
 
-CLI 的日志级别可通过全局选项 `--rust-log` 设置：
+> Python 时代的 `LOGGING` 配置块（`LOGGING.root.level` 等）在当前版本**不再被读取**，写进配置文件会被忽略。
+
+命令行启动的日志过滤可用全局选项 `--rust-log`（与 `loggers_level` 同一套格式）：
 
 ```bash
 # 详细日志（用于排查问题）

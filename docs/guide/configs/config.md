@@ -27,7 +27,7 @@ Commands:
 Options:
   -p, --proxy <PROXY>              配置代理
   -u, --user-cookie <USER_COOKIE>  登录信息文件 [default: cookies.json]
-      --rust-log <RUST_LOG>        日志级别（RUST_LOG 格式）[default: tower_http=debug,info]
+      --rust-log <RUST_LOG>        日志过滤规则，如 debug；不指定时读取环境变量 RUST_LOG，都没有则为 tower_http=debug,info
   -h, --help                       Print help
   -V, --version                    Print version
 ```
@@ -133,7 +133,7 @@ biliup upload [OPTIONS] [VIDEO_PATH]...
 |------|------|------|--------|
 | `<VIDEO_PATH>` | `Vec<PathBuf>` | 视频文件路径（可指定多个） | 必填（指定 `--config` 时可省略）|
 | `-c, --config` | `PathBuf` | 配置文件路径（指定后可从配置中读取投稿参数，省略视频路径） | — |
-| `--submit` | `app`/`web`/`bcutandroid` | 提交接口 | 自动选择 |
+| `--submit` | `app`/`web`/`bcutandroid` | 提交接口 | `app` |
 | `-l, --line` | `UploadLine` | 上传线路（见下方可选值） | 自动选择 |
 | `--limit` | `usize` | 单视频文件最大并发上传数 | `3` |
 | `--copyright` | `u8` | 版权：`1`=自制 `2`=转载 | `1` |
@@ -172,6 +172,10 @@ biliup upload [OPTIONS] [VIDEO_PATH]...
 
 > `--line` 只接受上表中的具体线路名，不接受 `AUTO`；`AUTO`（自动选择）是全局配置 `lines` 的取值，详见[全局设置](/guide/getting-started/配置/global-config.html)。若某条线路上传失败，换一条重试即可。
 
+::: info CLI 与服务端的提交接口默认值不同
+CLI `upload` / `append` 不带 `--submit` 时默认用 **app** 接口投稿；服务端录制完成后的自动投稿则由全局配置 `submit_api` 决定，2026-10 起默认 **web**（[#1801](https://github.com/biliup/biliup/pull/1801)）。两者互不影响。
+:::
+
 示例：
 ```bash
 # 基础上传
@@ -197,9 +201,9 @@ biliup append [OPTIONS] --vid <VID> <VIDEO_PATH>...
 
 | 参数 | 类型 | 说明 | 默认值 |
 |------|------|------|--------|
-| `--vid` | `String` | 目标稿件 AV 或 BV 号（**必填**） | — |
+| `--vid` / `-v` | `Vid` | 目标稿件 AV 或 BV 号（**必填**） | — |
 | `<VIDEO_PATH>` | `Vec<PathBuf>` | 视频文件路径（可指定多个） | 必填 |
-| `--submit` | `app`/`web`/`bcutandroid` | 提交接口 | 自动选择 |
+| `--submit` | `app`/`web`/`bcutandroid` | 提交接口 | `app` |
 | `-l, --line` | `UploadLine` | 上传线路（同 upload） | 自动选择 |
 | `--limit` | `usize` | 单视频文件最大并发上传数 | `3` |
 | Studio 字段 | — | 同 upload 命令的 `--title`/`--tag`/`--desc` 等 | — |
@@ -241,7 +245,7 @@ biliup download [OPTIONS] <URL>
 |------|------|--------|
 | `<URL>` | 直播间或视频 URL | 必填 |
 | `-o, --output` | 输出文件名模板（支持 `{title}` 变量和 strftime 格式） | `{title}` |
-| `--split-size` | 按大小分割视频（支持 K/M/G 后缀，如 `4G`） | — |
+| `--split-size` | 按大小分割视频（支持 K/M/G 后缀，**按 1000 进制**，如 `4G` = 4,000,000,000 字节） | — |
 | `--split-time` | 按时间分割视频（如 `1h30m`） | — |
 
 示例：

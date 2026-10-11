@@ -16,7 +16,7 @@ biliup 涉及三类身份，请勿混淆：
 | B站投稿账号 | 上传与投稿 | 通过扫码 / Cookie 添加，可多个 |
 | API 调用者 | 调用 REST / WebSocket | 通过 WebUI 会话（当前无独立 API Token 机制） |
 
-> ⚠️ 首个用户的用户名**不可修改**、固定为 `biliup`。忘记密码需操作数据库重置（会丢失全部配置，操作前务必备份）。
+> ⚠️ 首个用户的用户名**不可修改**、固定为 `biliup`。忘记密码可在服务的工作目录执行 `biliup user reset-password <用户名>` 重置（v1.2.8 起），会同时让该用户所有会话失效，**不需要**动数据库。
 
 ## 2. 认证与访问控制
 
@@ -79,7 +79,7 @@ biliup 涉及三类身份，请勿混淆：
 | 结构化 metrics | ❌ 无 | 没有 Prometheus / OpenMetrics 导出。运行数据只能通过 `/v1/system-stats`（CPU / 内存 / 磁盘 / 网速）读取 |
 | 审计日志 | ❌ 无 | 不记录管理员操作与配置变更。需要留痕请在反向代理层记录访问日志 |
 | 结构化日志 / 轮转 | ⚠️ 部分 | 应用输出普通文本日志，级别可在全局配置调整；轮转需 Docker 日志驱动或 logrotate，见 [Docker 进阶部署](/guide/getting-started/安装部署/docker-advanced.html) |
-| 告警阈值 | ❌ 无内置 | 磁盘将满、Cookie 失效、上传失败等均无内置告警，需结合外部监控轮询接口或日志 |
+| 告警阈值 | ⚠️ 有限 | 单机模式无内置告警；主备（`--controller`）模式有 Fleet 告警（`/v1/fleet/alerts`，控制台「节点」页可见）。磁盘将满、Cookie 失效、上传失败等仍需外部监控轮询接口或日志 |
 | 升级 / 回滚 | ✅ 可操作 | 见[生产部署基线](/guide/getting-started/安装部署/production-base.html)第 5 节 |
 
 > biliup 是自托管工具，本身不提供监控与告警能力。上面几项"无"是设计取舍而非缺陷——生产环境请把这部分接到你自己的监控体系（可用 `/v1/system-stats` 做数据源）。

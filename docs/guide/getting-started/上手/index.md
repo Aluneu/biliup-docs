@@ -30,7 +30,7 @@ description: biliup 上手指南：安装方式、首次录制投稿路径、常
 <ol>
 <li><b>默认只录不传，且可能删除录像</b>：新建主播默认上传器为 <code>Noop</code>（只录制不上传），且默认带 <code>rm</code> 后处理。直接用默认配置，录完的文件可能被删除，请先跟着<a href="/guide/workflow-demo/">首次录制并投稿</a>建好投稿模板再正式使用。</li>
 <li><b>默认只监听本机</b>：<code>biliup server</code> 的 <code>--bind</code> 默认是 <code>127.0.0.1</code>，其他设备访问不了。需要远程访问请用 <code>biliup server --bind 0.0.0.0 --auth</code>（不加 <code>--auth</code> 会拒绝启动）。</li>
-<li><b>WebUI 管理员用户名固定为 <code>biliup</code></b>：开启 <code>--auth</code> 后首次访问设置密码，不是在终端生成，也别和 B站投稿账号混淆。忘记密码需重置数据库（会丢失全部配置）。</li>
+<li><b>WebUI 管理员用户名固定为 <code>biliup</code></b>：开启 <code>--auth</code> 后首次访问设置密码，不是在终端生成，也别和 B站投稿账号混淆。忘记密码可在服务的工作目录执行 <code>biliup user reset-password &lt;用户名&gt;</code> 重置，<b>不需要</b>动数据库。</li>
 <li><b>别把 19159 直接暴露公网，并定期备份</b>：至少开启 <code>--auth</code>，有域名建议反代 + HTTPS；B站 Cookie 约 1-3 个月过期（过期后 WebUI 重新扫码即可），配置与 Cookie 都在数据目录，请定期备份。</li>
 </ol>
 </details>
