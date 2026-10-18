@@ -478,113 +478,116 @@
   overflow-y: hidden;
 }
 
-/* ============ 上手页设计（qs- 前缀，仅"上手 biliup"页使用） ============ */
+/* ============ 上手页（qs- 前缀，仅"上手 biliup"页使用） ============ */
 .vp-doc > h1:first-of-type { display: none; }
 
 .vp-doc .qs-hero {
   position: relative;
   border: 1px solid var(--vp-c-border);
-  border-radius: 18px;
-  padding: 48px 36px 36px;
+  border-radius: 16px;
+  padding: 32px 28px 26px;
   text-align: center;
   background:
-    radial-gradient(900px 340px at 50% -12%, var(--vp-c-brand-soft), transparent 72%),
+    radial-gradient(700px 260px at 50% -20%, var(--vp-c-brand-soft), transparent 70%),
     linear-gradient(180deg, var(--vp-c-bg-soft), var(--vp-c-bg));
-  margin: 8px 0 28px;
+  margin: 4px 0 20px;
 }
 .qs-logo {
-  width: 72px;
-  height: 72px;
-  border-radius: 20px;
-  margin: 0 auto 18px;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  margin: 0 auto 14px;
   display: block;
   box-shadow:
     0 0 0 1px var(--vp-c-border),
-    0 8px 28px color-mix(in srgb, var(--vp-c-brand-1) 22%, transparent);
-  animation: qs-float 5s ease-in-out infinite;
-}
-@keyframes qs-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
-}
-.qs-badge {
-  display: inline-block;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  color: var(--vp-c-brand-1);
-  background: var(--vp-c-brand-soft);
-  border: 1px solid color-mix(in srgb, var(--vp-c-brand-1) 28%, transparent);
-  border-radius: 999px;
-  padding: 4px 14px;
+    0 6px 18px color-mix(in srgb, var(--vp-c-brand-1) 18%, transparent);
 }
 .qs-hero h1 {
-  font-size: 42px;
-  line-height: 1.15;
-  letter-spacing: -0.03em;
-  margin: 18px 0 12px;
-  background: linear-gradient(115deg, var(--vp-c-text-1) 30%, var(--vp-c-brand-1));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-size: 30px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 0 0 8px;
+  color: var(--vp-c-text-1);
 }
 .qs-hero .qs-sub {
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.7;
   color: var(--vp-c-text-2);
   max-width: 520px;
   margin: 0 auto;
 }
 .qs-cmd {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 26px auto 0;
-  max-width: 580px;
+  position: relative;
+  margin: 18px auto 0;
+  max-width: 520px;
   background: #16181d;
   border: 1px solid #2e323a;
-  border-radius: 12px;
-  padding: 13px 12px 13px 18px;
+  border-radius: 10px;
+  padding: 12px 16px;
   text-align: left;
 }
-.qs-cmd code {
-  flex: 1;
+.vp-doc .qs-cmd pre {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  overflow: visible;
+}
+.vp-doc .qs-cmd code {
+  display: block;
   color: #e6edf3;
   font-family: var(--vp-font-family-mono);
   font-size: 13px;
-  white-space: nowrap;
+  line-height: 1.9;
+  white-space: pre;
   overflow-x: auto;
   background: transparent;
-  padding: 0;
+  padding: 0 72px 0 0;
 }
 .qs-cmd code::-webkit-scrollbar { height: 4px; }
 .qs-copy {
-  flex-shrink: 0;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
   border: 1px solid #3d444d;
   background: #21262d;
   color: #e6edf3;
-  border-radius: 8px;
-  padding: 6px 12px;
+  border-radius: 7px;
+  padding: 5px 11px;
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   transition: background 0.2s;
 }
 .qs-copy:hover { background: #30363d; }
-.qs-actions { display: flex; gap: 10px; justify-content: center; margin-top: 26px; }
+.qs-hint {
+  max-width: 520px;
+  margin: 10px auto 0;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--vp-c-text-3);
+}
+.qs-hint code {
+  font-size: 11.5px;
+  color: var(--vp-c-text-2);
+  background: transparent;
+  padding: 0;
+}
+.qs-actions { display: flex; gap: 8px; justify-content: center; margin-top: 16px; }
 .vp-doc .qs-btn {
   display: inline-block;
-  border-radius: 10px;
-  padding: 10px 22px;
-  font-size: 14px;
+  border-radius: 9px;
+  padding: 8px 18px;
+  font-size: 13px;
   font-weight: 500;
   border: 1px solid var(--vp-c-border);
   color: var(--vp-c-text-1);
   background: var(--vp-c-bg-soft);
   text-decoration: none;
-  transition: border-color 0.2s, transform 0.2s, background 0.2s;
+  transition: border-color 0.2s, background 0.2s;
 }
-.vp-doc .qs-btn:hover { border-color: var(--vp-c-brand-1); transform: translateY(-1px); text-decoration: none; }
+.vp-doc .qs-btn:hover { border-color: var(--vp-c-brand-1); text-decoration: none; }
 .vp-doc .qs-btn-primary {
   background: var(--vp-c-brand-1);
   border-color: var(--vp-c-brand-1);
@@ -592,90 +595,66 @@
 }
 .vp-doc .qs-btn-primary:hover { background: var(--vp-c-brand-2); border-color: var(--vp-c-brand-2); color: #fff; }
 
-.qs-grid {
+.qs-links {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
-  gap: 12px;
-  margin: 16px 0 8px;
-}
-.qs-card {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 18px 18px 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px 24px;
+  margin: 12px 0 4px;
+  padding: 16px 20px;
   border: 1px solid var(--vp-c-border);
   border-radius: 12px;
   background: var(--vp-c-bg-soft);
-  text-decoration: none;
-  color: var(--vp-c-text-1);
-  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
 }
-.qs-card:hover {
-  border-color: var(--vp-c-brand-1);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px color-mix(in srgb, var(--vp-c-brand-1) 14%, transparent);
-  text-decoration: none;
-  color: var(--vp-c-text-1);
-}
-.qs-card .qs-icon { font-size: 22px; line-height: 1; }
-.qs-card b { font-size: 14px; font-weight: 600; }
-.qs-card small { font-size: 12px; line-height: 1.5; color: var(--vp-c-text-2); }
-.qs-arrow {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  font-size: 13px;
+.qs-links b {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   color: var(--vp-c-text-3);
-  opacity: 0.6;
-  transition: transform 0.2s, color 0.2s, opacity 0.2s;
+  margin-bottom: 4px;
 }
-.qs-card:hover .qs-arrow {
-  opacity: 1;
-  color: var(--vp-c-brand-1);
-  transform: translate(2px, -2px);
+.vp-doc .qs-links a {
+  display: block;
+  font-size: 13.5px;
+  line-height: 1.95;
+  color: var(--vp-c-text-1);
+  text-decoration: none;
 }
-.vp-doc .qs-card:focus-visible,
-.vp-doc .qs-btn:focus-visible {
-  outline: 2px solid var(--vp-c-brand-1);
-  outline-offset: 2px;
-}
+.vp-doc .qs-links a:hover { color: var(--vp-c-brand-1); }
 
 details.qs-collapse {
   border: 1px solid var(--vp-c-border);
   border-radius: 12px;
   background: var(--vp-c-bg-soft);
-  padding: 12px 18px;
-  margin: 16px 0;
+  padding: 10px 16px;
+  margin: 14px 0;
 }
 details.qs-collapse summary {
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
-  color: var(--vp-c-text-1);
+  color: var(--vp-c-text-2);
   list-style: none;
 }
 details.qs-collapse summary::-webkit-details-marker { display: none; }
-details.qs-collapse[open] summary { margin-bottom: 12px; }
-details.qs-collapse ol { margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.9; color: var(--vp-c-text-2); }
-details.qs-collapse ol li { margin: 4px 0; }
+details.qs-collapse[open] summary { margin-bottom: 10px; }
+details.qs-collapse ol { margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.85; color: var(--vp-c-text-2); }
+details.qs-collapse ol li { margin: 3px 0; }
 
 .qs-footnote {
-  margin-top: 24px;
+  margin-top: 20px;
   font-size: 12px;
   color: var(--vp-c-text-3);
   text-align: center;
 }
 
-@media (max-width: 960px) {}
-
 @media (max-width: 640px) {
-  .vp-doc .qs-hero { padding: 38px 20px 28px; border-radius: 14px; }
-  .qs-hero h1 { font-size: 32px; }
-  .qs-cmd { padding-left: 14px; }}
-
-@media (prefers-reduced-motion: reduce) {
-  .qs-logo { animation: none; }
-  .qs-card, .qs-btn, .qs-arrow, .qs-ext { transition: none; }
+  .vp-doc .qs-hero { padding: 26px 18px 22px; border-radius: 14px; }
+  .qs-hero h1 { font-size: 26px; }
+  .qs-cmd { padding-left: 14px; }
+  .qs-links { grid-template-columns: 1fr; gap: 2px; }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .qs-btn, .qs-copy { transition: none; }
+}
