@@ -49,6 +49,7 @@ node --version
 
 ```bash
 # 全局安装，之后直接用 biliup 命令
+# 国内网络慢可加：--registry=https://registry.npmmirror.com
 npm i -g @biliup/cli
 ```
 

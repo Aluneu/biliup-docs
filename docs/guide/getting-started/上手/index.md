@@ -45,6 +45,14 @@ biliup server --auth</code></pre>
 
 其他环境：[Termux](../安装部署/termux.html) · [Docker 进阶部署](../安装部署/docker-advanced.html) · [FFmpeg 安装](../安装部署/ffmpeg安装.html)
 
+::: tip 国内网络慢？给 npm 换个镜像源
+```bash
+npm config set registry https://registry.npmmirror.com
+```
+
+只想这一次走镜像，就在安装命令后加 `--registry=https://registry.npmmirror.com`；想换回官方源用 `npm config set registry https://registry.npmjs.org`。`npx` 用的也是同一个源。
+:::
+
 ## 继续阅读
 
 <div class="qs-links">
