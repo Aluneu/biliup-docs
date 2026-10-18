@@ -10,9 +10,12 @@ biliup 对大量直播 / 视频平台的流解析与下载能力，建立在以�
 
 | 项目 | 简介 | 在 biliup 中的作用 | 仓库地址 |
 | --- | --- | --- | --- |
-| **ykdl** | 支持国内外多个视频与直播平台的下载库 | 提供大量国内平台（B 站、斗鱼、虎牙等）的流地址解析 | [ykdl/ykdl](https://github.com/ykdl/ykdl) |
-| **youtube-dl** | 广为人知的命令行视频下载工具 | 提供广泛的视频平台下载与解析能力 | [ytdl-org/youtube-dl](https://github.com/ytdl-org/youtube-dl) |
-| **streamlink** | 从流媒体服务提取并录制直播流的命令行工具 | 提供直播流提取与录制能力，是 biliup 录制的重要基础 | [streamlink/streamlink](https://github.com/streamlink/streamlink) |
+| **mesio / rust-srec** | Rust 实现的直播流下载与修复库 | v1.2.9 起的默认下载器，进程内完成 FLV / HLS 下载与时间戳修复 | [hua0512/rust-srec](https://github.com/hua0512/rust-srec) |
+| **stream-gears** | biliup 自研的 Rust 下载与上传内核 | 提供 FLV / HLS 下载、断流重连与 GOP 收尾 | [biliup/stream-gears](https://github.com/biliup/stream-gears) |
+| **streamlink** | 从流媒体服务提取并录制直播流的命令行工具 | 备选下载器，处理部分 HLS 平台 | [streamlink/streamlink](https://github.com/streamlink/streamlink) |
+| **yt-dlp** | 广为人知的命令行视频下载工具 | 通用适配器（General）与 YouTube 等平台的下载后端 | [yt-dlp/yt-dlp](https://github.com/yt-dlp/yt-dlp) |
+
+> 历史依赖：[ykdl](https://github.com/ykdl/ykdl) 与 [youtube-dl](https://github.com/ytdl-org/youtube-dl) 出现在 Python 时代的致谢里，v1.3.0 代码中已不再引用。
 
 ### 弹幕库
 

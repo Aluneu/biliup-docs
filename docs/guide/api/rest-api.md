@@ -40,7 +40,7 @@ biliup server --auth
 - WebSocket / SSE / 直播流等长连接在握手后**每 30 秒复查一次**会话与权限，用户被禁用、改密或强制下线时连接会被切断；
 - 登录相关接口（`/v1/users/login|register|logout|biliup`）与 `/v1/me*` 在权限层之外，只要求（或不要求）登录本身。
 
-> ⚠️ WebUI 管理员账号的用户名**固定为 `biliup`**，注册 / 登录时该用户名不可修改，你只需设置密码。它与用于投稿的 B站账号（扫码 / Cookie 添加）是两套不同身份，接口上也分别对应 `/v1/web-users*` 与 `/v1/users*` 两组路由，请勿混淆。
+> ⚠️ WebUI 管理员账号的用户名**默认预填 `biliup`**（注册时可以改，创建后不能改名），你只需设置密码。它与用于投稿的 B站账号（扫码 / Cookie 添加）是两套不同身份，接口上也分别对应 `/v1/web-users*` 与 `/v1/users*` 两组路由，请勿混淆。
 
 > 没开 `--auth` 时接口没有任何保护（视同超管），登录与用户管理路由不会挂载，生产环境别直接把端口暴露出去。
 
@@ -225,7 +225,7 @@ biliup server --auth
 | 方法 | 路径 | 说明 |
 |---|---|---|
 | POST | `/v1/users/login` | WebUI 用户登录 |
-| POST | `/v1/users/register` | WebUI 用户注册（首个账号用户名固定 `biliup`）|
+| POST | `/v1/users/register` | WebUI 用户注册（首个账号用户名默认预填 `biliup`，可改）|
 | GET | `/v1/users/biliup` | 检查默认管理账号是否已存在 |
 | GET / POST | `/v1/logout` | 退出登录，销毁会话 |
 
@@ -382,25 +382,18 @@ curl -X DELETE http://localhost:19159/v1/streamers/1
 
 ### 手动上传
 
-> `POST /v1/uploads` 的 `params` 在服务端会被反序列化为上传模板模型，**必须包含 `id` 与 `template_name`**，否则请求在进入上传逻辑前就会失败。
+> `POST /v1/uploads` 只接受两个字段：`files`（工作目录内的媒体**文件名**列表）与 `template_id`（投稿模板 id）。请求体是严格模式（多余字段直接 400），不接受路径。
 
 ```bash
 curl -X POST http://localhost:19159/v1/uploads \
   -H "Content-Type: application/json" \
   -d '{
-    "files": ["/opt/录播/video.flv"],
-    "params": {
-      "id": 1,
-      "template_name": "默认投稿",
-      "title": "手动上传",
-      "tid": 171,
-      "tags": ["直播录制"],
-      "copyright": 1
-    }
+    "files": ["video2026-10-19T20_00_00.flv"],
+    "template_id": 1
   }'
 ```
 
-> 示例中的 `id` 与 `template_name` 需替换为你实际已创建的投稿模板的值（可通过 `GET /v1/upload/streamers` 获取）。如果开启了 `--auth`，上述 `curl` 还需携带会话 Cookie（先 `POST /v1/users/login` 登录并保存 Cookie 后再请求）。
+> `template_id` 可通过 `GET /v1/upload/streamers` 获取；如果开启了 `--auth`，上述 `curl` 还需携带会话 Cookie（先 `POST /v1/users/login` 登录并保存 Cookie 后再请求）。返回 `{"task_id": ...}`，进度看 [上传队列](#上传队列与活动记录-v1-3-0-新增) 或 `/v1/activity-events`。
 
 ### 监听日志（Python）
 

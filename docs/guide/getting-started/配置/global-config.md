@@ -21,10 +21,10 @@ description: biliup 全局配置参考：下载器、分段规则、delay 默认
 
 ### stream-gears
 
-- 上一版本的默认下载器，无需安装 FFmpeg。
+- 上一版本的默认下载器（v1.2.9 起默认改为 `mesio`），无需安装 FFmpeg。
 - 自动处理主播 PK 等导致的分辨率变化，防止视频花屏。
-- 不支持 HLS 流（如 B站 APEX 分区），此类流需改用 `streamlink`。
-- ⚠️ 已知问题：收尾时可能丢失流尾，这也是默认下载器改为 `mesio` 的原因。若你手动指定了它并遇到录像结尾缺失，请换回 `mesio`。
+- v1.3.0 起支持 HLS（TS 与 fMP4，含 B站 `hls_fmp4`），容器跟随源站：TS 存 `.ts`，fMP4 存 `.mp4`。
+- v1.3.0 起断流、读超时、下播时不再丢失最后一个 GOP；「收尾丢流尾」只是当初改用 `mesio` 的历史原因，现已修复。
 
 ### streamlink
 
@@ -87,7 +87,7 @@ description: biliup 全局配置参考：下载器、分段规则、delay 默认
 
 - 可以填目录本身，也可以填它下面的 `fonts/`。
 - CLI 发布包 / 桌面安装包 / Docker 镜像都自带 `render-tools/`（字体与许可）；自行部署时把 `render-tools/` 放在可执行文件旁，或把这里指向该目录。
-- 与 `ffmpeg_path` 一样**全局生效、可按主播覆写**。
+- 与 `ffmpeg_path` 一样**全局生效，主播覆写里不能改**。
 
 ---
 
@@ -95,11 +95,11 @@ description: biliup 全局配置参考：下载器、分段规则、delay 默认
 
 ### 分段大小（file_size）
 
-按文件大小分段，单位 Byte。例：`4294967296` ≈ 4GB。
+按文件大小分段，单位 Byte。不填时后端默认 `2621440000`（约 2.5 GB）；WebUI 里留空表示**不按大小分段**（会显式写 null）。例：`4294967296` ≈ 4GB。
 
 ### 分段时长（segment_time）
 
-按录制时长分段，支持三种写法：`HH:MM:SS`、`MM:SS` 或秒数（如 `3600`）。`stream-gears`、`mesio`、`ffmpeg` 三种下载器现在按同一套规则解析；写错的值会在日志里提示，并按「不分段」录制。
+按录制时长分段，支持三种写法：`HH:MM:SS`、`MM:SS` 或秒数（如 `3600`）。全局配置保存、主播覆写保存与配置文件加载时都会校验，写错的值会被**直接拒绝并报错**（不会静默降级）；`stream-gears`、`mesio`、`ffmpeg` 三种下载器按同一套规则解析。
 
 WebUI 里可以直接选预设时长，也可以填自定义值；主播的「配置覆写」可以显式继承全局值或关闭分段。
 
@@ -288,7 +288,7 @@ biliup **不会删除未完成的录像**：
 
 ### event_loop_interval
 
-整体事件循环的检测间隔，单位秒。例如设置为 `10` 表示每 10 秒检测一次所有主播。
+整体事件循环的检测间隔，单位秒，默认 `30`。例如设置为 `10` 表示每 10 秒检测一次所有主播。
 
 ### checker_sleep
 
@@ -346,48 +346,7 @@ biliup **不会删除未完成的录像**：
 
 ---
 
-## 平台专属设置补充
+## 平台专属设置
 
-以下平台字段在[各平台设置](./live-config.html)的基础上补充说明。
-
-### 斗鱼
-
-| 字段 | 说明 |
-|---|---|
-| `douyu_cookie` | 斗鱼网页版登录 Cookie（请求头字符串或浏览器 JSON 导出）。部分房间的原画需要登录；属于账号凭据，非超管不可见、不下发到 Fleet |
-| `douyu_ltp0` | 斗鱼 passport 长期续期凭据 `LTP0`；仅本机保存，不下发到 Fleet |
-| `douyu_refresh_device_id` | 续期时使用的斗鱼 Web 设备号 `dy_did`；不填时从 Cookie / 导出 JSON 读取 |
-| `douyu_auto_refresh` | 是否自动续期斗鱼 Web 登录 Cookie；有 `LTP0` 时默认开启 |
-| `douyu_cdn` | 斗鱼 CDN 节点 |
-| `douyu_force_hs` | 强制 hs 流使用构造链接 |
-| `douyu_rate` | 码率 |
-| `douyu_codec` | 视频编码：`AVC` 或 `HEVC`（HEVC 需使用 `mesio` 或支持 HEVC 的新版 FFmpeg） |
-| `douyu_device_id` | 对应 Cookie 中 `acf_did` 的值 |
-| `douyu_disable_interactive_game` | 跳过互动游戏（不录制互动游戏画面） |
-
-### 网易 CC / 克拉克拉
-
-| 字段 | 说明 |
-|---|---|
-| `cc_protocol` | 网易 CC 直播协议：`hls` 或 `flv` |
-| `kila_protocol` | 克拉克拉直播协议：`hls` 或 `flv` |
-
-### YouTube
-
-| 字段 | 说明 |
-|---|---|
-| `youtube_max_resolution` | 最大分辨率 |
-| `youtube_max_videosize` | 最大视频大小 |
-| `youtube_after_date` | 开始日期（只下载该日期之后的） |
-| `youtube_before_date` | 结束日期（只下载该日期之前的） |
-| `youtube_enable_download_live` | 启用直播下载 |
-| `youtube_enable_download_playback` | 启用回放下载 |
-| `youtube_danmaku` | 弹幕录制；旧版字段 `ytb_danmaku` 仍兼容，两者作用相同 |
-
-### Twitch
-
-| 字段 | 说明 |
-|---|---|
-| `twitch_danmaku` | 弹幕录制 |
-| `twitch_disable_ads` | 禁用广告 |
+斗鱼、虎牙、抖音、YouTube、Twitch 等平台的字段见[各平台设置](./live-config.html)，各平台的具体行为见[平台配置](../平台配置/哔哩哔哩.html)，这里不再重复。
 

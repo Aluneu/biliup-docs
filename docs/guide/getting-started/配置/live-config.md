@@ -30,6 +30,8 @@
 | 映客 | - | [映客配置](/guide/getting-started/平台配置/映客.html) |
 | 猫耳 FM | - | [猫耳FM 配置](/guide/getting-started/平台配置/猫耳FM.html) |
 | 网易 CC | - | [网易CC 配置](/guide/getting-started/平台配置/网易CC.html) |
+| Picarto | 无内置插件，走 streamlink / yt-dlp | [Picarto 配置](/guide/getting-started/平台配置/Picarto.html) |
+| TTingLive | 无内置插件，走 streamlink / yt-dlp | [TTingLive 配置](/guide/getting-started/平台配置/TTingLive.html) |
 
 > 各平台详细配置参数见对应链接页面或下方补充说明。
 
@@ -44,12 +46,7 @@
 | `douyin_danmaku` | Switch | 录制弹幕 | 关闭 |
 | `douyin_double_screen` | Switch | 双屏直播录制 | 关闭 |
 | `douyin_true_origin` | Switch | 抖音真原画（HEVC） | 关闭 |
-| `user.douyin_cookie` | Input | Cookie（避免风控） | — |
-
-::: tip
-抖音直播首页（非 `live.douyin.com` 域名）需提供 Cookie 才能录制。
-:::
-
+| `user.douyin_cookie` | Input | Cookie（避免风控、解锁首页直播录制） | — |
 
 ---
 
@@ -93,7 +90,7 @@ Cookie 文件放置路径：
 | 下载器 | 适用平台 | 说明 |
 |---|---|---|
 | `mesio`（默认） | 大部分平台 | Rust 实现，进程内下载与修复，无外部依赖 |
-| `stream-gears` | 大部分平台 | 上一版本的默认下载器；不支持 HLS 流，且收尾可能丢流尾 |
+| `stream-gears` | 大部分平台 | 上一版本的默认下载器（v1.2.9 起默认改为 `mesio`）；v1.3.0 起支持 HLS（TS / fMP4），收尾不再丢最后一个 GOP |
 | `streamlink` | B站（HLS）、YouTube、Twitch | 需安装 FFmpeg |
 | `ffmpeg` | 全部平台 | 通用但资源占用较高 |
 | `sync-downloader` | 支持边录边传的平台 | 需稳定上行带宽 |
@@ -134,10 +131,9 @@ Cookie 文件放置路径：
 | `huya_max_ratio` | 码率上限 |
 | `huya_cdn_fallback` | CDN 回退 |
 | `huya_protocol` | 协议选择 |
-| `huya_imgplus` | 二次编码 |
+| `huya_imgplus` | 二次编码（**默认开启**；2K/4K 超分与 HDR 依赖它，谨慎关闭） |
 | `huya_codec` | 编码选择（264/265） |
 | `huya_mobile_api` | 移动端 API |
-| `huya_use_wup` | 使用 WUP 协议获取直播流（WebUI 中默认开启，用于解决部分直播分区 2 分钟分段问题；配置文件中的该字段以后端实现为准） |
 
 ---
 
@@ -174,7 +170,7 @@ Cookie 文件放置路径：
 | 配置项 | 说明 |
 |---|---|
 | `twitch_danmaku` | 弹幕录制 |
-| `twitch_disable_ads` | 禁用广告 |
+| `twitch_disable_ads` | 禁用广告（**默认开启**） |
 
 ---
 
@@ -188,8 +184,8 @@ Cookie 文件放置路径：
 | `youtube_max_videosize` | 最大视频大小 |
 | `youtube_after_date` | 开始日期，只处理该日期之后的内容 |
 | `youtube_before_date` | 结束日期，只处理该日期之前的内容 |
-| `youtube_enable_download_live` | 启用直播下载 |
-| `youtube_enable_download_playback` | 启用回放下载 |
+| `youtube_enable_download_live` | 启用直播下载（**默认开启**） |
+| `youtube_enable_download_playback` | 启用回放下载（**默认开启**） |
 | `youtube_danmaku` | 弹幕录制（旧字段 `ytb_danmaku` 仍兼容，作用相同） |
 
 ---

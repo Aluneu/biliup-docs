@@ -10,10 +10,10 @@
 
 ## 1. 固定版本（不要使用 latest）
 
-::: warning 镜像标签现状
-官方镜像 `ghcr.io/biliup/caution` **目前不提供与 CLI 版本号对应的标签**（如 `1.2.6`）。镜像仓库实际可用的标签为 `latest`、`master` 和 `sha-<commit>`，历史版本标签只到 `v0.4.x`。
+::: warning 镜像标签
+官方镜像 `ghcr.io/biliup/caution` 的发布流程会为 `v*` tag 生成 semver 标签（如 `1.3.0` / `1.3` / `1`），但**标签是否已推送以 registry 实际结果为准**。
 
-因此写成 `image: ghcr.io/biliup/caution:1.2.6` 会直接拉取失败（manifest unknown）。生产环境请按下面的方式用 **digest 固定**：
+生产环境建议用 **digest 固定**，不要依赖 `latest`：
 :::
 
 ```bash
@@ -46,9 +46,7 @@ services:
     ports:
       - "127.0.0.1:19159:19159"   # 仅监听本机，由反代对外暴露
     volumes:
-      - ./data:/opt/data          # SQLite 数据库与配置
-      - ./cookies:/opt/cookies     # B站 登录 Cookie（如启用）
-      - ./recordings:/opt          # 录像保存目录（按全局配置调整）
+      - ./data:/opt              # 数据库、凭据、日志与录像都在这一卷里
     environment:
       TZ: Asia/Shanghai
     # 资源限制，避免占用宿主机全部资源
@@ -107,8 +105,9 @@ biliup 的数据相对工作目录（容器内为 `/opt`）组织：
 | 数据 | 容器内默认位置 | 是否敏感 | 是否必须备份 |
 |---|---|---|---|
 | SQLite 数据库 | `/opt/data/data.sqlite3` | 是（含账号/主播/模板） | 是 |
-| 平台 Cookie / Token | `/opt/cookies`（如启用） | 高敏感 | 是 |
-| 录像与临时文件 | 录制保存目录 | 可能敏感 | 按业务策略 |
+| B站账号凭据 | `/opt/data/<mid>.json`（扫码添加）；命令行登录为 `/opt/cookies.json` | 高敏感 | 是 |
+| Fleet 数据（启用时） | `/opt/data/fleet.sqlite3`、`/opt/data/node.json` | 是 | 是 |
+| 录像与临时文件 | `/opt`（工作目录） | 可能敏感 | 按业务策略 |
 
 **备份脚本（先停服再拷贝整卷，保证一致性）：**
 
@@ -118,12 +117,12 @@ set -e
 BACKUP_DIR="./backups/biliup-$(date +%Y%m%d-%H%M%S)"
 mkdir -p "$BACKUP_DIR"
 docker compose stop biliup
-cp -a ./data    "$BACKUP_DIR/data"
-cp -a ./cookies "$BACKUP_DIR/cookies" 2>/dev/null || true
-cp -a ./recordings "$BACKUP_DIR/recordings" 2>/dev/null || true
+cp -a ./data "$BACKUP_DIR/data"
 docker compose start biliup
 echo "备份完成：$BACKUP_DIR"
 ```
+
+> 只挂了一个 `./data:/opt` 卷，所以拷贝它就够了：数据库、凭据、日志和录像都在里面。
 
 ::: danger 不要使用按扩展名 + 时间无差别删除
 旧文档中 `find ... -name "*.flv" -mtime +7 -delete` 会删除所有超过 7 天的 FLV，**不区分是否已上传完成**，可能误删未上传录像。清理前请先 `dry-run` 确认清单，并优先基于应用的上传状态判断。

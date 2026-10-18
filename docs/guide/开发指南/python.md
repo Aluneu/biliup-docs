@@ -69,16 +69,19 @@ python -c "import stream_gears; print('OK')"
 ### 登录
 
 ```python
+import json
 import stream_gears
 
-# 用已保存的 cookies.json 登录
+# 方式一：用已保存的 cookie 文件登录
 stream_gears.login_by_cookies("cookies.json")
 
-# 扫码登录：先取二维码，再轮询
-qr = stream_gears.get_qrcode()
-print(qr)          # 二维码内容 / 链接，自行渲染成图片
-stream_gears.login_by_qrcode(qr, "cookies.json")
+# 方式二：扫码登录
+qr = stream_gears.get_qrcode()        # 返回 JSON 字符串（含二维码 url 与 qrcode_key）
+print(json.loads(qr)["url"])          # 自行渲染成二维码图片
+stream_gears.login_by_qrcode(qr, file="cookies.json")   # 扫码确认后写入凭据
 ```
+
+> `login_by_qrcode` 的第二个位置参数是 `proxy`，不是文件名；要落盘请用关键字参数 `file=`。
 
 ### 上传
 
@@ -86,38 +89,47 @@ stream_gears.login_by_qrcode(qr, "cookies.json")
 import stream_gears
 
 stream_gears.upload(
-    video_path="video.mp4",
+    video_path=["video.mp4"],   # 列表，可传多个文件做多 P 上传
     cookie_file="cookies.json",
     title="测试投稿",
-    tag="测试",
+    tid=171,                    # 分区 id
+    tag="测试,直播录制",
     desc="通过 stream_gears 上传",
-    tid=171,          # 分区 id
-    copyright=1,      # 1 自制 / 2 转载
+    copyright=1,                # 1 自制 / 2 转载
+    submit="b-cut-android",     # 可选：web / app / b-cut-android
 )
 ```
 
-其余参数（`source`、`cover`、`dynamic`、`dtime`、`line`、`extra_fields`、`submit` 等）与 CLI 投稿参数一一对应，见[命令行参考](/guide/configs/config.html)。
+其余参数（`source`、`cover`、`dynamic`、`dtime`、`line`、`extra_fields` 等）与 CLI 投稿参数一一对应，见[命令行参考](/guide/configs/config.html)。
 
 ### 下载直播流
 
 ```python
 import stream_gears
 
+segment = stream_gears.PySegment()
+segment.time = 3600            # 每段 1 小时（秒）
+segment.size = 2 * 1024 ** 3   # 或每段 2 GiB（字节）；都不设 = 不分段
+
 stream_gears.download(
     url="https://...",
-    header_map={"User-Agent": "Mozilla/5.0", "Referer": "https://live.bilibili.com/"},
-    file_name="recording.flv",
-    segment=False,    # True 时按分段写入
+    header_map={"referer": "https://live.bilibili.com", "user-agent": "Mozilla/5.0"},
+    file_name="recording%Y-%m-%dT%H_%M_%S",   # 文件名模板，不含扩展名
+    segment=segment,
 )
 ```
 
-带回调的版本用 `download_with_callback`，可在每段文件生成时收到通知。
+- `file_name` **不含扩展名**，容器由流决定（写了 `recording.flv` 会得到 `recording.flv.flv`），支持 strftime 占位符；
+- `segment` 是**必填**参数，可传 `PySegment`、`{"time": …, "size": …}` 或带这两个属性的对象；
+- 带回调的版本用 `download_with_callback`，每段文件写完后回调一次。
+
+> 仓库里自带可直接运行的示例：`crates/stream-gears/examples/` 下的 `login.py`、`download.py`、`upload.py`。
 
 ### 接口一览
 
 | 接口 | 说明 |
 |---|---|
-| `upload` | 上传视频到 B站 |
+| `upload` | 上传视频到 B站（`video_path` 传列表） |
 | `download` / `download_with_callback` | 下载直播流（带 / 不带分段回调） |
 | `login_by_cookies` | 用 cookies.json 登录 |
 | `login_by_web_cookies` | 用 Web Cookie 登录 |
@@ -133,10 +145,16 @@ stream_gears.download(
 
 ```
 crates/stream-gears/
-├── src/
-│   ├── lib.rs          # PyO3 模块导出
-│   ├── login.rs        # 登录相关接口
-│   └── uploader.rs     # 上传相关接口
+├── src/                 # Rust 侧实现
+│   ├── lib.rs           # PyO3 模块导出
+│   ├── login.rs         # 登录相关接口
+│   └── uploader.rs      # 上传相关接口
+├── stream_gears/        # Python 包（随 wheel 分发）
+│   ├── __init__.py      # 导出 Credit / PySegment 等
+│   ├── stream_gears.pyi # 类型提示
+│   └── py.typed
+├── examples/            # login.py / download.py / upload.py
+├── tests/
 ├── Cargo.toml
 └── pyproject.toml
 ```
@@ -146,9 +164,11 @@ crates/stream-gears/
 ## 打包与发布
 
 ```bash
+# 本地构建（产物在 target/wheels/）
 maturin build -m crates/stream-gears/Cargo.toml --release
-# 产物在 target/wheels/
 ```
+
+> 官方**只往 PyPI 发布源码包（sdist）**，用户 `pip install biliup` 时在本机现场编译（需要 Rust 工具链）。想用预编译产物请走 [npm / 预编译二进制 / Docker](/guide/getting-started/安装部署/Linux.html)。
 
 ---
 

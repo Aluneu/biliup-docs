@@ -20,15 +20,15 @@ biliup 提供四个阶段的钩子，支持自定义脚本和外部通知：
 
 ### 钩子步骤类型
 
-每个钩子阶段接受一个步骤数组，每个步骤支持以下格式：
+每个钩子阶段接受一个步骤数组。**不同阶段能用的步骤不一样**（WebUI 的处理流程编辑器只提供可用项）：
 
-| 格式 | JSON 示例 | 说明 |
-|---|---|---|
-| `run` | `{"run": "sh ./process.sh"}` | 执行 Shell 命令（Windows: `cmd /C`，Unix: `sh -c`） |
-| `mv` | `{"mv": "backup/"}` | 移动文件到指定目录 |
-| `remux` | `{"remux": "mp4"}` | 转封装为 MP4（使用 ffmpeg，不重编码） |
-| `render` | `{"render": {"danmaku": {"enabled": true}, "regions": [...]}}` | 内置遮挡 / 弹幕压制（与工作台导出同一个引擎） |
-| `rm` | `"rm"` | 删除文件 |
+| 格式 | JSON 示例 | 说明 | 可用阶段 |
+|---|---|---|---|
+| `run` | `{"run": "sh ./process.sh"}` | 执行 Shell 命令（Windows: `cmd /C`，Unix: `sh -c`） | 四个阶段都可用 |
+| `remux` | `{"remux": "mp4"}` | 把 `.ts` / `.m2ts` 转封装为 MP4（ffmpeg，不重编码）；其它格式跳过 | 仅 `segment_processor` |
+| `render` | `{"render": {"danmaku": {"enabled": true}, "regions": [...]}}` | 内置遮挡 / 弹幕压制（与工作台导出同一个引擎） | 仅 `segment_processor` |
+| `mv` | `{"mv": "backup/"}` | 移动文件到指定目录 | 仅 `postprocessor` |
+| `rm` | `"rm"` | 删除文件（受[保留策略](/guide/getting-started/配置/global-config.html#存储与清理)约束） | 仅 `postprocessor`（`segment_processor` 里也能执行，但编辑器不提供） |
 
 ### 处理流程编辑器
 
@@ -57,12 +57,14 @@ segment_processor:
 
 ### 各阶段输入数据
 
-| 阶段 | 输入方式 | 数据格式 |
+| 阶段 | stdin | 数据格式 |
 |---|---|---|
-| `preprocessor` | JSON via stdin | `{"name":"主播名","url":"直播间URL","start_time":时间戳}` |
-| `segment_processor` | 文件路径 via stdin | 视频分段的文件路径 |
-| `downloaded_processor` | JSON via stdin | `{"name":"主播名","url":"URL","room_title":"标题","start_time":时间戳,"end_time":时间戳,"file_list":[文件列表]}` |
-| `postprocessor` | 文件路径 via stdin | 已上传视频的文件路径 |
+| `preprocessor` | 空 | 不传数据，仅触发（只支持 `run`） |
+| `segment_processor` | 文件路径 | 本段视频路径；有弹幕时**第二行**是弹幕 XML 路径 |
+| `downloaded_processor` | 空 | 不传数据，仅触发（只支持 `run`） |
+| `postprocessor` | 文件路径 | 已上传视频的路径；多个路径按换行分隔 |
+
+> 脚本从标准输入按行读取路径即可，例如 `while IFS= read -r line; do ...; done`。
 
 ### 钩子配置方式
 
@@ -102,7 +104,8 @@ postprocessor:
 
 | 处理器 | 说明 |
 |--------|------|
-| `remux:mp4` | 将 FLV/TS 重新封装为 MP4（无需重新编码，速度快） |
+| `remux:mp4` | 将 `.ts` / `.m2ts` 重新封装为 MP4（不重编码，速度快）；其它格式会跳过 |
+| `render` | 内置遮挡与弹幕压制（与「录后合成」同一引擎），见上节 |
 
 #### remux:mp4 技术细节
 

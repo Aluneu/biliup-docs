@@ -2,7 +2,7 @@
 
 本页面记录 biliup 各版本的变更内容。
 
-> ⚠️ 从 v1.0.0 开始，biliup 与 biliup-rs（Rust 上传引擎）合并为统一主项目，采用 Rust + Python 架构；WebUI 与桌面端（biliup-app）作为[独立仓库](https://github.com/biliup/biliup-app-new)分开维护。
+> ⚠️ 从 v1.0.0 开始，biliup 与 biliup-rs（Rust 上传引擎）合并为统一主项目，核心改为 **Rust + 内嵌 Next.js 前端**（v1.3.0 起 Python 只保留 API 绑定）；桌面端与投稿客户端（biliup-app）仍在[独立仓库](https://github.com/biliup/biliup-app-new)维护。
 
 ---
 

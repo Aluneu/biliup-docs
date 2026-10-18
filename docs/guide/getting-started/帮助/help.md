@@ -37,14 +37,14 @@
 
 ### 即时交流
 
-- QQ 群 / Telegram 群（详见 [biliup 社区](https://biliup.me)）
-- 在群内提问前，建议先阅读本文档
+- Telegram 群：[t.me/+IkpIABHqy6U0ZTQ5](https://t.me/+IkpIABHqy6U0ZTQ5) · 社区论坛：[biliup.rs](https://biliup.rs)
+- 提问前建议先阅读本文档
 
 ---
 
 ## 常见问题快速入口
 
 - [安装问题](/guide/getting-started/安装部署/Linux.html)
-- [录制配置](/guide/getting-started/上手/get-start.html)
+- [首次录制并投稿](/guide/workflow-demo/)
 - [Q&A 常见问题](/guide/getting-started/帮助/faq.html)
 - [CLI 命令参考](/guide/configs/config.html)

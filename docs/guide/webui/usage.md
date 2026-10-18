@@ -25,7 +25,7 @@ biliup server --auth
 ```
 
 ::: info 关于 WebUI 登录账号
-`--auth` 是布尔开关，**不接收 `user:pass` 参数**。开启后首次访问 WebUI 会进入登录页：**首个账号的用户名固定为 `biliup`（不可修改），由你设置密码**。
+`--auth` 是布尔开关，**不接收 `user:pass` 参数**。开启后首次访问 WebUI 会进入登录页：**首个账号的用户名默认预填 `biliup`（可以改，创建后不能改名），由你设置密码**。
 
 自 v1.2.8 起支持多用户，可在「用户管理」页新增其他账号（超级管理员 / 操作员 / 只读观察者三种角色）。
 
@@ -487,7 +487,7 @@ biliup 支持添加多个 B站账号：
 | 操作员 | 可进行日常操作，权限受限 |
 | 只读观察者 | 只能查看 |
 
-> 首个账号的用户名固定为 `biliup`。忘记密码时可用 [`biliup user reset-password`](/guide/configs/config.html#user-管理-web-登录用户) 重置，不需要动数据库。
+> 首个账号的用户名默认预填 `biliup`（创建后不能改名）。忘记密码时可用 [`biliup user reset-password`](/guide/configs/config.html#user-管理-web-登录用户) 重置，不需要动数据库。
 
 ---
 

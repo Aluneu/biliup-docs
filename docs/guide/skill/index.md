@@ -35,6 +35,9 @@ Skill 封装了以下 biliup CLI 子命令，Agent 可根据上下文自动选�
 | `biliup reply` | 回复视频评论 |
 | `biliup renew` | 手动验证并刷新登录信息 |
 | `biliup dump-flv` | 输出 FLV 文件元数据（用于调试录制问题） |
+| `biliup season list \| sections \| add \| remove \| sort` | 管理自己的 B站合集与小节顺序 |
+| `biliup user list \| reset-password <用户名>` | 管理 WebUI 登录用户（重置密码需在服务的工作目录执行） |
+| `biliup node join \| leave \| status` | 加入 / 退出 Fleet 控制面、查看节点状态 |
 | `biliup --help` | 查看完整帮助 |
 
 ---

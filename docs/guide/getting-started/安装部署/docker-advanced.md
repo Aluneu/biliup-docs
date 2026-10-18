@@ -17,11 +17,13 @@ description: Docker 进阶部署基线：Compose、反向代理、健康检查�
 ```bash
 docker run -d \
   --name biliup \
-  -p 19159:19159 \
+  -p 127.0.0.1:19159:19159 \
   -v $(pwd)/data:/opt \
   ghcr.io/biliup/caution:latest \
-  server
+  server --bind 0.0.0.0 --auth
 ```
+
+> 容器内**必须**加 `--bind 0.0.0.0`，否则只监听容器回环，端口映射转发不进去。
 
 ---
 
@@ -33,8 +35,6 @@ docker run -d \
 
 ```yaml
 # docker-compose.yml
-version: "3.8"
-
 services:
   biliup:
     image: ghcr.io/biliup/caution:latest
@@ -57,8 +57,6 @@ services:
 
 ```yaml
 # docker-compose.yml
-version: "3.8"
-
 services:
   biliup:
     image: ghcr.io/biliup/caution:latest
@@ -114,10 +112,12 @@ networks:
 
 ```
 data/
-├── data.sqlite3        # WebUI 配置数据库（账号、模板、主播配置）
-├── log/                # 运行日志
-├── recordings/         # 录制文件存放目录（默认）
-└── cookies/           # 存放 B站等平台的 Cookie 文件
+├── data/data.sqlite3     # WebUI 配置数据库（账号、模板、主播配置）
+├── data/<mid>.json       # 扫码添加的 B站账号凭据
+├── data/fleet.sqlite3    # Fleet 主备数据库（启用控制面时）
+├── ds_update.log         # 运行日志
+├── cookies.json          # 命令行 biliup login 的默认凭据文件
+└── <录像文件>             # 录像直接写在容器工作目录 /opt
 ```
 
 ### 重要提醒
@@ -126,15 +126,14 @@ data/
 
 ### 自定义录制文件存放路径
 
-默认录制文件保存在容器内的 `/opt/recordings`，映射到宿主机：
+录像默认就写在容器的工作目录 `/opt` 下，与数据库同卷。想换到更大的磁盘，把 `/opt` 挂到目标路径即可：
 
 ```yaml
 volumes:
-  # 将录制文件存放到宿主机的指定路径
   - /mnt/large-disk/biliup-data:/opt
 ```
 
-或在「空间配置 → 全局设置」中修改录制文件保存路径（需挂载对应路径）。
+> 没有「在空间配置里改录制路径」这个设置项；录像位置由进程工作目录决定。
 
 ---
 
@@ -142,15 +141,16 @@ volumes:
 
 | 环境变量 | 说明 | 默认值 |
 |---|---|---|
-| `TZ` | 时区（影响文件名时间戳） | `UTC` |
-| `BILIUP_PORT` | 服务端口 | `19159` |
-| `BILIUP_CONFIG` | 自定义配置文件路径 | - |
+| `TZ` | 时区（影响日志与文件名时间戳） | `Asia/Shanghai`（镜像内置） |
+| `RUST_LOG` | 日志过滤（等价于 `--rust-log` / `loggers_level`） | `tower_http=debug,info` |
+| `BILIUP_JOIN_TICKET` | 节点加入控制面时使用的票据 | - |
+| `BILIUP_AUTO_CLIP_API_KEY` | 自动剪辑调用模型接口的密钥 | - |
 
 ::: warning
-截至本文撰写版本，源码中**未确认** `BILIUP_PORT` / `BILIUP_CONFIG` 这两个环境变量被服务端实际读取。请优先使用命令行参数（`--port`）与 WebUI「空间配置」来设置端口与配置，不要依赖环境变量生效；如后续版本支持，以该版本的发布说明为准。
+端口用命令行 `--port` 设置，配置在 WebUI「空间配置」里改；**不存在** `BILIUP_PORT` / `BILIUP_CONFIG` 这两个服务端变量。
 :::
 
-> 💡 认证通过 `--auth` 参数开启，首次访问 WebUI 时管理员用户名固定为 `biliup` 并设置密码，无需额外环境变量。
+> 💡 认证通过 `--auth` 参数开启，首次访问 WebUI 时自行设置管理员用户名（默认预填 `biliup`，可改）与密码，无需额外环境变量。
 
 ---
 
@@ -212,9 +212,11 @@ Caddy 会自动申请和续期 Let's Encrypt 证书，无需额外配置。
 
 ### 1. 开启登录认证并设置密码
 
-`docker-compose.yml` 的 `command` 中已包含 `--auth` 参数（见上方基础配置）。`--auth` 仅控制是否开启登录认证，不接收密码；服务启动后**首次访问 WebUI 时，管理员用户名固定为 `biliup`**，请设置密码，之后使用同一用户名（`biliup`）与密码登录。
+`docker-compose.yml` 的 `command` 中已包含 `--auth` 参数（见上方基础配置）。`--auth` 仅控制是否开启登录认证，不接收密码；服务启动后**首次访问 WebUI 时自行设置管理员用户名（默认预填 `biliup`，可以改，创建后不能改名）与密码**。
 
-> ⚠️ WebUI 管理员账号（固定用户名 `biliup`）与用于投稿的 B站账号（扫码 / Cookie 添加）是两套不同身份，请勿混淆。
+> ⚠️ WebUI 管理员账号与用于投稿的 B站账号（扫码 / Cookie 添加）是两套不同身份，请勿混淆。
+
+> 🔐 反向代理终结 HTTPS 时，建议启动参数加上 `--secure-session-cookie`，让会话 Cookie 带 `Secure`；**纯 HTTP 远程访问不要加**，否则浏览器会丢掉登录态。
 
 可用以下命令生成高强度密码备用：
 

@@ -8,7 +8,7 @@
 
 **提示找不到 `biliup` 命令？**
 
-- 通过 npm 安装的，确认 Node.js 的全局 bin 目录在 `PATH` 中：`npm bin -g`（或 `npm config get prefix`）
+- 通过 npm 安装的，确认 npm 的全局 bin 目录在 `PATH` 中：`npm config get prefix`（Windows 下是 `%APPDATA%\npm`）
 - 手动下载二进制的，确认解压目录在 `PATH` 中，或直接用完整路径运行
 - Docker 用户确认容器已启动：`docker ps -a`
 
@@ -32,7 +32,7 @@
 
 **HLS 流不会录制（如 B站 APEX 分区）？**
 
-- 默认下载器 `mesio`（v1.2.9 起）已支持 HLS，含 B站 `hls_fmp4` 与 HEVC，无需额外安装。若仍在用 `stream-gears`（不支持 HLS），改用 `mesio`，或将协议配合 `streamlink` + FFmpeg 使用。
+- 默认下载器 `mesio`（v1.2.9 起）支持 HLS，含 B站 `hls_fmp4` 与 HEVC，无需额外安装；v1.3.0 的 `stream-gears` 也已支持 HLS（TS / fMP4）。只有**加密清单**（`#EXT-X-KEY`）需要 `mesio` 或 `ffmpeg`。
 
 **境外服务器录制 B站？**
 
@@ -40,7 +40,7 @@
 
 **斗鱼只能录到「超清」，原画很卡或几分钟就断？**
 
-- 2026-09 起斗鱼把原画 / 蓝光收紧到登录会话。在「空间配置 → 平台设置 → 斗鱼」填入网页版 Cookie（`douyu_cookie`），建议同时配置 `LTP0` + `dy_did` 自动续期。详见[斗鱼平台配置](/guide/getting-started/平台配置/斗鱼.html)。
+- 部分房间会把未登录请求降到较低档位（常见是「超清」），未登录时也可能录制几分钟后断流。在「空间配置 → 平台设置 → 斗鱼」填入网页版 Cookie（`douyu_cookie`，需含 `acf_uid` 与 `acf_auth`），建议同时配置 `douyu_ltp0` + `douyu_refresh_device_id` 自动续期（`douyu_auto_refresh` 默认开启，每 3 天检查一次）。详见[斗鱼平台配置](/guide/getting-started/平台配置/斗鱼.html)。
 
 **日志里一直出现 `Non-monotonous DTS ... previous: 4877, current: 0`？**
 
@@ -56,7 +56,7 @@
 
 **配置了自动上传但没有上传行为？**
 
-- 检查模板中「上传插件」是否为 `biliup-rs`（非默认的 `Noop`）。
+- 检查模板中「上传插件」有没有被手动改成 `Noop`（新建模板默认就是 `biliup-rs`）。
 - 检查文件名模板是否包含 `{streamer}`，缺少此标识符将无法识别。
 
 **上传日志出现重试（Retry）相关条目？**
@@ -133,11 +133,11 @@
 
 **如何启用自动投稿？**
 
-- 进入「空间配置」→ 在模板中将「上传插件」从 `Noop` 改为 `biliup-rs`。
+- 进入「投稿管理」→ 右上角「新建」→ 确认「上传插件」是默认的 `biliup-rs`（不是 `Noop`）。
 
 **如何添加多个 B站账号？**
 
-- 进入「投稿管理」→ 点击左上角图标 →「新增」→ 扫码登录。
+- 进入「投稿管理」→ 右上角「B 站账号」→ 抽屉底部「添加账号」→ 选「扫码登录」或「Cookie 文件」。
 
 **如何修改录制保存路径？**
 

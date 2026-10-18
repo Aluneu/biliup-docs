@@ -1,6 +1,6 @@
 # 系统架构
 
-biliup 采用 **Rust 后端 + 内嵌前端 + Python API 绑定** 的架构，各层职责清晰、可独立开发。
+biliup 采用 **Rust 后端（内嵌 Next.js 前端）+ Python API 绑定** 的架构，各层职责清晰、可独立开发。
 
 > v1.3.0 起 Python 包收敛为**纯 API**：不再提供 `python -m biliup` 入口与录制服务，只保留上传 / 直链下载 / 登录接口。运行完整应用请用原生 CLI、桌面版或 Docker。
 
@@ -81,13 +81,14 @@ Rust 后端的优势：
 
 | 下载器 | 说明 |
 |---|---|
-| `mesio`（默认） | Rust 原生下载器，无需 FFmpeg |
+| `mesio`（默认） | Rust 原生下载器（rust-srec），无需 FFmpeg |
+| `stream-gears` | 上一版本的默认下载器；v1.3.0 起支持 HLS（TS / fMP4），无需 FFmpeg |
 | `streamlink` | HLS 多线程下载，需 FFmpeg |
 | `ffmpeg` | 通用下载器，需 FFmpeg |
 | `sync-downloader` | 边录边传，实时上传 |
 | `ytarchive` | 专为 YouTube Live 设计 |
-| `ffmpeg`（外部分段） | FFmpeg 外部分段模式 |
-| `ffmpeg`（内部分段） | FFmpeg 内部分段模式 |
+| `ffmpeg-external` | FFmpeg 外部分段模式 |
+| `ffmpeg-internal` | FFmpeg 内部分段模式 |
 | `yt-dlp` | 使用 yt-dlp 作为后端 |
 
 ### Python 包（`crates/stream-gears`）
@@ -138,7 +139,7 @@ Python 包的存在意义：供非 Rust / 非 Node 环境调用上传、下载�
 | `clip_suggestions` | 自动切片候选（v1.2.10 新增，同上） |
 | `douyu_cookie_keeper` | 斗鱼 Cookie 自动续期状态（v1.3.0 新增） |
 | `stream_session_ids` / `session_group_members` / `session_merge_candidates` | 回看工作台的会话合并（v1.3.0 新增） |
-| `render_recipes` / `render_assets` / `render_jobs` / `render_sources` / `render_job_assets` | 录后合成的配方、素材与任务（v1.3.0 新增） |
+| `render_recipes` / `render_assets` / `render_recipe_assets` / `render_jobs` / `render_sources` / `render_job_assets` | 录后合成的配方、素材与任务（v1.3.0 新增） |
 | `upload_observation_tasks` / `upload_observation_files` | 上传队列与活动记录（v1.3.0 新增） |
 
 > 结构以 `crates/biliup-cli/migrations/` 下的迁移文件为准，当前主库共 **15** 个迁移；Fleet 库 `fleet_migrations/` 共 **7** 个。
@@ -151,7 +152,7 @@ Python 包的存在意义：供非 Rust / 非 Node 环境调用上传、下载�
 
 ```
 用户操作（浏览器）
-  → Vite 前端
+  → Next.js 前端
   → POST /v1/streamers（REST API）
   → biliup-cli 处理
   → 写入 SQLite
@@ -184,17 +185,16 @@ biliup-cli 定时检测直播间状态
 
 ---
 
-## Tauri 桌面应用（biliup-app）
+## 桌面端
 
-biliup 提供基于 [Tauri](https://tauri.app/) 的桌面应用版本：
+biliup 有两个基于 [Tauri](https://tauri.app/) 的桌面程序，用途不同：
 
-| 项目 | 说明 |
-|---|---|
-| 技术栈 | Tauri (Rust) + Vue 3 + Element Plus |
-| 后端机制 | **进程内运行 `biliup server`**（v1.2.9 起，不再使用 PyInstaller sidecar） |
-| 内置依赖 | 安装包自带 FFmpeg，外部工具调用不再弹出控制台窗口 |
-| 前端端口 | `1420` |
-| 源码位置 | [biliup-app-new](https://github.com/biliup/biliup-app-new) 独立仓库 |
+| 形态 | 说明 | 源码 |
+|---|---|---|
+| **biliup 桌面版** | Tauri v2 外壳，**进程内启动 `biliup server`**，窗口里打开 WebUI；安装包内置 FFmpeg 与 `render-tools/` 字体；版本跟随主项目（当前 `1.3.0`），目前只出 Windows 安装包 | 主仓库 `tauri-app/` |
+| **biliup-app** | 独立的 B站投稿 / 稿件管理客户端，不负责录制；独立版本号（`app-v*`），覆盖 Windows / macOS / Linux | [biliup-app-new](https://github.com/biliup/biliup-app-new) 独立仓库 |
+
+> 两种桌面程序都**没有** sidecar 子进程：服务直接跑在桌面进程里。详见[桌面端](/guide/getting-started/更多/desktop-app.html)。
 
 ---
 
@@ -202,7 +202,7 @@ biliup 提供基于 [Tauri](https://tauri.app/) 的桌面应用版本：
 
 | 平台 | 架构 | 说明 |
 |---|---|---|
-| Windows | x86_64 | 预编译二进制 + Tauri 桌面应用 |
+| Windows | x86_64 | 预编译二进制 + biliup 桌面版安装包 |
 | Linux | x86_64 / aarch64 | 预编译二进制 |
 | macOS | x86_64 / aarch64 | 预编译二进制 |
 | Android (Termux) | aarch64 | 通过交叉编译 `aarch64-linux-android` 目标支持 |
@@ -213,7 +213,7 @@ biliup 提供基于 [Tauri](https://tauri.app/) 的桌面应用版本：
 
 | 组件 | 最低版本 | 推荐版本 |
 |---|---|---|
-| Rust（编译 CLI） | 1.75 | stable |
+| Rust（编译 CLI） | 1.85 | stable |
 | Node.js（前端开发） | 20.9 | 22 LTS |
 | Python（Python API 绑定） | 3.9 | 3.12 |
 | npm | 9 | 10 |
@@ -236,14 +236,14 @@ biliup/
 ├── app/                 # Next.js 前端（WebUI）
 ├── npm/                 # npm 分发的包装包（@biliup/cli 等）
 ├── public/              # 前端静态资源
-├── tauri-app/           # 桌面端外壳（实验性）
+├── tauri-app/           # biliup 桌面版外壳（Windows 安装包）
 ├── docs/                # 文档源文件
 ├── Cargo.toml           # Rust 工作区配置
 ├── package.json         # 前端依赖与构建脚本
 └── tsconfig.json
 ```
 
-> 📦 WebUI 源码在主仓库的 `app/`；正式发布的桌面客户端（biliup-app）在[独立仓库](https://github.com/biliup/biliup-app-new)维护，主仓库里的 `tauri-app/` 是实验性外壳。
+> 📦 WebUI 源码在主仓库的 `app/`；主仓库的 `tauri-app/` 是 **biliup 桌面版**外壳（内置服务与 FFmpeg），投稿客户端 **biliup-app** 在[独立仓库](https://github.com/biliup/biliup-app-new)维护。
 
 ---
 

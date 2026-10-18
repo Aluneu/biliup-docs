@@ -4,7 +4,7 @@
 
 | 直播平台 | 支持类型 | 链接示例 | 备注 |
 |----------|----------|----------|------|
-| 哔哩哔哩 | 直播 | `https://live.bilibili.com/123456`、`https://b23.tv/xxxx` | HLS分区需streamlink/可录制弹幕 |
+| 哔哩哔哩 | 直播 | `https://live.bilibili.com/123456`、`https://b23.tv/xxxx` | HLS 分区用默认 `mesio` 即可；可录制弹幕 |
 | 斗鱼 | 直播 | `https://www.douyu.com/123456` | 可录制弹幕 |
 | 虎牙 | 直播 | `https://www.huya.com/123456` | 可录制弹幕 |
 | 抖音 | 直播 | `https://live.douyin.com/123456` | 可录制弹幕/主页/风控需Cookie |
@@ -52,21 +52,17 @@
 
 ---
 
-## Yaml 源文件
+## 用配置文件批量导入（旧版配置）
 
-以下平台可通过 Yaml 文件的方式添加直播源：
+v1.3.0 的直播源统一存在数据库里，正常用法是在 WebUI 里逐个添加链接。如果你有大量直播源，也可以用 `biliup server --config <文件>` 导入 **1.0.7 风格**的配置文件，格式是「备注 → URL 列表」：
 
-| 平台 | 支持类型 |
-|------|----------|
-| Twitch | 直播 / VOD |
-| NicoNico | 直播 / 时间表 |
-| Pixiv Sketch | 直播 |
-| Mirrativ | 直播 |
-| Mildom | 直播 |
-| 抖音 | 直播（备用方案） |
-| Showroom | 直播 |
-| TwitCasting | 直播 |
-| Whowatch | 直播 |
+```yaml
+streamers:
+  某主播: https://live.bilibili.com/123456
+  另一个: https://www.douyu.com/654321
+```
+
+> 旧版 Python 插件式的 `*.yaml` 源定义（Pixiv Sketch / Mirrativ / Mildom / Showroom / Whowatch 等）在 Rust 版中**已不支持**：这些平台请用通用适配器（`General`）+ yt-dlp / streamlink。
 
 ---
 

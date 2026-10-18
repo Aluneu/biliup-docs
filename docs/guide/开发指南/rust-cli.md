@@ -8,7 +8,7 @@ biliup 的核心逻辑（`biliup`、`biliup-cli`、`danmaku`）均使用 **Rust*
 
 | 技术 | 用途 |
 |---|---|
-| Rust (stable) | 1.75+ |
+| Rust (stable) | **1.85+**（工作区使用 edition 2024 / resolver 3） |
 | cargo | 包管理 + 构建工具 |
 | tokio | 异步运行时 |
 | reqwest | HTTP 客户端（B站 API 调用） |
@@ -33,8 +33,8 @@ source ~/.cargo/env
 验证：
 
 ```bash
-rustc --version   # 1.75+
-cargo --version   # 1.75+
+rustc --version   # 1.85+
+cargo --version   # 1.85+
 ```
 
 ### 2. 安装系统依赖
@@ -67,22 +67,26 @@ brew install openssl sqlite
 crates/
 ├── biliup/              # 核心库
 │   ├── src/
-│   │   ├── lib.rs      # 库入口
-│   │   ├── downloader/ # 各平台下载器
-│   │   ├── uploader/   # B站上传逻辑
-│   │   └── config.rs   # 配置结构定义
+│   │   ├── lib.rs       # 库入口
+│   │   ├── downloader/  # 各平台下载器
+│   │   └── uploader/    # B站上传逻辑
 │   └── Cargo.toml
 ├── biliup-cli/          # 命令行 + Web API
 │   ├── src/
-│   │   ├── main.rs    # CLI 入口
-│   │   ├── server.rs   # Web 服务（axum）
-│   │   └── api/       # REST API 路由
+│   │   ├── main.rs      # CLI 入口
+│   │   ├── entry.rs     # 子命令分发与服务启动
+│   │   └── server/
+│   │       ├── router.rs   # 所有 REST 路由集中注册
+│   │       ├── api/        # 各接口实现
+│   │       ├── config.rs   # 全局配置结构（Config / ConfigPatch）
+│   │       └── ...
 │   └── Cargo.toml
-└── danmaku/            # 弹幕客户端（Rust 重构版）
-    ├── src/
-    │   └── lib.rs
-    └── Cargo.toml
+├── danmaku/             # 弹幕客户端
+│   └── src/protocols/   # 各平台弹幕协议实现
+└── danmaku-factory/     # XML → ASS 转换（v1.3.0 新增）
 ```
+
+> 全局配置结构在 `crates/biliup-cli/src/server/config.rs`（`biliup` 核心库中**没有** `config.rs`）。
 
 ---
 
@@ -119,23 +123,23 @@ cargo build -p biliup-cli
 
 ## Web API 开发
 
-`biliup-cli` 使用 `axum` 框架提供 REST API，源码在 `crates/biliup-cli/src/api/`。
+`biliup-cli` 使用 `axum` 框架提供 REST API，实现放在 `crates/biliup-cli/src/server/api/`，**所有路由集中注册在 `crates/biliup-cli/src/server/router.rs`**（不再有 `api/mod.rs` 里的路由表）。
 
 ### 添加新接口
 
-1. 在 `api/` 目录新建模块文件
-2. 定义路由和处理函数
-3. 在 `api/mod.rs` 中注册路由
+1. 在 `server/api/` 下新建模块文件，实现处理函数；
+2. 在 `server/router.rs` 的 `router()` 里挂上 `.route(...)`；
+3. 如需权限控制，在 `server/infrastructure/permissions.rs` 里登记路径与所需权限点。
 
 示例（简化）：
 
 ```rust
-// crates/biliup-cli/src/api/streamers.rs
-use axum::{extract::Json, http::StatusCode};
+// crates/biliup-cli/src/server/api/streamers.rs
+use axum::Json;
 
 pub async fn get_streamers() -> Json<Vec<Streamer>> {
     // 从数据库读取主播列表
-    let streamers = vec![]; // TODO: 实际实现
+    let streamers = vec![]; // 实际实现见源码
     Json(streamers)
 }
 ```
@@ -161,15 +165,17 @@ curl http://localhost:19159/v1/streamers
 | 平台 | 协议 |
 |---|---|
 | B站（直播） | WebSocket |
-| 斗鱼 | TCP 自定义协议 |
-| 虎牙 | WebSocket |
+| 斗鱼 | TCP 自定义协议（STT） |
+| 虎牙 | WebSocket（TARS） |
+| 抖音 | WebSocket（Protobuf） |
 | Twitch | IRC / WebSocket |
-| YouTube | 无需弹幕（使用 Chat API） |
+| TwitCasting | WebSocket（JSON） |
+| YouTube | HTTP 轮询 Live Chat |
 
 添加新的弹幕源：
 
-1. 在 `danmaku/src/platforms/` 实现对应 trait
-2. 在 `danmaku/src/lib.rs` 中注册平台
+1. 在 `crates/danmaku/src/protocols/` 下新建模块并实现对应 trait；
+2. 在 `crates/danmaku/src/protocols/mod.rs` 的 `create_platform` 里注册。
 
 ---
 
@@ -194,10 +200,10 @@ fn stream_gears(_py: Python, m: &PyModule) -> PyResult<()> {
 }
 ```
 
-编译为 Python 扩展：
+编译为 Python 扩展（仓库根目录没有 pyproject.toml，必须用 `-m` 指定）：
 
 ```bash
-maturin develop
+maturin develop -m crates/stream-gears/Cargo.toml
 ```
 
 ---

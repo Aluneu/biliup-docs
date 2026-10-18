@@ -35,9 +35,9 @@ description: biliup 上手指南：安装方式、首次录制投稿路径、常
 
 ::: warning 开始前先看三条
 
-- **默认只录不传，还可能删录像**：新建主播的上传器是 `Noop`，并且默认带 `rm` 后处理。先按[首次录制并投稿](/guide/workflow-demo/)建好投稿模板，再正式使用。
-- **默认只监听本机**：远程访问要用 `biliup server --bind 0.0.0.0 --auth`（不加 `--auth` 会拒绝启动）；公网部署请加反代与 HTTPS，并定期备份数据目录。
-- **WebUI 用户名固定为 `biliup`**：`--auth` 后首次访问时设置密码。忘记密码用 `biliup user reset-password <用户名>` 重置，不需要动数据库。
+- **默认只录不传**：新建的直播间不绑定投稿模板，所以不会自动上传。想录完自动投稿，先按[首次录制并投稿](/guide/workflow-demo/)建好模板并绑定；另外检查「处理流程 → 上传后」里有没有 `rm`——有它录像会在上传后被删。
+- **默认只监听本机**：启动后会打印访问地址，浏览器打开 `http://127.0.0.1:19159`（远程访问要用 `biliup server --bind 0.0.0.0 --auth`，不加 `--auth` 会拒绝启动）；公网部署请加反代与 HTTPS，并定期备份数据目录（见[安全与运维](/guide/getting-started/帮助/security-ops.html)第 6 节）。
+- **WebUI 管理员用户名默认预填 `biliup`**：`--auth` 后首次访问时自行设置用户名（可改）与密码，创建后不能改名。忘记密码用 `biliup user reset-password <用户名>` 重置，不需要动数据库。
 
 :::
 
@@ -69,7 +69,7 @@ npm config set registry https://registry.npmmirror.com
 <a href="/guide/configs/config.html">命令行参考</a>
 <a href="/guide/webui/usage.html">WebUI 使用指南</a>
 <a href="../配置/global-config.html">全局设置</a>
-<a href="../配置/live-config.html">各平台设置</a>
+<a href="./supported-platforms.html">支持的平台</a>
 </div>
 
 <div>

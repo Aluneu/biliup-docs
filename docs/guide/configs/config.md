@@ -95,7 +95,7 @@ biliup server --bind 0.0.0.0 --auth
 :::
 
 ::: tip
-`--auth` 是布尔开关，不接收 `user:pass` 参数。开启后首次访问 WebUI 会进入注册页面，需创建管理账号（用户名固定为 `biliup`）。详见 [WebUI 认证](/guide/api/rest-api.html#认证说明)。
+`--auth` 是布尔开关，不接收 `user:pass` 参数。开启后首次访问 WebUI 会进入注册页面，需创建管理账号（用户名默认预填 `biliup`，可改）。详见 [WebUI 认证](/guide/api/rest-api.html#认证说明)。
 :::
 
 
@@ -133,7 +133,7 @@ biliup upload [OPTIONS] [VIDEO_PATH]...
 |------|------|------|--------|
 | `<VIDEO_PATH>` | `Vec<PathBuf>` | 视频文件路径（可指定多个） | 必填（指定 `--config` 时可省略）|
 | `-c, --config` | `PathBuf` | 配置文件路径（指定后可从配置中读取投稿参数，省略视频路径） | — |
-| `--submit` | `app`/`web`/`bcutandroid` | 提交接口 | `app` |
+| `--submit` | `app`/`web`/`b-cut-android` | 提交接口 | `app` |
 | `-l, --line` | `UploadLine` | 上传线路（见下方可选值） | 自动选择 |
 | `--limit` | `usize` | 单视频文件最大并发上传数 | `3` |
 | `--copyright` | `u8` | 版权：`1`=自制 `2`=转载 | `1` |
@@ -203,7 +203,7 @@ biliup append [OPTIONS] --vid <VID> <VIDEO_PATH>...
 |------|------|------|--------|
 | `--vid` / `-v` | `Vid` | 目标稿件 AV 或 BV 号（**必填**） | — |
 | `<VIDEO_PATH>` | `Vec<PathBuf>` | 视频文件路径（可指定多个） | 必填 |
-| `--submit` | `app`/`web`/`bcutandroid` | 提交接口 | `app` |
+| `--submit` | `app`/`web`/`b-cut-android` | 提交接口 | `app` |
 | `-l, --line` | `UploadLine` | 上传线路（同 upload） | 自动选择 |
 | `--limit` | `usize` | 单视频文件最大并发上传数 | `3` |
 | Studio 字段 | — | 同 upload 命令的 `--title`/`--tag`/`--desc` 等 | — |

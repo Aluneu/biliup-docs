@@ -40,7 +40,7 @@ features:
     details: 支持多p上传、线路切换、大文件上传（最高 32G）、多账号管理，自动选择最优线路。
   - icon: 🐳
     title: 灵活部署
-    details: 支持 uv/pip/Docker/Winexe 多种安装方式。官方 Docker 镜像一键部署，开箱即用。
+    details: npm 一行安装、预编译二进制解压即用，官方 Docker 镜像一键部署，另有 Windows 桌面客户端。
   - icon: 🔓
     title: 开源免费
     details: 基于 MIT 协议完全开源，无付费墙、无云端绑定。代码与问题追踪均在 GitHub，欢迎贡献。

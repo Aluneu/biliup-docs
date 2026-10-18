@@ -12,7 +12,7 @@ biliup 支持 **5 种 B站账号登录方式**，适用于不同使用场景。�
 
 ::: warning
 本文讲的是**用于投稿的 B站账号**登录方式。它与 **WebUI 管理员账号**是两套完全不同的身份：
-- **WebUI 管理员账号**：用于登录 WebUI 后台，用户名**固定为 `biliup`**，首次访问时设置密码（开启 `--auth` 后）。
+- **WebUI 管理员账号**：用于登录 WebUI 后台，用户名**默认预填 `biliup`（可改，创建后不可改名）**，首次访问时设置密码（开启 `--auth` 后）。
 - **B站投稿账号**：通过下方扫码 / Cookie 等方式添加，用于实际录制与投稿。
 请勿把两者混为一谈；忘记 WebUI 管理员密码无需动数据库，在服务的工作目录执行 `biliup user reset-password <用户名>` 即可重置，详见 [CLI 命令行参考 - user](/guide/configs/config.html#user-管理-web-登录用户) 或 [WebUI 使用指南 - 忘记密码](/guide/webui/usage.html#忘记-webui-密码)。
 :::
@@ -158,7 +158,7 @@ biliup 支持两种 Cookie 文件格式：
    - Windows：`%APPDATA%\biliup\cookies.json`
    - Linux/macOS：`~/.config/biliup/cookies.json`
 2. 在 WebUI「空间配置」→「哔哩哔哩」中指定 Cookie 文件路径
-3. 保存后重启 biliup 生效
+3. 保存后即用于后续录制，无需重启
 
 ---
 
@@ -170,7 +170,7 @@ biliup 支持两种 Cookie 文件格式：
 |---|---|---|
 | 抖音 | `douyin_cookie` | 风控严格，多数直播需要 Cookie 才能拉到流 |
 | Twitch | `twitch_cookie` | 录制会员专属流或规避部分限制 |
-| TwitCasting | `twitcasting_cookie`、`twitcasting_password` | 密码房录制 |
+| TwitCasting | `twitcasting_cookie`；密码房的 `twitcasting_password` 在**各平台设置**下，不在 `user` 段 | 密码房录制 |
 | YouTube | `youtube_cookie` | Cookie **文件路径**（与上面几个不同，这里填路径不是字符串） |
 | niconico | `niconico-email`、`niconico-password`、`niconico-user-session`、`niconico-purge-credentials` | 账号密码登录；`niconico-purge-credentials` 用于清除已存凭据 |
 | AfreecaTV | `afreecatv_username`、`afreecatv_password` | 账号密码登录 |

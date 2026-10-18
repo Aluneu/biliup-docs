@@ -59,6 +59,10 @@ npm i -g @biliup/cli
 npx @biliup/cli server --auth
 ```
 
+::: tip npm 包不含渲染字体
+弹幕渲染、画面遮挡与录后合成需要 `render-tools/`（Noto 字体），npm 包只含二进制。只录制 + 投稿不受影响；需要这些功能时，把 Release 压缩包里的 `render-tools/` 放到二进制旁，或配置 `render_fonts_dir`（见[全局设置](/guide/getting-started/配置/global-config.html#字体目录-render-fonts-dir)）。
+:::
+
 ### 4. 验证安装
 
 ```bash
@@ -115,23 +119,26 @@ npm uninstall -g @biliup/cli
 | Intel Mac | `biliupR-v1.x.x-x86_64-macos.tar.xz` |
 
 ```bash
-# 示例：Apple Silicon（请把 1.2.11 换成最新版本号）
+# 示例：Apple Silicon（请把 1.3.0 换成最新版本号）
 cd ~/Downloads
-curl -L -O https://github.com/biliup/biliup/releases/download/v1.2.11/biliupR-v1.2.11-aarch64-macos.tar.xz
+curl -L -O https://github.com/biliup/biliup/releases/download/v1.3.0/biliupR-v1.3.0-aarch64-macos.tar.xz
 ```
 
 ### 2. 解压并安装
 
 ```bash
-# 解压
+# 解压（压缩包顶层是 biliupR-v<版本>-<平台>/，里面有 biliup 与 render-tools/）
 tar -xJf biliupR-*.tar.xz
 
-# 移动到 PATH 目录
-sudo mv biliup /usr/local/bin/
+# 安装二进制与渲染字体目录（漏掉 render-tools 会导致弹幕渲染 / 遮挡合成报“找不到字体”）
+sudo install -d /usr/local/bin
+sudo cp -r biliupR-*/biliup biliupR-*/render-tools /usr/local/bin/
 
 # 验证
 biliup --version
 ```
+
+> Apple Silicon 上 `/usr/local/bin` 可能不存在，可用 `~/bin`（确保在 `PATH` 中），或先 `sudo mkdir -p /usr/local/bin`。
 
 ### 3. 启动
 
@@ -143,19 +150,21 @@ biliup server --auth
 
 ### 4. 更新
 
-重新下载新版本压缩包，覆盖 `/usr/local/bin/biliup` 即可。
+重新下载新版本压缩包，覆盖 `/usr/local/bin/biliup` 与 `/usr/local/bin/render-tools` 即可。
 
 ---
 
-## 方法三：使用 uv / pip 安装
+## 方法三：Python API（uv / pip，可选）
 
-::: warning PyPI 只发布源码包
-PyPI 上的 `biliup` **只有源码包（sdist），没有预编译 wheel**。因此 `uv tool install biliup` 和 `pip install biliup` 都会在**本机现场编译**，需要提前装好：
+::: warning 这是给 Python 脚本用的，不是装 CLI
+PyPI 上的 `biliup` 是 **stream-gears 的 Python 绑定**（模块名 `stream_gears`），只提供上传、直链下载与登录接口，**没有 `biliup` 命令，也没有录制服务**（v1.3.0 起 `python -m biliup` 已移除）。
+
+而且 PyPI **只发布源码包（sdist）**，安装时会在本机现场编译，需要提前装好：
 
 - Python 3.9+（推荐 3.11 及以上）
 - **Rust 工具链**（`brew install rust` 或 [rustup.rs](https://rustup.rs/)），编译耗时较长
 
-如果你只是想装好就能用，请优先选择 [方法一（npm）](#方法一-使用-npm-安装-推荐) 或 [方法二（预编译二进制）](#方法二-预编译二进制-无需-node-python)。
+只想装好就能用，请选 [方法一（npm）](#方法一-使用-npm-安装-推荐) 或 [方法二（预编译二进制）](#方法二-预编译二进制-无需-node-python)。
 :::
 
 ### uv 方式
@@ -168,25 +177,24 @@ brew install uv
 # 安装 Rust 工具链（编译必需）
 brew install rust
 
-# 安装 biliup
-uv tool install biliup
-```
-
-更新与卸载：
-
-```bash
-uv tool install --reinstall biliup   # 更新
-uv tool uninstall biliup             # 卸载
+# 在虚拟环境里装绑定库
+uv venv && source .venv/bin/activate
+uv pip install biliup
 ```
 
 ### pip 方式
 
 ```bash
-# 确保已有 Python 3.11+
+# 确保已有 Python 3.9+
 python3 --version
 
-# 安装 biliup
 pip3 install biliup
+```
+
+### 验证
+
+```bash
+python3 -c "import stream_gears; print('ok')"
 ```
 
 更新与卸载：

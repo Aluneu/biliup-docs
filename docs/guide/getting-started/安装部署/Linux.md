@@ -14,10 +14,10 @@
 |---|---|---|
 | **npm**（推荐） | Node.js 18+ | 自动匹配平台预编译二进制，装完即用 |
 | 预编译二进制 | 无 | 手动下载解压，适合无 Node 的服务器 |
-| uv / pip | Python + Rust 工具链 | PyPI 只发源码包，安装时需现场编译 |
+| uv / pip | Python + Rust 工具链 | 装的是 **Python 绑定库**（`stream_gears`），没有 `biliup` 命令 |
 | Docker | Docker | 见 [Docker 部署](./docker.html)，环境隔离最彻底 |
 
-> 三种方式装出来的都是同一个 Rust CLI，`biliup --help` 输出的参数完全一致。
+> npm、预编译二进制与 Docker 装出来的都是同一个 Rust CLI，`biliup --help` 输出的参数完全一致；uv / pip 装的是给 Python 脚本调用的绑定库，不含录制服务与命令行入口（见[方法三](#方法三-python-api-uv-pip-可选)）。
 
 ---
 
@@ -113,6 +113,10 @@ npm uninstall -g @biliup/cli
 
 未列出的平台请改用下方预编译二进制或 Docker。
 
+::: tip npm 包不含渲染字体
+弹幕渲染、画面遮挡与录后合成需要 `render-tools/`（Noto 字体）。npm 包只含二进制，**只录制 + 投稿不受影响**；需要这些功能时，把 Release 压缩包里的 `render-tools/` 放到二进制旁，或按[全局设置 · 字体目录](/guide/getting-started/配置/global-config.html#字体目录-render-fonts-dir)配置 `render_fonts_dir`。
+:::
+
 ---
 
 ## 方法二：使用预编译二进制（无需 Node / Python）
@@ -131,19 +135,20 @@ npm uninstall -g @biliup/cli
 | armv7（树莓派 3/4） | `biliupR-v1.x.x-arm-linux.tar.xz` |
 
 ```bash
-# 示例：x86_64 架构（请把 1.2.11 换成最新版本号）
+# 示例：x86_64 架构（请把 1.3.0 换成最新版本号）
 cd /tmp
-wget https://github.com/biliup/biliup/releases/download/v1.2.11/biliupR-v1.2.11-x86_64-linux.tar.xz
+wget https://github.com/biliup/biliup/releases/download/v1.3.0/biliupR-v1.3.0-x86_64-linux.tar.xz
 ```
 
 ### 2. 解压并安装
 
 ```bash
-# 解压
+# 解压（压缩包顶层是 biliupR-v<版本>-<平台>/，里面有 biliup 与 render-tools/）
 tar -xJf biliupR-*.tar.xz
 
-# 移动到 PATH 目录
-sudo mv biliup /usr/local/bin/
+# 安装二进制与渲染字体目录（漏掉 render-tools 会导致弹幕渲染 / 遮挡合成报“找不到字体”）
+sudo install -d /usr/local/bin
+sudo cp -r biliupR-*/biliup biliupR-*/render-tools /usr/local/bin/
 
 # 验证
 biliup --version
@@ -157,19 +162,21 @@ biliup server --auth
 
 ### 4. 更新
 
-重新下载新版本压缩包，覆盖 `/usr/local/bin/biliup` 即可。
+重新下载新版本压缩包，覆盖 `/usr/local/bin/biliup` 与 `/usr/local/bin/render-tools` 即可。
 
 ---
 
-## 方法三：使用 uv / pip 安装
+## 方法三：Python API（uv / pip，可选）
 
-::: warning PyPI 只发布源码包
-PyPI 上的 `biliup` **只有源码包（sdist），没有预编译 wheel**。因此 `uv tool install biliup` 和 `pip install biliup` 都会在**本机现场编译**，需要提前装好：
+::: warning 这是给 Python 脚本用的，不是装 CLI
+PyPI 上的 `biliup` 是 **stream-gears 的 Python 绑定**（模块名 `stream_gears`），只提供上传、直链下载与登录接口，**没有 `biliup` 命令，也没有录制服务**（v1.3.0 起 `python -m biliup` 已移除）。
+
+而且 PyPI **只发布源码包（sdist）**，`pip install biliup` 会在本机现场编译，需要提前装好：
 
 - Python 3.9+（推荐 3.11 及以上）
 - **Rust 工具链**（[rustup.rs](https://rustup.rs/)），编译耗时较长
 
-如果你只是想装好就能用，请优先选择 [方法一（npm）](#方法一-使用-npm-安装-推荐) 或 [方法二（预编译二进制）](#方法二-使用预编译二进制-无需-node-python)。
+只想装好就能用，请选 [方法一（npm）](#方法一-使用-npm-安装-推荐) 或 [方法二（预编译二进制）](#方法二-使用预编译二进制-无需-node-python)。
 :::
 
 ### uv 方式
@@ -182,15 +189,9 @@ source ~/.bashrc
 # 安装 Rust 工具链（编译必需）
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
-# 安装 biliup
-uv tool install biliup
-```
-
-更新与卸载：
-
-```bash
-uv tool install --reinstall biliup   # 更新
-uv tool uninstall biliup             # 卸载
+# 在虚拟环境里装绑定库
+uv venv && source .venv/bin/activate
+uv pip install biliup
 ```
 
 ### pip 方式
@@ -201,6 +202,19 @@ pip3 install biliup
 
 # 国内镜像加速（清华源）
 pip3 install biliup -i https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
+### 验证与使用
+
+```bash
+python3 -c "import stream_gears; print('ok')"
+```
+
+接口与示例见 [Python 开发](/guide/开发指南/python.html)：
+
+```python
+import stream_gears
+stream_gears.login_by_cookies("cookies.json")
 ```
 
 更新与卸载：
@@ -241,7 +255,7 @@ biliup 本体已包含下载器，多数场景**开箱即用**，以下依赖按
 | 依赖 | 什么时候需要 |
 |---|---|
 | — | 默认下载器 `mesio` 由 Rust 实现，**无需任何外部依赖** |
-| `ffmpeg` | 改用 `ffmpeg` 下载器，或配置了压制 / remux 等后处理 |
+| `ffmpeg` | 改用 `ffmpeg` 下载器，或要用画面遮挡 / 录后合成 / 精确剪 / remux（弹幕压制需要带 libass 的构建） |
 | `yt-dlp` / `streamlink` | 录制 YouTube、niconico 等平台，或使用通用适配器处理非内置平台的地址 |
 
 ```bash

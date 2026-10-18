@@ -28,15 +28,16 @@ pkg install xz-utils ffmpeg -y
 官方为 Android (aarch64) 直接提供预编译二进制，**不需要 Python，也不需要本机编译**：
 
 ```bash
-# 下载（请把 1.2.11 换成最新版本号）
+# 下载（请把 1.3.0 换成最新版本号）
 cd ~
-curl -L -O https://github.com/biliup/biliup/releases/download/v1.2.11/biliupR-v1.2.11-aarch64-android.tar.xz
+curl -L -O https://github.com/biliup/biliup/releases/download/v1.3.0/biliupR-v1.3.0-aarch64-android.tar.xz
 
-# 解压
+# 解压（顶层是 biliupR-v<版本>-aarch64-android/，含 biliup 与 render-tools/）
 tar -xJf biliupR-*.tar.xz
 
-# 安装到 Termux 的 PATH 目录
-mv biliup $PREFIX/bin/
+# 安装到 Termux 的 PATH 目录（render-tools 一起放，否则弹幕渲染/遮挡合成找不到字体）
+mkdir -p $PREFIX/bin
+cp -r biliupR-*/biliup biliupR-*/render-tools $PREFIX/bin/
 chmod +x $PREFIX/bin/biliup
 
 # 验证
@@ -45,23 +46,20 @@ biliup --version
 
 > `$PREFIX` 是 Termux 的安装前缀（通常为 `/data/data/com.termux/files/usr`），`$PREFIX/bin` 已在 `PATH` 中。
 >
-> 其他 ARM 架构的旧设备可尝试上面的 `aarch64` 包；若架构不匹配，请改用方式 B。
+> 官方只发 **aarch64** 的 Android 包；32 位 ARM 设备无法运行，只能走方式 B 现场编译。
 
-### 方式 B：pip / uv 安装（需要 Rust 工具链）
+### 方式 B：Python API（pip / uv，需要 Rust 工具链）
 
-::: warning PyPI 只发布源码包
-PyPI 上的 `biliup` **只有源码包（sdist），没有预编译 wheel**，在 Termux 里安装需要先装 Rust 工具链并现场编译，耗时长且容易失败。除非有特殊需求，**建议使用方式 A**。
+::: warning 这是给 Python 脚本用的，不是装 CLI
+PyPI 上的 `biliup` 是 **stream-gears 的 Python 绑定**，没有 `biliup` 命令，也没有录制服务。它只有源码包（sdist），在 Termux 里安装需要先装 Rust 工具链并现场编译，耗时长且容易失败。除非要写 Python 脚本，**建议使用方式 A**。
 :::
 
 ```bash
 # 安装 Python 与 Rust（编译必需，体积较大）
 pkg install python rust make -y
 
+python -m venv .venv && source .venv/bin/activate
 pip install biliup
-
-# 或使用 uv
-pkg install uv -y
-uv tool install biliup
 ```
 
 ---
@@ -72,7 +70,7 @@ uv tool install biliup
 biliup server --auth
 ```
 
-启动后在手机浏览器访问 `http://localhost:19159`，管理员用户名为 `biliup`，首次访问时在注册页自行设置密码。
+启动后在手机浏览器访问 `http://localhost:19159`，首次访问时自行设置管理员用户名（默认预填 `biliup`，可改）与密码。
 
 > ⚠️ Termux 会话在应用被系统回收后会中断。如需长期后台运行：
 > - 开启 Termux 的「唤醒锁」：`termux-wake-lock`
@@ -89,11 +87,11 @@ biliup server --auth
 cd ~
 curl -L -O https://github.com/biliup/biliup/releases/download/v<新版本>/biliupR-v<新版本>-aarch64-android.tar.xz
 tar -xJf biliupR-*.tar.xz
-mv -f biliup $PREFIX/bin/
+cp -rf biliupR-*/biliup biliupR-*/render-tools $PREFIX/bin/
 chmod +x $PREFIX/bin/biliup
 
 # 卸载
-rm $PREFIX/bin/biliup
+rm -rf $PREFIX/bin/biliup $PREFIX/bin/render-tools
 ```
 
 方式 B：
