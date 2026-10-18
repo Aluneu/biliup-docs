@@ -19,6 +19,11 @@ biliup 对大量直播 / 视频平台的流解析与下载能力，建立在以�
 | 项目 | 简介 | 在 biliup 中的作用 | 仓库地址 |
 | --- | --- | --- | --- |
 | **THMonster/danmaku** | 多平台弹幕协议解析库 | 提供直播弹幕录制能力，输出标准 XML 弹幕文件 | [THMonster/danmaku](https://github.com/THMonster/danmaku) |
+| **DanmakuFactory** | 弹幕 XML → ASS 转换工具 | v1.3.0 起 biliup 内置了原生 Rust 转换实现（排版逻辑派生自该项目），无需再单独安装 | [hihkm/DanmakuFactory](https://github.com/hihkm/DanmakuFactory) |
+
+### 字体
+
+录后合成与弹幕压制使用 **Noto Sans CJK SC** 与 **Noto Emoji**，均以 SIL Open Font License 分发，随 CLI 发布包 / 桌面安装包 / Docker 镜像提供。
 
 ## 特别感谢
 

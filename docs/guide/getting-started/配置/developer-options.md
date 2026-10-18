@@ -27,7 +27,33 @@ biliup 提供四个阶段的钩子，支持自定义脚本和外部通知：
 | `run` | `{"run": "sh ./process.sh"}` | 执行 Shell 命令（Windows: `cmd /C`，Unix: `sh -c`） |
 | `mv` | `{"mv": "backup/"}` | 移动文件到指定目录 |
 | `remux` | `{"remux": "mp4"}` | 转封装为 MP4（使用 ffmpeg，不重编码） |
+| `render` | `{"render": {"danmaku": {"enabled": true}, "regions": [...]}}` | 内置遮挡 / 弹幕压制（与工作台导出同一个引擎） |
 | `rm` | `"rm"` | 删除文件 |
+
+### 处理流程编辑器
+
+v1.3.0 起 WebUI 提供**图形化的处理流程编辑器**（直播间 → 处理流程）：四个阶段一次编排，步骤可拖动排序，画布上能看到「下载结束」分支；保存时仍写回原有的四个钩子数组，不引入第二套存储。
+
+`render` 步骤与「录后合成」共用同一编码管线，可同时完成遮挡与弹幕压制：
+
+```yaml
+segment_processor:
+  - render:
+      danmaku:
+        enabled: true
+        font: "Noto Sans CJK SC"
+        font_size: 38
+      regions:
+        - effect_type: mosaic   # mosaic | blur | smooth_blur | solid | image
+          x: 0.05
+          y: 0.05
+          width: 0.25
+          height: 0.2
+          strength: 16
+          intervals: []         # 留空 = 全程生效；否则填 [{from_ms, to_ms}]
+```
+
+> 区域坐标与宽高都是 **0–1 的比例**（相对画面），不是像素。一般不需要手写这段 JSON——在遮挡编辑器里画好保存即可。
 
 ### 各阶段输入数据
 
@@ -97,7 +123,9 @@ ffmpeg -hide_banner -loglevel warning -y \
 
 ### 自定义处理器
 
-可编写自定义 Python 脚本，搭配 [DanmakuFactory](https://github.com/hihkm/DanmakuFactory) 等工具实现弹幕压制。
+可以编写自定义 Shell / Python 脚本做任意处理（如调用外部工具转码、上传到网盘）。
+
+弹幕压制**不再需要**外部 [DanmakuFactory](https://github.com/hihkm/DanmakuFactory)：XML → ASS 转换已内置为原生 Rust 实现，用 `render` 步骤或「录后合成」即可，详见[录后合成](/guide/tutorials/post-recording-render.html)。
 
 ---
 

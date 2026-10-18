@@ -245,7 +245,7 @@ biliup download [OPTIONS] <URL>
 |------|------|--------|
 | `<URL>` | 直播间或视频 URL | 必填 |
 | `-o, --output` | 输出文件名模板（支持 `{title}` 变量和 strftime 格式） | `{title}` |
-| `--split-size` | 按大小分割视频（支持 K/M/G 后缀，**按 1000 进制**，如 `4G` = 4,000,000,000 字节） | — |
+| `--split-size` | 按大小分割视频（支持 K/M/G 后缀，**按 1000 进制**，如 `4G` = 4,000,000,000 字节）。必须是正的有限值；`0`、负数、`NaN` 与溢出的值会直接报错 | — |
 | `--split-time` | 按时间分割视频（如 `1h30m`） | — |
 
 示例：
@@ -362,7 +362,7 @@ biliup season [--json] <SUBCOMMAND>
 
 | 子命令 | 说明 |
 |---|---|
-| `list` | 列出自己的合集及其小节 |
+| `list` | 列出自己的合集及其小节，合集顺序与 B 站创作中心里的自定义顺序一致 |
 | `sections <SEASON_ID>` | 查看合集的各个小节和其中的稿件（输出里的 episode id 用于 `remove` / `sort`） |
 | `add --vid <VID>... <SECTION_ID>` | 把稿件加入小节，cid 与标题自动获取；`--vid` 可重复指定以一次加入多个 |
 | `remove <EPISODE_ID>` | 从合集移出一个稿件（注意是 **episode id，不是 aid**，见 `sections` 的输出） |

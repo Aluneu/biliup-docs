@@ -35,6 +35,7 @@ export default defineConfig({
     nav: [
       { text: "指引", link: "/guide/getting-started/上手/", activeMatch: "/guide/getting-started/" },
       { text: "工作原理", link: "/guide/workflow-demo/", activeMatch: "/guide/workflow-demo/" },
+      { text: "教程", link: "/guide/tutorials/recording-and-masking", activeMatch: "/guide/tutorials/" },
       { text: "WebUI", link: "/guide/webui/usage", activeMatch: "/guide/webui/" },
       { text: "API", link: "/guide/api/rest-api", activeMatch: "/guide/api/" },
       { text: "CLI", link: "/guide/configs/config", activeMatch: "/guide/configs/" },
@@ -57,6 +58,7 @@ export default defineConfig({
       "/guide/changelog/": set_sidebar('/guide/changelog', false, false),
       "/guide/skill/": set_sidebar('/guide/skill', false, false),
       "/guide/workflow-demo/": set_sidebar('/guide/workflow-demo', false, false),
+      "/guide/tutorials/": set_sidebar('/guide/tutorials', false, false),
       "/guide/开发指南/": set_sidebar('/guide/开发指南', false, false),
     }
   },

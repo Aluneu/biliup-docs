@@ -1,6 +1,8 @@
 # 系统架构
 
-biliup 采用 **Rust 后端 + Python 包 + Vite 前端** 的混合架构，各层职责清晰、可独立开发。
+biliup 采用 **Rust 后端 + 内嵌前端 + Python API 绑定** 的架构，各层职责清晰、可独立开发。
+
+> v1.3.0 起 Python 包收敛为**纯 API**：不再提供 `python -m biliup` 入口与录制服务，只保留上传 / 直链下载 / 登录接口。运行完整应用请用原生 CLI、桌面版或 Docker。
 
 ---
 
@@ -12,9 +14,8 @@ graph TB
     CLI[biliup-cli]
     CORE[biliup 核心库]
     DANMAKU[danmaku 弹幕库]
+    FACTORY[danmaku-factory<br/>XML→ASS]
     GEARS[stream-gears PyO3]
-    PYENTRY[biliup.__main__]
-    PYUPLOAD[bili_webup]
     DB[("SQLite")]
     FILES[文件系统]
     BILI[Bilibili API]
@@ -23,15 +24,14 @@ graph TB
     UI --> CLI
     CLI --> CORE
     CLI --> DANMAKU
+    CLI --> FACTORY
     CLI --> DB
     CLI --> FILES
     CORE --> STREAMS
     CORE --> BILI
     DANMAKU --> STREAMS
     DANMAKU --> FILES
-    GEARS --> CLI
-    PYENTRY --> GEARS
-    PYUPLOAD --> BILI
+    GEARS --> CORE
 ```
 
 各节点详细说明见下方「各层说明」章节。
@@ -66,8 +66,9 @@ npm run dev
 |---|---|
 | `biliup-cli` | 命令行入口 + Web API 服务，整合所有功能 |
 | `biliup` | 核心库：直播解析、下载器调度、B站上传 |
-| `danmaku` | 弹幕客户端（Rust 重构版），支持多平台弹幕录制，输出 XML |
-| `stream-gears` | PyO3 扩展模块，Rust ↔ Python 桥梁，供 Python 包调用核心功能 |
+| `danmaku` | 弹幕客户端（Rust），支持多平台弹幕录制，输出 XML |
+| `danmaku-factory` | 内置的 XML → ASS 转换（原生 Rust，v1.3.0 新增；不再依赖外部 DanmakuFactory 可执行文件） |
+| `stream-gears` | PyO3 **基础 API** 绑定（上传 / 直链下载 / 登录），不依赖服务端 |
 
 Rust 后端的优势：
 - 高性能：并发下载、上传不阻塞
@@ -89,39 +90,26 @@ Rust 后端的优势：
 | `ffmpeg`（内部分段） | FFmpeg 内部分段模式 |
 | `yt-dlp` | 使用 yt-dlp 作为后端 |
 
-### Python 包（`crates/stream-gears/biliup/`）
+### Python 包（`crates/stream-gears`）
 
-> v1.2.9 起 Python 包从仓库根目录的 `biliup/` 移到了 `crates/stream-gears/biliup/`，由该 crate 一并构建发布。
+> v1.3.0 起 Python 包收敛为**纯 API**：`biliup.__main__`、`bili_webup` / `bili_webup_sync` 投稿库、`main_loop` 与 `config_bindings` 均已移除，包体只暴露上传、直链下载与登录接口。录制服务、WebUI、字体与命令行入口都不在 Python 包里。
 
-| 模块 | 说明 |
+| 接口 | 说明 |
 |---|---|
-| `biliup.__main__` | 最小入口，调用 `stream_gears.main_loop` 启动主循环 |
-| `biliup.plugins.bili_webup` | B站投稿库，可被外部 Python 项目 import 使用 |
-| `biliup.plugins.bili_webup_sync` | 同步版投稿库 |
+| `stream_gears.upload` | 上传视频到 B站 |
+| `stream_gears.download` | 下载直播流 |
+| `stream_gears.download_with_callback` | 带回调的下载 |
+| `stream_gears.login_by_cookies` | Cookie 登录 |
+| `stream_gears.login_by_web_cookies` | Web Cookie 登录 |
+| `stream_gears.get_qrcode` / `login_by_qrcode` | 二维码登录 |
+| `stream_gears.send_sms` / `login_by_sms` | 短信登录 |
+| `stream_gears.login_by_web_qrcode` | Web 二维码登录 |
 
-Python 包的存在意义：
-- 兼容旧版脚本和自动化流程
-- 供非 Rust 环境调用投稿功能
-- 插件和钩子可用 Python 编写
+Python 包的存在意义：供非 Rust / 非 Node 环境调用上传、下载与登录能力。
 
 ### stream-gears PyO3 绑定
 
-`stream_gears` 模块暴露了以下函数，可供 Python 脚本直接调用：
-
-| 函数 | 说明 |
-|---|---|
-| `upload` | 上传视频到 B站 |
-| `download` | 下载直播流 |
-| `download_with_callback` | 带回调的下载 |
-| `login_by_cookies` | Cookie 登录 |
-| `send_sms` | 发送短信验证码 |
-| `login_by_qrcode` | 二维码登录 |
-| `get_qrcode` | 获取二维码 |
-| `login_by_sms` | 短信登录 |
-| `login_by_web_cookies` | Web Cookie 登录 |
-| `login_by_web_qrcode` | Web 二维码登录 |
-| `main_loop` | 主循环入口 |
-| `config_bindings` | 配置绑定 |
+`stream_gears` 模块暴露的函数与上表一致，供 Python 脚本直接调用。它只链接 `biliup` 核心库，不再依赖 `biliup-cli` 与 axum。
 
 ### 数据层
 
@@ -148,8 +136,12 @@ Python 包的存在意义：
 | `clips` | 切片与导出记录（v1.2.9 新增） |
 | `auto_clip_jobs` | 自动切片任务（v1.2.10 新增，该功能尚未正式发布） |
 | `clip_suggestions` | 自动切片候选（v1.2.10 新增，同上） |
+| `douyu_cookie_keeper` | 斗鱼 Cookie 自动续期状态（v1.3.0 新增） |
+| `stream_session_ids` / `session_group_members` / `session_merge_candidates` | 回看工作台的会话合并（v1.3.0 新增） |
+| `render_recipes` / `render_assets` / `render_jobs` / `render_sources` / `render_job_assets` | 录后合成的配方、素材与任务（v1.3.0 新增） |
+| `upload_observation_tasks` / `upload_observation_files` | 上传队列与活动记录（v1.3.0 新增） |
 
-> 结构以 `crates/biliup-cli/migrations/` 下的迁移文件为准，当前共 14 个迁移。
+> 结构以 `crates/biliup-cli/migrations/` 下的迁移文件为准，当前主库共 **15** 个迁移；Fleet 库 `fleet_migrations/` 共 **7** 个。
 
 ---
 
@@ -175,7 +167,7 @@ biliup-cli 定时检测直播间状态
   → 调用 biliup 核心库下载直播流
   → 写入文件系统（分段）
   → 下载完成后触发上传任务
-  → 调用 biliup-rs / bili_webup 上传至 B站
+  → 调用 biliup-rs 上传至 B站
   → 更新 SQLite 任务状态
   → WebUI 可查看进度
 ```
@@ -223,7 +215,7 @@ biliup 提供基于 [Tauri](https://tauri.app/) 的桌面应用版本：
 |---|---|---|
 | Rust（编译 CLI） | 1.75 | stable |
 | Node.js（前端开发） | 20.9 | 22 LTS |
-| Python（Python 包 / 通过 PyPI 安装时编译） | 3.9 | 3.12 |
+| Python（Python API 绑定） | 3.9 | 3.12 |
 | npm | 9 | 10 |
 | maturin（Python/Rust 桥接） | 1.0 | latest |
 
@@ -239,7 +231,8 @@ biliup/
 │   ├── biliup/          # 核心：直播解析、下载、上传
 │   ├── biliup-cli/      # 命令行与 Web API
 │   ├── danmaku/         # 弹幕客户端
-│   └── stream-gears/    # PyO3 绑定 + Python 包（含 biliup/ 子目录）
+│   ├── danmaku-factory/ # 内置 XML→ASS 转换
+│   └── stream-gears/    # PyO3 基础 API 绑定（不含服务端）
 ├── app/                 # Next.js 前端（WebUI）
 ├── npm/                 # npm 分发的包装包（@biliup/cli 等）
 ├── public/              # 前端静态资源

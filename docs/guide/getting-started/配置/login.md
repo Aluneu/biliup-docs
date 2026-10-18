@@ -1,5 +1,5 @@
 ---
-description: biliup 登录方式：B站账号扫码/Cookie 与 WebUI 管理员账号（固定 biliup）的区别，认证开启与密码设置，基于 v1.2.11 核对。
+description: biliup 登录方式：B站账号扫码/Cookie 与 WebUI 管理员账号（固定 biliup）的区别，认证开启与密码设置，基于 v1.3.0 核对。
 ---
 
 # 登录方式详解

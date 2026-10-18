@@ -145,11 +145,18 @@ Cookie 文件放置路径：
 
 | 配置项 | 说明 |
 |---|---|
+| `douyu_cookie` | 斗鱼网页版登录 Cookie（请求头字符串或浏览器 JSON 导出）。原画等高码率需要登录 |
+| `douyu_ltp0` | 长期续期凭据 `LTP0`（仅本机保存，不下发 Fleet）|
+| `douyu_refresh_device_id` | 续期用的 Web 设备号 `dy_did` |
+| `douyu_auto_refresh` | 是否自动续期，有 `LTP0` 时默认开启 |
+| `douyu_cdn` | 斗鱼 CDN 节点 |
 | `douyu_force_hs` | 强制 hs 流使用构造链接 |
-| `douyu_rate` | 码率 |
-| `douyu_codec` | 视频编码：`AVC` 或 `HEVC` |
+| `douyu_rate` | 请求的最高画质档位：`0` 原画 / `8` 蓝光 8M / `4` 蓝光 4M / `3` 超清 / `2` 高清 |
+| `douyu_codec` | 视频编码：`AVC`（默认）或 `HEVC`（需 `mesio` 或支持的新版 FFmpeg）|
 | `douyu_device_id` | 对应 Cookie 中 `acf_did` 的值 |
 | `douyu_disable_interactive_game` | 跳过互动游戏（不录制互动游戏画面） |
+
+> 登录、续期与画质排查见[斗鱼平台配置](/guide/getting-started/平台配置/斗鱼.html)。
 
 ---
 

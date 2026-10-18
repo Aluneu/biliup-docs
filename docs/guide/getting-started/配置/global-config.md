@@ -1,5 +1,5 @@
 ---
-description: biliup 全局配置参考：下载器、分段规则、delay 默认值（300 秒）、上传器与上传重试（max_upload_limit），基于 v1.2.11 与 master 现行行为核对。
+description: biliup 全局配置参考：下载器、分段规则、delay 默认值（300 秒）、上传器与上传重试（max_upload_limit），基于 v1.3.0 源码核对。
 ---
 
 # 全局设置
@@ -81,6 +81,16 @@ description: biliup 全局配置参考：下载器、分段规则、delay 默认
 
 ---
 
+## 字体目录（render_fonts_dir）
+
+弹幕渲染（浏览器预览与合成导出共用）使用的字体目录。不填时使用随包分发的 Noto Sans CJK SC 与 Noto Emoji。
+
+- 可以填目录本身，也可以填它下面的 `fonts/`。
+- CLI 发布包 / 桌面安装包 / Docker 镜像都自带 `render-tools/`（字体与许可）；自行部署时把 `render-tools/` 放在可执行文件旁，或把这里指向该目录。
+- 与 `ffmpeg_path` 一样**全局生效、可按主播覆写**。
+
+---
+
 ## 视频分段设置
 
 ### 分段大小（file_size）
@@ -89,7 +99,9 @@ description: biliup 全局配置参考：下载器、分段规则、delay 默认
 
 ### 分段时长（segment_time）
 
-按录制时长分段，格式 `00:00:00`（时:分:秒）。
+按录制时长分段，支持三种写法：`HH:MM:SS`、`MM:SS` 或秒数（如 `3600`）。`stream-gears`、`mesio`、`ffmpeg` 三种下载器现在按同一套规则解析；写错的值会在日志里提示，并按「不分段」录制。
+
+WebUI 里可以直接选预设时长，也可以填自定义值；主播的「配置覆写」可以显式继承全局值或关闭分段。
 
 ::: tip
 分段大小和分段时长可同时设置，先触发哪个就按哪个分段。
@@ -156,8 +168,8 @@ description: biliup 全局配置参考：下载器、分段规则、delay 默认
 | `app` | App 接口提交 |
 | `b-cut-android` / `bcutandroid` | BCut Android 接口提交 |
 
-::: info 默认值变化（2026-10，未发布）
-服务端自动投稿 / 编辑稿件原先不配置时走 app 接口；app 接口会拿稿件的第一个标签自动参加活动（转载稿因此常被误挂活动），也更容易被风控。master 分支已改为**默认 web**（[#1801](https://github.com/biliup/biliup/pull/1801)）。命令行 `biliup upload` 不指定 `--submit` 时仍默认 `app`，与此是两条独立路径。
+::: info 默认值变化（v1.3.0 起）
+服务端自动投稿 / 编辑稿件原先不配置时走 app 接口；app 接口会拿稿件的第一个标签自动参加活动（转载稿因此常被误挂活动），也更容易被风控。v1.3.0 起改为**默认 web**（[#1801](https://github.com/biliup/biliup/pull/1801)）。命令行 `biliup upload` 不指定 `--submit` 时仍默认 `app`，与此是两条独立路径。
 :::
 
 ### 上传线路（lines）
@@ -192,13 +204,33 @@ description: biliup 全局配置参考：下载器、分段规则、delay 默认
 - **B 站限流、风控等拒绝不会重试**——重试只针对网络问题，避免加剧风控。
 - 次数用完仍失败：跳过该分段，**文件保留在本地**，可手动上传或等下次任务。
 
-::: info 该字段已恢复生效（2026-10，未发布）
-v1.2.11 的后端一度没有实现这个字段（WebUI 输入框填了也不生效，当时本文档标注过"不再生效"）。master 分支已把它接回网络失败重试逻辑（[#1805](https://github.com/biliup/biliup/pull/1805)），WebUI 表单与配置文件均可正常使用。
+::: info 该字段已恢复生效（v1.3.0 起）
+v1.2.11 的后端一度没有实现这个字段（WebUI 输入框填了也不生效，当时本文档标注过"不再生效"）。v1.3.0 已把它接回网络失败重试逻辑（[#1805](https://github.com/biliup/biliup/pull/1805)），WebUI 表单与配置文件均可正常使用。
 :::
 
 ### 使用直播封面（use_live_cover）
 
 开启后将自动下载直播间封面并用作投稿封面，默认关闭。
+
+---
+
+## 画面遮挡（mosaic_config）
+
+`mosaic_config` 保存遮挡区域（JSON）。日常不需要手写：在 WebUI 房间的「画面遮挡」编辑器里圈选区域保存即可，写入的是该主播的覆写；全局字段作为默认值。
+
+启用遮挡后，分段关闭时会先做遮挡再参与碎片过滤与后续处理；**处理后的分段才会进入投稿与切片导出**。切片工作台的快速剪 / 精确剪不会在导出时再加遮罩，需要额外效果请用「合成导出选段」。
+
+> 操作方式见[录制分段、画面遮挡与本地合并](/guide/tutorials/recording-and-masking.html)。
+
+---
+
+## 未完成的录像
+
+biliup **不会删除未完成的录像**：
+
+- **FLV / TS**（`stream-gears`、`mesio`，以及 ffmpeg 录 FLV / TS）：断流、出错、暂停、删除房间或退出程序时，截断的文件照常作为一个分段保存，并进入上传与后处理。
+- **HLS fMP4**：分片整片收齐才写入，截断在分片中间的最后一小段直接丢弃（半个分片会让整个文件结尾解不出来），init segment + 完整分片仍可播放。
+- **ffmpeg 录 MP4**（`format: mp4`）：MP4 索引（moov）在录制结束时才写入，被中止的文件无法播放，因此**不进入上传流程**；但文件不会被删除，会以 `.mp4.part` 留在录像目录，可用 untrunc 等工具尝试修复，或自行删除。
 
 ---
 
@@ -322,9 +354,14 @@ v1.2.11 的后端一度没有实现这个字段（WebUI 输入框填了也不生
 
 | 字段 | 说明 |
 |---|---|
+| `douyu_cookie` | 斗鱼网页版登录 Cookie（请求头字符串或浏览器 JSON 导出）。部分房间的原画需要登录；属于账号凭据，非超管不可见、不下发到 Fleet |
+| `douyu_ltp0` | 斗鱼 passport 长期续期凭据 `LTP0`；仅本机保存，不下发到 Fleet |
+| `douyu_refresh_device_id` | 续期时使用的斗鱼 Web 设备号 `dy_did`；不填时从 Cookie / 导出 JSON 读取 |
+| `douyu_auto_refresh` | 是否自动续期斗鱼 Web 登录 Cookie；有 `LTP0` 时默认开启 |
+| `douyu_cdn` | 斗鱼 CDN 节点 |
 | `douyu_force_hs` | 强制 hs 流使用构造链接 |
 | `douyu_rate` | 码率 |
-| `douyu_codec` | 视频编码：`AVC` 或 `HEVC` |
+| `douyu_codec` | 视频编码：`AVC` 或 `HEVC`（HEVC 需使用 `mesio` 或支持 HEVC 的新版 FFmpeg） |
 | `douyu_device_id` | 对应 Cookie 中 `acf_did` 的值 |
 | `douyu_disable_interactive_game` | 跳过互动游戏（不录制互动游戏画面） |
 

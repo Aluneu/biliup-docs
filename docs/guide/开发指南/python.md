@@ -1,6 +1,8 @@
 # Python 开发
 
-biliup 的 Python 包提供投稿库（`bili_webup`）和 CLI 最小入口（`biliup.__main__`），同时 `stream-gears` 作为 Rust 核心的 Python 绑定，是 Python 层与 Rust 层之间的桥梁。
+biliup 的 Python 部分在 v1.3.0 起收敛为**纯 API 绑定**：`stream-gears` 把 Rust 核心的上传、直链下载与登录能力暴露给 Python，**不再包含录制服务、WebUI、字体或命令行入口**。
+
+> 如果你在找 `python -m biliup`：该入口已在 v1.3.0 移除。运行完整应用请用原生 CLI、桌面版或 Docker，见[安装部署](/guide/getting-started/安装部署/Linux.html)。
 
 ---
 
@@ -10,9 +12,7 @@ biliup 的 Python 包提供投稿库（`bili_webup`）和 CLI 最小入口（`bi
 |---|---|
 | Python | 3.9+ |
 | maturin | Rust/Python 桥接，编译 `stream-gears` 扩展 |
-| bili_webup | B站投稿库（可被外部项目 import） |
-| bili_webup_sync | 同步版投稿库 |
-| stream-gears | Rust 核心的 Python 绑定（由 maturin 编译） |
+| stream-gears | Rust 核心的 Python 绑定（上传 / 直链下载 / 登录） |
 
 ---
 
@@ -40,118 +40,114 @@ brew install python@3.12
 
 ```bash
 pip install maturin
-```
-
-验证：
-
-```bash
-maturin --version  # >= 1.0
-```
-
-### 3. 安装 Python 依赖
-
-```bash
-cd biliup/          # Python 包在 biliup/ 目录
-pip install -e ".[dev]"
+maturin --version   # >= 1.0
 ```
 
 ---
 
 ## 编译 Rust 扩展（stream-gears）
 
-Python 包依赖 `stream-gears`（Rust 编译的 Python 扩展模块），需要先编译：
-
 ```bash
-cd biliup           # 仓库根目录
-
-# 开发模式：编译并安装到当前 Python 环境
-maturin develop
-
-# 如需每次修改 Rust 代码后自动重新编译
-maturin develop --cargo-extra-args="-Z unstable-options"
+# 仓库根目录
+maturin develop -m crates/stream-gears/Cargo.toml
 ```
 
-验证安装：
+验证：
 
 ```bash
 python -c "import stream_gears; print('OK')"
 ```
 
----
-
-## 运行 biliup（Python 入口）
-
-```bash
-# 方式一：作为模块运行
-python -m biliup
-
-# 方式二：直接调用 CLI（如已安装 biliup CLI）
-biliup --help
-```
+::: tip 构建 Python 包不需要构建前端
+`stream-gears` 只链接 `biliup` 核心库，不依赖 `biliup-cli`、axum 或 `out/` 前端产物，因此不必先跑 `npm run build`。
+:::
 
 ---
 
-## 项目结构（Python）
+## 使用
 
+### 登录
+
+```python
+import stream_gears
+
+# 用已保存的 cookies.json 登录
+stream_gears.login_by_cookies("cookies.json")
+
+# 扫码登录：先取二维码，再轮询
+qr = stream_gears.get_qrcode()
+print(qr)          # 二维码内容 / 链接，自行渲染成图片
+stream_gears.login_by_qrcode(qr, "cookies.json")
 ```
-biliup/                    # Python 包根目录
-├── biliup/
-│   ├── __init__.py
-│   ├── __main__.py      # python -m biliup 入口
-│   ├── bili_webup.py    # B站投稿库
-│   ├── bili_webup_sync.py # 同步版投稿库
-│   └── ...
-├── crates/
-│   └── stream-gears/    # Rust 扩展（由 maturin 编译为 .pyd/.so）
-├── pyproject.toml       # Python 包配置
-└── setup.py             # 兼容旧版 pip 安装
+
+### 上传
+
+```python
+import stream_gears
+
+stream_gears.upload(
+    video_path="video.mp4",
+    cookie_file="cookies.json",
+    title="测试投稿",
+    tag="测试",
+    desc="通过 stream_gears 上传",
+    tid=171,          # 分区 id
+    copyright=1,      # 1 自制 / 2 转载
+)
 ```
+
+其余参数（`source`、`cover`、`dynamic`、`dtime`、`line`、`extra_fields`、`submit` 等）与 CLI 投稿参数一一对应，见[命令行参考](/guide/configs/config.html)。
+
+### 下载直播流
+
+```python
+import stream_gears
+
+stream_gears.download(
+    url="https://...",
+    header_map={"User-Agent": "Mozilla/5.0", "Referer": "https://live.bilibili.com/"},
+    file_name="recording.flv",
+    segment=False,    # True 时按分段写入
+)
+```
+
+带回调的版本用 `download_with_callback`，可在每段文件生成时收到通知。
+
+### 接口一览
+
+| 接口 | 说明 |
+|---|---|
+| `upload` | 上传视频到 B站 |
+| `download` / `download_with_callback` | 下载直播流（带 / 不带分段回调） |
+| `login_by_cookies` | 用 cookies.json 登录 |
+| `login_by_web_cookies` | 用 Web Cookie 登录 |
+| `get_qrcode` + `login_by_qrcode` | 二维码登录 |
+| `send_sms` + `login_by_sms` | 短信登录 |
+| `login_by_web_qrcode` | Web 二维码登录 |
+
+> 所有接口出错时抛 `stream_gears.StreamGearsError`（`RuntimeError` 的子类），消息里带完整原因链。
 
 ---
 
-## 开发技巧
+## 项目结构
 
-### 修改投稿逻辑
-
-编辑 `biliup/bili_webup.py`，然后直接运行测试（无需重新编译）：
-
-```bash
-python -m biliup upload test.mp4
 ```
-
-### 修改下载逻辑（Rust 部分）
-
-如下载器核心在 Rust 的 `crates/biliup/` 中，修改后需重新编译：
-
-```bash
-maturin develop
-```
-
-### 使用虚拟环境
-
-推荐始终在虚拟环境中开发：
-
-```bash
-python -m venv .venv
-source .venv/bin/activate   # Linux/macOS
-.venv\Scripts\activate      # Windows
+crates/stream-gears/
+├── src/
+│   ├── lib.rs          # PyO3 模块导出
+│   ├── login.rs        # 登录相关接口
+│   └── uploader.rs     # 上传相关接口
+├── Cargo.toml
+└── pyproject.toml
 ```
 
 ---
 
 ## 打包与发布
 
-### 构建 wheel 包
-
 ```bash
-maturin build --release
-# 产物在 target/wheels/ 目录
-```
-
-### 发布到 PyPI
-
-```bash
-maturin publish
+maturin build -m crates/stream-gears/Cargo.toml --release
+# 产物在 target/wheels/
 ```
 
 ---
@@ -160,29 +156,21 @@ maturin publish
 
 ### `import stream_gears` 失败
 
-原因：`stream-gears` 未编译或未安装到当前 Python 环境。
-
-解决：
+原因：扩展未编译或未安装到当前 Python 环境。
 
 ```bash
-maturin develop
+maturin develop -m crates/stream-gears/Cargo.toml
 ```
 
 ### Windows 上编译失败
 
-原因：Windows 需要安装 [Visual Studio Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)。
-
-解决：安装 "Desktop development with C++" 工作负载。
+需要安装 [Visual Studio Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)，勾选 "Desktop development with C++" 工作负载。
 
 ### macOS 上 maturin 找不到 Python
 
-原因：Python 路径未正确设置。
-
-解决：
-
 ```bash
 export PYTHON_SYS_EXECUTABLE=$(which python3)
-maturin develop
+maturin develop -m crates/stream-gears/Cargo.toml
 ```
 
 ---

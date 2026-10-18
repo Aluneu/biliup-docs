@@ -16,16 +16,35 @@
 
 ---
 
-## 未发布（v1.2.11 之后）
+## v1.3.0
 
-> 以下变更已合入 master、随下个版本发布；条目按提交整理。
+> 发布时间：2026-10-18
 
-- 💡 **WebUI 页面结构**：Fleet 配置（`/nodes/config`）与 Fleet 模板（`/nodes/template`）从弹窗改为独立页面；节点覆写与本机密钥改为在父页面打开的抽屉（`/dashboard?secrets=1`，旧路径 `/dashboard/secrets` 自动转发）；弹窗 / 抽屉统一走共享的页面外壳 [#1796](https://github.com/biliup/biliup/pull/1796) [#1797](https://github.com/biliup/biliup/pull/1797) [#1798](https://github.com/biliup/biliup/pull/1798) [#1799](https://github.com/biliup/biliup/pull/1799) [#1800](https://github.com/biliup/biliup/pull/1800)
-- 🔧 **投稿接口默认改为 `web`**：服务端自动投稿 / 编辑稿件在未配置 `submit_api` 时默认走 web 接口（原先走 app 接口——app 接口会拿第一个标签自动参加活动，也更容易被风控）[#1801](https://github.com/biliup/biliup/pull/1801)
+本次更新主要来自 [#1811](https://github.com/biliup/biliup/pull/1811)（画面遮挡、录后合成、斗鱼登录、弹幕转换纯 Rust 化），并包含 v1.2.11 之后累积的界面重构与下载 / 上传修复。
+
+- 💡 **画面遮挡编辑器**：在真实直播截帧上圈选马赛克 / 模糊 / 纯色区域，分段关闭后自动处理；**待遮挡的原片不会进入投稿或切片导出**。分段时长支持预设、自定义与主播级继承／关闭
+- 💡 **录后合成（renders）**：下播后可在回看工作台拖拽缩放图片遮挡、调整弹幕，一次编码导出合成 MP4；新增「合成任务」页面（`/renders`）与 `/v1/renders` 接口，支持预览、任务进度、取消与源片保留
+- 💡 **斗鱼登录与 Cookie 自动续期**：新增 `douyu_cookie`、`douyu_ltp0`、`douyu_refresh_device_id`、`douyu_auto_refresh` 配置项；WebUI 提供 Cookie 测试按钮与续期状态 / 手动续期控件。原画等高码率流需要登录
+- 💡 **弹幕转换内置为纯 Rust**：不再需要外部 [DanmakuFactory](https://github.com/hihkm/DanmakuFactory) 可执行文件（`danmaku_factory_path` 仅作兼容保留、不再生效），转换在本进程内完成；字体随 CLI 发布包 / 桌面安装包 / Docker 镜像分发，可用 `render_fonts_dir` 指向自定义目录
+- 💡 **WebUI 新增页面**：新增「合成任务」`/renders` 与「上传队列」`/upload-queue`；回看工作台支持会话合并，上传队列 / 活动记录持久化
+- 💡 **WebUI 页面结构重构**：Fleet 配置（`/nodes/config`）与 Fleet 模板（`/nodes/template`）从弹窗改为独立页面；节点覆写与本机密钥改为父页抽屉（`/dashboard?secrets=1`，旧路径 `/dashboard/secrets` 自动转发）；弹窗 / 抽屉统一走共享外壳 [#1796](https://github.com/biliup/biliup/pull/1796) [#1797](https://github.com/biliup/biliup/pull/1797) [#1798](https://github.com/biliup/biliup/pull/1798) [#1799](https://github.com/biliup/biliup/pull/1799) [#1800](https://github.com/biliup/biliup/pull/1800)
+- 💡 **REST API 扩充**：新增合成任务、遮挡截帧、会话合并、上传队列、文件浏览、活动事件与斗鱼 Cookie 校验等路由，详见 [REST API](/guide/api/rest-api.html)
+- ⚠️ **未完成的录像一律保留、不删除**：断流、出错、暂停或删除房间、退出程序时，已写下的 FLV / TS 照常作为分段保存并上传；ffmpeg 录 MP4 被中止（未写完 moov）时不进入上传流程，但 `.mp4.part` 会留在录像目录供手动修复或删除
+- 🔧 **FLV / 斗鱼录制**：非单调 DTS 改为按音频、视频轨道分别修复（不再因音视频交错把时间轴越拉越长）；斗鱼 CDN 切换（`Non-monotonous DTS ... previous: 4877, current: 0`）不再中断录制，切换瞬间的空 tag、残缺 tag 与重发的 FLV 文件头会被跳过 [#1802](https://github.com/biliup/biliup/pull/1802)
+- 🔧 **HLS**：fMP4（含 `#EXT-X-MAP` 初始化分片）改存 `.mp4` 并写入 init segment，可直接播放；媒体序号跳号时自动切段；加密清单（`#EXT-X-KEY`）直接报错；未收满的分片整片丢弃
+- 🔧 **AAC 音频时间戳自动修复**：落盘 FLV 分段检查 AAC 音频包时间戳，出现重复或回退时修复并重编码音频为 192 kbps AAC，正常音频保持复制；输出需通过严格递增校验，失败保留原片且不进入投稿或后处理（已有录像与边录边传不追溯）
+- 🔧 **分段时长（`segment_time`）**：`stream-gears`、`mesio`、`ffmpeg` 统一按 `HH:MM:SS` / `MM:SS` / 秒数解析；写错的值会提示并按不分段录制
+- 🔧 请求 `format: mp4` 时，未配置下载器或配置为 `stream-gears` 的主播改用 ffmpeg 真正转封装，避免只改扩展名得到无法播放的文件
+- 🔧 **投稿接口默认改为 `web`**：服务端自动投稿 / 编辑稿件未配置 `submit_api` 时默认走 web 接口（app 接口会拿第一个标签自动参加活动，也更容易被风控）[#1801](https://github.com/biliup/biliup/pull/1801)
 - 🔧 **上传网络故障重试**：分段因断网、DNS 失败、超时、5xx 等网络类失败时按 `max_upload_limit` 重传整个分段，该配置项重新生效（不填默认 6 次，含第一次；B 站限流、风控等拒绝不重试）[#1805](https://github.com/biliup/biliup/pull/1805)
-- 🔧 **FLV 下载**：处理非单调 DTS，并安全解析数据包头部 [#1802](https://github.com/biliup/biliup/pull/1802)
-- 🔧 Fleet：修复节点在 select! 分支间丢失已读一半的控制面帧的问题 [#1794](https://github.com/biliup/biliup/pull/1794)
+- 🔧 `biliup season list` 不再强制按修改时间倒序，改为返回 B 站创作中心里的**自定义顺序** [#1810](https://github.com/biliup/biliup/pull/1810)
+- 🔧 **安全与稳定性**：删除仍被主播使用的投稿模板返回 409（不再级联删掉主播）、登录失败计数与 Argon2 校验放在同一把锁内、编辑暂停中的主播不再恢复监听、上传并发设为 0 不再挂死、遗留上传锁可被 30 分钟阈值回收、代理的封面 / 头像响应加 CSP 与 `nosniff`
+- 🔧 抖音弹幕 PushFrame / gzip / Response 解码失败改为显式错误，损坏消息跳过并告警
+- 🔧 Fleet：修复节点在 `select!` 分支间丢失已读一半控制面帧的问题；主备同步能正确传递删除与新暂停 [#1794](https://github.com/biliup/biliup/pull/1794)
 - 🔧 **npm 发布改用 Trusted Publishing（OIDC）**，不再依赖长期有效的 token [#1795](https://github.com/biliup/biliup/pull/1795)
+- ⚠️ **Python 包收敛为纯 API**：`python -m biliup` 入口已移除，`stream_gears` 只保留上传 / 直链下载 / 登录 API；运行完整应用请使用原生 CLI、桌面版或 Docker
+
+[完整对比 v1.2.11 → v1.3.0](https://github.com/biliup/biliup/compare/v1.2.11...v1.3.0)
 
 ---
 

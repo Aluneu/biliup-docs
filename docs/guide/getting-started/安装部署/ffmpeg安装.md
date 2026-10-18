@@ -2,6 +2,8 @@
 
 ::: info
 仅在使用 `streamlink` 或 `ffmpeg` 下载器时需要安装 FFmpeg。默认下载器 `mesio` 无需 FFmpeg。
+
+但 **v1.3.0 的画面遮挡、录后合成与精确剪** 依赖 FFmpeg：遮挡 / 合成建议使用带 `libx264` 与 `libass` 的完整构建。
 :::
 
 

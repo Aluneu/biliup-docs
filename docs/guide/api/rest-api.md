@@ -1,5 +1,5 @@
 ---
-description: biliup REST API 与日志 WebSocket：路由、认证与分级权限、B站账号与 WebUI 账号两组用户接口、Fleet 控制面路由、手动上传示例（含必填 id/template_name）与日志频道（upload.log），基于 v1.2.11 与 master 现行代码核对。
+description: biliup REST API 与日志 WebSocket：路由、认证与分级权限、B站账号与 WebUI 账号两组用户接口、Fleet 控制面路由、录后合成 / 遮挡 / 上传队列接口、手动上传示例（含必填 id/template_name）与日志频道（upload.log），基于 v1.3.0 源码核对。
 ---
 
 # REST API 文档
@@ -55,6 +55,7 @@ biliup server --auth
 | PUT | `/v1/streamers` | 更新主播 |
 | DELETE | `/v1/streamers/{id}` | 删除主播 |
 | PUT | `/v1/streamers/{id}/pause` | 暂停/恢复主播录制 |
+| GET | `/v1/streamers/{id}/mosaic-frame` | 取一张真实直播截帧，供遮挡编辑器圈选区域 |
 
 ### 直播预览与实时数据
 
@@ -79,10 +80,56 @@ biliup server --auth
 | GET | `/v1/sessions` | 列出录制会话（场次） |
 | GET | `/v1/sessions/{id}` | 获取单个会话 |
 | PATCH | `/v1/sessions/{id}` | 更新会话，用于「保留这场」（改 `retain_until`） |
+| DELETE | `/v1/sessions/{id}` | 删除已结束场次的历史记录（v1.3.0 新增） |
 | GET | `/v1/sessions/{id}/keyframes` | 可落刀位置（关键帧） |
 | GET | `/v1/sessions/{id}/media` | DVR 回看流，拖动进度 |
 | GET | `/v1/sessions/{id}/thumb` | 会话缩略图 |
 | GET | `/v1/sessions/{id}/danmaku-density` | 弹幕密度曲线（10 秒一桶，含基线与高峰） |
+
+### 会话合并（v1.3.0 新增）
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| GET | `/v1/session-merge-candidates` | 列出可合并的相邻场次候选 |
+| POST | `/v1/session-merge-candidates/{id}/confirm` | 确认合并 |
+| POST | `/v1/session-merge-candidates/{id}/dismiss` | 忽略该候选 |
+| POST | `/v1/session-groups` | 手动创建合并分组 |
+
+### 录后合成（v1.3.0 新增）
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| GET / PUT | `/v1/sessions/{id}/render-recipe` | 读取 / 保存该场次的合成配方（遮挡区域、弹幕样式、编码参数） |
+| GET / PUT | `/v1/sessions/{id}/render-settings` | 同上，路径别名 |
+| GET / POST | `/v1/sessions/{id}/render-assets` | 列出 / 上传图片素材（按 ID 引用，不接受服务器路径） |
+| GET / DELETE | `/v1/render-assets/{aid}` | 读取 / 删除素材 |
+| GET / POST | `/v1/sessions/{id}/renders` | 列出 / 创建合成任务（任务不可变） |
+| GET | `/v1/renders` | 列出全部合成任务 |
+| GET / DELETE | `/v1/renders/{jid}` | 任务详情 / 取消删除 |
+| POST | `/v1/renders/{jid}/cancel` | 取消 |
+| POST | `/v1/renders/{jid}/retry` | 重试（新建任务） |
+| GET | `/v1/renders/{jid}/download` | 下载成品 |
+| POST | `/v1/sessions/{id}/render-preview` | 生成预览 |
+| GET | `/v1/render-gpus` | 可用 GPU / 硬件编码器 |
+| GET | `/v1/render-tools` | 渲染能力（FFmpeg、libass、字体是否就绪） |
+| GET | `/v1/render-fonts/{id}` | 读取随包字体文件 |
+
+> 详见[录后合成](/guide/tutorials/post-recording-render.html)。
+
+### 上传队列与活动记录（v1.3.0 新增）
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| GET | `/v1/upload-queue` | 统一上传队列（只读）。支持 `source`、`state`、`limit`、`offset` |
+| GET | `/v1/upload-queue/{id}` | 单条上传任务详情与文件列表 |
+| GET | `/v1/activity-events` | 活动流（场次开始/结束、分段完成、合成与上传），读取时从业务记录派生，不单独落库 |
+
+### 文件定位（v1.3.0 新增）
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| GET | `/v1/files/location` | 解析录制文件 / 合成成品的路径，只接受已有的录制文件名或渲染任务 ID，**不接受任意路径** |
+| POST | `/v1/files/reveal` | 在系统文件管理器中定位文件；仅限本机直连的客户端 |
 
 ### 标记
 
@@ -117,7 +164,7 @@ biliup server --auth
 
 | 方法 | 路径 | 说明 |
 |---|---|---|
-| GET | `/v1/configuration` | 获取全局配置 |
+| GET | `/v1/configuration` | 获取全局配置（响应带 `Cache-Control: no-store`，因为可能含账号凭据）|
 | PUT | `/v1/configuration` | 更新全局配置 |
 
 ### 主播信息
@@ -142,6 +189,9 @@ biliup server --auth
 |---|---|---|
 | GET | `/v1/system-stats` | 控制台首页系统状态（CPU / 内存 / 录制目录磁盘 / 网速）。带 `?since=` 时只取增量 |
 | GET | `/v1/tools` | FFmpeg 是否可用、版本与许可 |
+| GET | `/v1/render-tools` | 渲染能力检查（FFmpeg / libass / 字体）|
+| GET | `/v1/render-capabilities` | 同上，路径别名 |
+| GET | `/v1/render-gpus` | 可用 GPU 与硬件编码器 |
 
 ### B站投稿账号
 
@@ -185,6 +235,14 @@ biliup server --auth
 |---|---|---|
 | GET | `/v1/get_qrcode` | 获取 B 站扫码登录二维码 |
 | POST | `/v1/login_by_qrcode` | 二维码扫码登录 |
+
+### 斗鱼 Cookie 校验与续期（v1.3.0 新增）
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| POST | `/v1/douyu/validate-cookie` | 校验提交的斗鱼 Cookie（不保存、不续期）|
+| GET | `/v1/douyu/auth/status` | 查看续期状态、上次结果与下次时间 |
+| POST | `/v1/douyu/auth/refresh` | 手动续期（需 `config.edit` 权限）|
 
 ### 视频与状态
 

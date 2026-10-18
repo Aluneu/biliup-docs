@@ -1,5 +1,5 @@
 ---
-description: Windows 上安装 biliup：npm 预编译二进制、手动下载 CLI、桌面客户端，Rust CLI 需 server 子命令启动 WebUI，基于 v1.2.11 核对。
+description: Windows 上安装 biliup：npm 预编译二进制、手动下载 CLI、桌面客户端，Rust CLI 需 server 子命令启动 WebUI，基于 v1.3.0 核对。
 ---
 
 # Windows 安装教程

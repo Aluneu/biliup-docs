@@ -46,7 +46,7 @@
 | YouTube | `youtube_danmaku` | HTTP 轮询 |
 
 ::: tip
-弹幕录制输出为 B站兼容的 XML 格式，可配合 [DanmakuFactory](https://github.com/hihkm/DanmakuFactory) 进行弹幕压制。
+弹幕录制输出为 B站兼容的 XML 格式；v1.3.0 起 XML → ASS 转换已内置，可直接用「录后合成」压制弹幕，不再需要外部 DanmakuFactory。
 :::
 
 

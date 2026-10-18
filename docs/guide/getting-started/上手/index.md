@@ -7,7 +7,7 @@ description: biliup 上手指南：安装方式、首次录制投稿路径、常
 
 <img class="qs-logo" src="/icon.png" alt="biliup" width="72" height="72" />
 
-<span class="qs-badge">v1.2.11 · 开源免费</span>
+<span class="qs-badge">v1.3.0 · 开源免费</span>
 
 <h1>上手 biliup</h1>
 
@@ -214,4 +214,4 @@ npx @biliup/cli server --auth
 </ol>
 </details>
 
-<p class="qs-footnote">本文档对应 biliup <b>v1.2.11</b>，更新可能不及时，请以 <a href="https://github.com/biliup/biliup">biliup 主仓库</a>实际代码为准 · 桌面客户端（biliup-app）在<a href="https://github.com/biliup/biliup-app-new">独立仓库</a>维护</p>
+<p class="qs-footnote">本文档对应 biliup <b>v1.3.0</b>，更新可能不及时，请以 <a href="https://github.com/biliup/biliup">biliup 主仓库</a>实际代码为准 · 桌面客户端（biliup-app）在<a href="https://github.com/biliup/biliup-app-new">独立仓库</a>维护</p>
