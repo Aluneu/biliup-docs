@@ -11,10 +11,17 @@ description: biliup 上手指南：安装方式、首次录制投稿路径、常
 
 <p class="qs-sub">直播录制、自动投稿、WebUI 管理。需要 Node.js 18+，两条命令就能起服务。</p>
 
+<div class="qs-cmds">
 <div class="qs-cmd">
-<pre id="qs-hero-cmd"><code>npm i -g @biliup/cli
-biliup server --auth</code></pre>
-<button class="qs-copy" onclick="navigator.clipboard.writeText(document.getElementById('qs-hero-cmd').textContent.trim());this.textContent='已复制';setTimeout(()=>this.textContent='复制',1500)">复制</button>
+<span class="qs-cmd-label">安装</span>
+<code>npm i -g @biliup/cli</code>
+<button class="qs-copy" onclick="navigator.clipboard.writeText(this.parentElement.querySelector('code').textContent.trim());this.textContent='已复制';setTimeout(()=>this.textContent='复制',1500)">复制</button>
+</div>
+<div class="qs-cmd">
+<span class="qs-cmd-label">启动</span>
+<code>biliup server --auth</code>
+<button class="qs-copy" onclick="navigator.clipboard.writeText(this.parentElement.querySelector('code').textContent.trim());this.textContent='已复制';setTimeout(()=>this.textContent='复制',1500)">复制</button>
+</div>
 </div>
 
 <p class="qs-hint">也可以不装：<code>npx @biliup/cli server --auth</code>（npx 由 npm 自带，但不会生成 <code>biliup</code> 命令）</p>
