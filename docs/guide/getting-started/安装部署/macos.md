@@ -119,9 +119,9 @@ npm uninstall -g @biliup/cli
 | Intel Mac | `biliupR-v1.x.x-x86_64-macos.tar.xz` |
 
 ```bash
-# 示例：Apple Silicon（请把 1.3.0 换成最新版本号）
+# 示例：Apple Silicon（请把 1.3.4 换成最新版本号）
 cd ~/Downloads
-curl -L -O https://github.com/biliup/biliup/releases/download/v1.3.0/biliupR-v1.3.0-aarch64-macos.tar.xz
+curl -L -O https://github.com/biliup/biliup/releases/download/v1.3.4/biliupR-v1.3.4-aarch64-macos.tar.xz
 ```
 
 ### 2. 解压并安装

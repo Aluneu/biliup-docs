@@ -101,4 +101,4 @@ npm config set registry https://registry.npmmirror.com
 </ol>
 </details>
 
-<p class="qs-footnote">本文档对应 biliup <b>v1.3.0</b>（开源免费），更新可能不及时，请以 <a href="https://github.com/biliup/biliup">biliup 主仓库</a>实际代码为准 · 桌面客户端在<a href="https://github.com/biliup/biliup-app-new">独立仓库</a>维护</p>
+<p class="qs-footnote">本文档对应 biliup <b>v1.3.4</b>（开源免费），更新可能不及时，请以 <a href="https://github.com/biliup/biliup">biliup 主仓库</a>实际代码为准 · 桌面客户端在<a href="https://github.com/biliup/biliup-app-new">独立仓库</a>维护</p>

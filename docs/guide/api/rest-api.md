@@ -1,5 +1,5 @@
 ---
-description: biliup REST API 与日志 WebSocket：路由、认证与分级权限、B站账号与 WebUI 账号两组用户接口、Fleet 控制面路由、录后合成 / 遮挡 / 上传队列接口、手动上传示例（含必填 id/template_name）与日志频道（upload.log），基于 v1.3.0 源码核对。
+description: biliup REST API 与日志 WebSocket：路由、认证与分级权限、B站账号与 WebUI 账号两组用户接口、Fleet 控制面路由、录后合成 / 遮挡 / 上传队列接口、手动上传示例（含必填 id/template_name）与日志频道（upload.log），基于 v1.3.4 源码核对。
 ---
 
 # REST API 文档
@@ -50,12 +50,16 @@ biliup server --auth
 
 | 方法 | 路径 | 说明 |
 |---|---|---|
-| GET | `/v1/streamers` | 获取主播列表 |
+| GET | `/v1/streamers` | 获取主播列表（全量，含配置；房间多时用下面的分页接口） |
+| GET | `/v1/streamers/page` | 分页 + 搜索 + 平台筛选（v1.3.3 新增）。参数 `page`（默认 1）、`page_size`（默认 24，范围 1–48）、`search`（匹配备注名 / 地址）、`platform`；返回 `items` / `infos` / `total` / `page` / `page_size` / `platforms` |
+| GET | `/v1/overview` | 控制台概览（v1.3.3 新增）：`total`、`recording`、`pending`、`uploading`、`version`，以及录制中房间的 `streamers` / `infos`（最多 6 路） |
 | POST | `/v1/streamers` | 添加主播 |
 | PUT | `/v1/streamers` | 更新主播 |
 | DELETE | `/v1/streamers/{id}` | 删除主播 |
 | PUT | `/v1/streamers/{id}/pause` | 暂停/恢复主播录制 |
 | GET | `/v1/streamers/{id}/mosaic-frame` | 取一张真实直播截帧，供遮挡编辑器圈选区域 |
+
+> 两个新接口都只读身份投影，不加载配置、钩子、场次历史或录制目录，也不触发开播探测——轮询它们不会把上游平台一起拉爆。
 
 ### 直播预览与实时数据
 
@@ -308,9 +312,19 @@ biliup server --auth
 | DELETE | `/v1/node/revoked` | 确认被移除状态并清理 |
 | POST | `/v1/node/revoked/resume` | 恢复被控制面暂停的受管主播 |
 
-::: info 自动切片（auto-clip）接口未收录
-源码中还有一组 `/v1/auto-clip/*` 与 `/v1/sessions/{id}/suggestions*` 路由（模型 API 驱动的自动切片，实验性质、尚未正式发布），本文暂不收录；接口形态以源码为准，正式发布后另行补文档。
-:::
+### 自动切片（实验）
+
+| 方法 | 路径 | 说明 |
+|---|---|---|
+| POST | `/v1/auto-clip/test` | 测试 chat / 转写接口连通性 |
+| GET | `/v1/auto-clip/status` | 启用状态与 key 来源（env / config） |
+| GET | `/v1/auto-clip/jobs` | 各场次最近的自动切片任务 |
+| GET / POST / DELETE | `/v1/sessions/{id}/auto-clip` | 任务状态与用量预估 / 预估后入队 / 取消 |
+| GET | `/v1/sessions/{id}/suggestions` | 候选列表 |
+| POST | `/v1/sessions/{id}/suggestions/{sid}/accept` | 接受候选（建切片草稿，不自动导出） |
+| POST | `/v1/sessions/{id}/suggestions/{sid}/dismiss` | 丢弃候选 |
+
+> 这组接口仍是实验性质，字段可能调整；功能与配置见[自动切片](/guide/getting-started/进阶运行/auto-clip.html)。
 
 ### 静态资源
 

@@ -1,17 +1,42 @@
-import mdItCustomAttrs from "markdown-it-custom-attrs";
+﻿import mdItCustomAttrs from "markdown-it-custom-attrs";
 import { defineConfig } from "vitepress";
 import { set_sidebar } from "../guide/set_sidebar.mts";
 
 export default defineConfig({
   base: "/",
   title: "biliup",
+  titleTemplate: ":title · biliup 文档",
   lang: "zh-CN",
   description: "高性能直播录制与视频投稿工具 - CLI + WebUI 交互",
+  sitemap: { hostname: "https://doc.biliup.rs" },
   head: [
     ["meta", { name: "author", content: "biliup" }],
-    ["meta", { name: "keywords", content: "biliup,直播录制,B站投稿,录播,上传,自动投稿" }],
+    ["meta", { name: "keywords", content: "biliup,直播录制,B站投稿,录播,上传,自动投稿,直播录制工具" }],
+    ["meta", { name: "theme-color", content: "#1890ff" }],
+    ["meta", { property: "og:type", content: "website" }],
+    ["meta", { property: "og:site_name", content: "biliup 文档" }],
+    ["meta", { property: "og:locale", content: "zh_CN" }],
+    ["meta", { property: "og:image", content: "https://doc.biliup.rs/home.webp" }],
+    ["meta", { name: "twitter:card", content: "summary_large_image" }],
+    ["meta", { name: "twitter:image", content: "https://doc.biliup.rs/home.webp" }],
     ["link", { rel: "icon", href: "/favicon.ico" }],
+    ["link", { rel: "apple-touch-icon", href: "/icon.png" }],
   ],
+  transformHead({ pageData }) {
+    const rel = pageData.relativePath.replace(/index\.md$/, "").replace(/\.md$/, ".html");
+    const url = `https://doc.biliup.rs/${rel.split("/").map(encodeURIComponent).join("/")}`;
+    const desc = pageData.frontmatter.description || pageData.description;
+    const tags = [
+      ["link", { rel: "canonical", href: url }],
+      ["meta", { property: "og:url", content: url }],
+      ["meta", { property: "og:title", content: pageData.title ? `${pageData.title} · biliup 文档` : "biliup 文档" }],
+    ];
+    if (desc) {
+      tags.push(["meta", { property: "og:description", content: desc }]);
+      tags.push(["meta", { name: "twitter:description", content: desc }]);
+    }
+    return tags;
+  },
   markdown: {
     mermaid: true,
     // Caddyfile 不在 shiki 预置语言内，映射到 nginx 以获得可用的指令高亮
@@ -38,7 +63,7 @@ export default defineConfig({
       { text: "教程", link: "/guide/tutorials/recording-and-masking", activeMatch: "/guide/tutorials/" },
       { text: "WebUI", link: "/guide/webui/usage", activeMatch: "/guide/webui/" },
       { text: "API", link: "/guide/api/rest-api", activeMatch: "/guide/api/" },
-      { text: "CLI", link: "/guide/configs/config", activeMatch: "/guide/configs/" },
+      { text: "命令行", link: "/guide/configs/config", activeMatch: "/guide/configs/" },
       { text: "Skill", link: "/guide/skill/", activeMatch: "/guide/skill/" },
       { text: "开发", link: "/guide/开发指南/", activeMatch: "/guide/开发指南/" },
       { text: "更新日志", link: "/guide/changelog/changelog", activeMatch: "/guide/changelog/" },
@@ -46,6 +71,7 @@ export default defineConfig({
         text: "相关链接",
         items: [
           { text: "GitHub 仓库", link: "https://github.com/biliup/biliup" },
+          { text: "论坛 BBS", link: "https://bbs.biliup.rs" },
           { text: "biliup 社区", link: "https://biliup.me" }
         ]
       },

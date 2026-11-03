@@ -16,6 +16,68 @@
 
 ---
 
+## 未发布（master）
+
+> 已合入 `master`、尚未打 tag 的改动。以下载到正式 Release 为准。
+
+- 💡 **钩子 `run` 支持 JSON 入参**：写成 `{"run": "sh ./hook.sh", "json": true}` 时，stdin 收到的不是换行分隔的路径，而是一个 JSON 对象（`name` / `url` / `room_title` / `start_time` / `end_time` / `file_list`），与 Python 版 `downloaded_processor` 的入参一致，老脚本可以直接复用。不写 `json` 时行为不变
+- 🔧 **YouTube 链路修复**：`yt-dlp` 参数改用 `-o`（部分版本没有 `--outtmpl` 会直接退出）、去掉 `--break-on-reject`（archive 命中最新一条会让整轮中止、后面的新视频再也拿不到）、退出码 `101` 视为正常收尾；下载进度判定要求真有产出，避免 archive 命中后空转重试；封面读不到时退化为 B 站默认封面，不再让整次投稿失败
+- 🔧 **WebUI**：投稿模板卡片展示补全，带上分区名
+- 🔧 **Docker**：补齐 Intel VAAPI 编码依赖、保留版权声明
+
+---
+
+## v1.3.4
+
+> 发布时间：2026-10-22
+
+- ⚠️ **主播的「ffmpeg 参数」（`opt_args`）重新生效**：用 `ffmpeg` 录制时和 1.0.7 一样，作为**输出参数**传给 ffmpeg（加在输出文件名之前）；其它下载器不使用，只在日志里提示。以前填过、一直没起作用的参数，升级后会开始生效，请检查
+- ⚠️ **「ffmpeg 参数」按钩子权限管控**：这些参数能让 ffmpeg 往任意路径写文件，现在和处理器里的 `run` 命令同级——只有超级管理员能查看和修改，其他角色保存主播时保持原值。Fleet 里设了 ffmpeg 参数的房间只会派给加入时带了 `--allow-hooks`（或启用「本机」时勾选「允许钩子」）的节点
+- 💡 **处理过的录像会登记来源**：分段处理（`render` / `remux`）产生的成品会记住它的原片与中间文件；`postprocessor` 的 `rm` 或延期清理删除成品时，一并清理**没有被其它成品引用**的来源文件，重启后依然有效。原片不会被误删，也不会长期堆在盘里
+- 🔧 **GPU 监控**：兼容 IGT 2.3 之前不支持 `-n` 的 `intel_gpu_top`
+- 🔧 **房间的 ffmpeg 参数**：修复参数没有真正传给 ffmpeg 的问题（同上一并受钩子权限约束）
+
+[完整对比 v1.3.3 → v1.3.4](https://github.com/biliup/biliup/compare/v1.3.3...v1.3.4)
+
+---
+
+## v1.3.3
+
+> 发布时间：2026-10-21
+
+- 💡 **主播列表分页 / 搜索 / 平台筛选**：新增 `GET /v1/streamers/page`（`page`、`page_size`、`search`、`platform`，默认每页 24、上限 48）与 `GET /v1/overview`（控制台概览：房间总数、录制中、待上传、上传中）。分页接口只读身份投影，不加载配置、钩子、场次历史或录制目录，房间多了也不至于把首页拖慢
+- 💡 **YouTube 支持 RSS 订阅与列表解析**：`https://www.youtube.com/feeds/videos.xml?channel_id=UCxxx`（或 `playlist_id=UULFxxx` 纯长视频 / `UUSHxxx` 仅 Shorts / `UULVxxx` 仅直播回放）走原生 XML 解析；频道页、播放列表、`/results?search_query=` 搜索结果走 `yt-dlp --flat-playlist` 轻量枚举
+- 🔧 **WebUI**：控制台与主播卡片布局刷新，直播封面 / 头像缩略图缓存优化，批量操作与账号查询限并发
+
+[完整对比 v1.3.2 → v1.3.3](https://github.com/biliup/biliup/compare/v1.3.2...v1.3.3)
+
+---
+
+## v1.3.2
+
+> 发布时间：2026-10-20
+
+- 💡 **内置上传结果 Webhook**：`postprocessor` 里可以写 `{"webhook": "https://…"}`。上传结束后、**任何文件后处理之前**回调一次（即使它排在 `rm` 后面也先执行），请求体是 `{"stream_info": {...}, "caught_error": ""}`，必须返回纯文本 `success` 才继续；返回非 2xx、其它内容或超时都算失败，**录像保留**并中止后处理。上传失败时也会回调一次，`caught_error` 带上错误原因（回调失败不会覆盖原始错误）。详见[开发者选项](/guide/getting-started/配置/developer-options.html#上传结果回调-webhook)
+- 💡 **处理流程编辑器**：支持添加与校验 webhook 步骤，画布缩放与触摸交互改进
+- 🔧 **`append` 保留已有分 P 的 cid**：编辑稿件时不再被当作新增分 P
+- 🔧 **B 站弹幕**：修复弹幕认证 UID 与 Cookie 不一致导致的连接失败
+
+[完整对比 v1.3.1 → v1.3.2](https://github.com/biliup/biliup/compare/v1.3.1...v1.3.2)
+
+---
+
+## v1.3.1
+
+> 发布时间：2026-10-19
+
+- 💡 **`biliup server` 默认即可作为 Fleet 控制面**：不用再加 `--controller`。没有其它节点加入时，直播间、投稿模板与配置照旧按单机使用；已有 `data/node.json` 或加入票据时优先作为**节点**运行。`--controller` 仍可用于显式声明
+- 💡 **任务平台改版**：任务状态集中到 `/status`，房间与模板编辑改为独立页面（`/nodes/room`、`/streamers/editor`），处理流程编辑器换成图形画布并加严校验
+- 🔧 CI 支持手动打 tag 发布
+
+[完整对比 v1.3.0 → v1.3.1](https://github.com/biliup/biliup/compare/v1.3.0...v1.3.1)
+
+---
+
 ## v1.3.0
 
 > 发布时间：2026-10-18

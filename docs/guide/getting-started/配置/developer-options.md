@@ -24,7 +24,8 @@ biliup 提供四个阶段的钩子，支持自定义脚本和外部通知：
 
 | 格式 | JSON 示例 | 说明 | 可用阶段 |
 |---|---|---|---|
-| `run` | `{"run": "sh ./process.sh"}` | 执行 Shell 命令（Windows: `cmd /C`，Unix: `sh -c`） | 四个阶段都可用 |
+| `run` | `{"run": "sh ./process.sh"}` | 执行 Shell 命令（Windows: `cmd /C`，Unix: `sh -c`）；加 `"json": true` 时 stdin 改传 JSON 对象 | 四个阶段都可用 |
+| `webhook` | `{"webhook": "https://example.com/hook"}` | 上传结果回调，必须在任何文件后处理之前返回 `success`，详见下方 | 仅 `postprocessor` |
 | `remux` | `{"remux": "mp4"}` | 把 `.ts` / `.m2ts` 转封装为 MP4（ffmpeg，不重编码）；其它格式跳过 | 仅 `segment_processor` |
 | `render` | `{"render": {"danmaku": {"enabled": true}, "regions": [...]}}` | 内置遮挡 / 弹幕压制（与工作台导出同一个引擎） | 仅 `segment_processor` |
 | `mv` | `{"mv": "backup/"}` | 移动文件到指定目录 | 仅 `postprocessor` |
@@ -55,6 +56,25 @@ segment_processor:
 
 > 区域坐标与宽高都是 **0–1 的比例**（相对画面），不是像素。一般不需要手写这段 JSON——在遮挡编辑器里画好保存即可。
 
+### 权限：钩子与 ffmpeg 参数只有超级管理员能改
+
+钩子里的 `run` 走 `sh -c`、主播的 `override` 能覆盖任意全局配置、主播的「ffmpeg 参数」（`opt_args`）能让 ffmpeg 往任意路径写文件——合起来等于这台机器上的 shell。因此：
+
+- 只有 **超级管理员**（`streamer.hooks` 权限）能查看和修改这些字段；操作员 / 只读观察者保存主播时，这些字段保持原值，不会被清空也不会被改；
+- v1.3.4 起 `opt_args` 与钩子同级受管（此前它不生效，也就没有人管）；
+- Fleet 控制面下发的房间里若带钩子或 ffmpeg 参数，只会派给**加入时带 `--allow-hooks`**（或启用「本机」时勾选「允许钩子」）的节点。
+
+### 处理过的原片与中间文件
+
+`remux`、`render` 这类会「产出新文件」的步骤会把成品与它的来源（原片、中间文件）登记下来。之后：
+
+- `postprocessor` 的 `rm` 或[延期清理](/guide/getting-started/配置/global-config.html#存储与清理)删除成品时，**连带删掉没有人再引用的来源文件**，不会把原片长期堆在盘里；
+- 同一份来源被多个成品引用时不删，等最后一个引用释放；
+- 记录存在数据库里，**服务重启后依然有效**；`mv` 之后来源关系跟着搬到新路径。
+
+> 遮挡功能出于安全考虑，待遮挡的原片本来就不进入投稿或切片导出；这条清理规则保证它们在成品被删除后也不会残留。
+
+
 ### 各阶段输入数据
 
 | 阶段 | stdin | 数据格式 |
@@ -65,6 +85,21 @@ segment_processor:
 | `postprocessor` | 文件路径 | 已上传视频的路径；多个路径按换行分隔 |
 
 > 脚本从标准输入按行读取路径即可，例如 `while IFS= read -r line; do ...; done`。
+
+写了 `"json": true` 的 `run` 步骤收到的则是一个 JSON 对象，字段与 Python 版一致：
+
+```json
+{
+  "name": "主播备注",
+  "url": "https://live.bilibili.com/1234",
+  "room_title": "直播标题",
+  "start_time": "2026-10-22 20:00:00",
+  "end_time": "2026-10-22 23:10:00",
+  "file_list": ["/data/record/xxx.flv"]
+}
+```
+
+`downloaded_processor` 的 `run` 还可以在 stdout 上打印一行 `BILIUP_OUTPUT=<JSON 数组>`，显式告诉 biliup 处理后要接手的具体文件；不打印则沿用录制产出的路径。一行脚本只能输出一条，内容必须是 UTF-8 JSON，超过 1 MiB 会报错而不是被截断。
 
 ### 钩子配置方式
 
@@ -85,14 +120,26 @@ postprocessor:
   - run: "sh ./cleanup.sh"
 ```
 
-### 外部通知（Webhook）
+### 上传结果回调（Webhook）
 
-当前 Rust 版本**没有内置的 Webhook 功能**（Python 时代的 `Webhook` / `task_queue` 配置未迁移）。要做上传完成通知，在 `postprocessor`（或 `downloaded_processor`）里用 `run` + `curl` 自行实现，钩子数据按上表从 stdin 读入。示例：
+v1.3.2 起 Rust 版本重新内置了上传结果回调，写成一个钩子步骤即可，不需要自己拼 `curl`：
 
 ```yaml
 postprocessor:
-  - run: "curl -s -X POST -H 'Content-Type: application/json' -d '{\"file\":\"'$(cat)\"}' https://example.com/notify"
+  - webhook: "https://example.com/biliup/hook"
+  - rm
 ```
+
+触发时机与语义：
+
+- **上传结束后、任何文件后处理之前**执行一次。即使它排在 `rm` / `mv` 后面，也会先回调，避免通知还没发出去文件已经被删。
+- 请求体是 JSON：`{"stream_info": {...}, "caught_error": ""}`，`stream_info` 里除了主播与直播信息，还带投稿模板的字段（`tid`、`title`、`tags`…）以及格式化后的 `format_title` / `format_desc`；`name` 是主播的**备注名**（与 Python 版一致）。
+- 必须返回 **2xx + 纯文本 `success`**（响应体不超过 128 字节）才继续；返回别的状态码、别的正文或超时（连接 10 秒 / 整体 30 秒）都算失败，**录像保留在本地**并中止后续后处理，日志会写明失败原因。
+- 上传失败时也会回调一次，此时 `caught_error` 带错误原因，方便外部系统记录；回调本身失败不会覆盖原始的上传错误。
+- 只接受 `http` / `https` 地址，**不跟随重定向**；不支持在其它阶段使用（`preprocessor` / `segment_processor` / `downloaded_processor` 里写 webhook 会报错）。
+- 一轮上传只回调一次，多段录像不会重复通知。
+
+> 未开启 `--auth` 时 Webhook 没有额外保护——回调地址由你提供，但请不要把带凭据的地址写进公开模板。WebUI 的「处理流程」编辑器里可以直接添加 webhook 步骤并校验地址格式。
 
 ---
 

@@ -135,14 +135,15 @@ Python 包的存在意义：供非 Rust / 非 Node 环境调用上传、下载�
 | `segment_pins` | 分段引用固定，保护被切片工作台引用的分段不被清理（v1.2.9 新增） |
 | `markers` | 看直播时打的标记（v1.2.9 新增） |
 | `clips` | 切片与导出记录（v1.2.9 新增） |
-| `auto_clip_jobs` | 自动切片任务（v1.2.10 新增，该功能尚未正式发布） |
+| `auto_clip_jobs` | 自动切片任务（v1.2.10 新增，功能见[自动切片](/guide/getting-started/进阶运行/auto-clip.html)） |
 | `clip_suggestions` | 自动切片候选（v1.2.10 新增，同上） |
 | `douyu_cookie_keeper` | 斗鱼 Cookie 自动续期状态（v1.3.0 新增） |
 | `stream_session_ids` / `session_group_members` / `session_merge_candidates` | 回看工作台的会话合并（v1.3.0 新增） |
 | `render_recipes` / `render_assets` / `render_recipe_assets` / `render_jobs` / `render_sources` / `render_job_assets` | 录后合成的配方、素材与任务（v1.3.0 新增） |
 | `upload_observation_tasks` / `upload_observation_files` | 上传队列与活动记录（v1.3.0 新增） |
+| `processed_video_sources` | 分段处理成品与其原片 / 中间文件的对应关系（v1.3.4 新增，清理时按此连带删除来源） |
 
-> 结构以 `crates/biliup-cli/migrations/` 下的迁移文件为准，当前主库共 **15** 个迁移；Fleet 库 `fleet_migrations/` 共 **7** 个。
+> 结构以 `crates/biliup-cli/migrations/` 下的迁移文件为准，当前主库共 **17** 个迁移（`1_initial` … `17_processed_video_sources`）；Fleet 库 `fleet_migrations/` 共 **7** 个。
 
 ---
 

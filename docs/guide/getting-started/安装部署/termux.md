@@ -28,9 +28,9 @@ pkg install xz-utils ffmpeg -y
 官方为 Android (aarch64) 直接提供预编译二进制，**不需要 Python，也不需要本机编译**：
 
 ```bash
-# 下载（请把 1.3.0 换成最新版本号）
+# 下载（请把 1.3.4 换成最新版本号）
 cd ~
-curl -L -O https://github.com/biliup/biliup/releases/download/v1.3.0/biliupR-v1.3.0-aarch64-android.tar.xz
+curl -L -O https://github.com/biliup/biliup/releases/download/v1.3.4/biliupR-v1.3.4-aarch64-android.tar.xz
 
 # 解压（顶层是 biliupR-v<版本>-aarch64-android/，含 biliup 与 render-tools/）
 tar -xJf biliupR-*.tar.xz

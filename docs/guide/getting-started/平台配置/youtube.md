@@ -13,6 +13,27 @@
 
 ----
 
+## 支持的链接形式
+
+YouTube 插件本身负责**解析**，实际下载仍交给配置的下载器。链接分两类：
+
+| 链接 | 解析方式 | 说明 |
+|---|---|---|
+| `https://www.youtube.com/feeds/videos.xml?channel_id=UCxxx` | 原生 XML | 频道 RSS，全内容 |
+| `...?playlist_id=UULFxxx` | 原生 XML | 只要长视频（RSS 视图） |
+| `...?playlist_id=UUSHxxx` | 原生 XML | 只要 Shorts |
+| `...?playlist_id=UULVxxx` | 原生 XML | 只要直播回放 |
+| `https://www.youtube.com/@频道名`、`/channel/UCxxx` | `yt-dlp --flat-playlist` | 频道页，只做轻量枚举 |
+| `https://www.youtube.com/playlist?list=PLxxx` | `yt-dlp --flat-playlist` | 播放列表 |
+| `https://www.youtube.com/results?search_query=关键词` | `yt-dlp --flat-playlist` | 搜索结果 |
+| `https://www.youtube.com/watch?v=xxx`、`https://youtu.be/xxx` | `yt-dlp` / 直链 | 单个视频或直播 |
+
+::: warning 需要本机有 yt-dlp
+除 RSS 订阅（原生解析）以外，YouTube 的枚举与直链提取都调用 `yt-dlp`，**PATH 里没有 `yt-dlp` 时会直接失败**。RSS 链接省掉这一次调用，适合订阅固定频道、批量搬运。
+:::
+
+> 频道 / 播放列表 / 搜索结果会一次枚举出多个条目，每个条目按自己的视频 ID 录制。想限制数量请用 `youtube_after_date` / `youtube_before_date` 收窄时间范围。
+
 ## 登录信息（Cookie）
 
 * 配置 YouTube 登录信息（Cookie 文件）后可解锁受限内容、提升稳定性。请在[登录方式详解](../配置/login.html)中了解网页 Cookie 文件登录，并在主播编辑页关联。

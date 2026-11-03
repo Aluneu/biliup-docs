@@ -135,9 +135,9 @@ npm uninstall -g @biliup/cli
 | armv7（树莓派 3/4） | `biliupR-v1.x.x-arm-linux.tar.xz` |
 
 ```bash
-# 示例：x86_64 架构（请把 1.3.0 换成最新版本号）
+# 示例：x86_64 架构（请把 1.3.4 换成最新版本号）
 cd /tmp
-wget https://github.com/biliup/biliup/releases/download/v1.3.0/biliupR-v1.3.0-x86_64-linux.tar.xz
+wget https://github.com/biliup/biliup/releases/download/v1.3.4/biliupR-v1.3.4-x86_64-linux.tar.xz
 ```
 
 ### 2. 解压并安装

@@ -54,9 +54,9 @@ biliup server [OPTIONS]
 | `--auth` | 开启 WebUI 登录认证（布尔开关，不接收参数） | 关闭 |
 | `--secure-session-cookie` | 为会话 Cookie 附加 `Secure` 属性。**仅当通过 HTTPS 反向代理访问时开启**，直接 HTTP 远程访问时开启会导致浏览器丢弃登录态 | 关闭 |
 | `-c, --config` | 使用 biliup 1.0.7 风格配置文件启动录制 | — |
-| `--controller` | 以 Fleet 控制面运行：接受其他 biliup 节点加入并显示它们的状态（数据在 `data/fleet.sqlite3`） | 关闭 |
-| `--relay-listen` | 控制面内嵌 relay 的 TCP 监听地址，节点必须能连到它；填 `off` 表示不起内嵌 relay（此时必须用 `--relay-url` 指定外部 relay）。**仅在 `--controller` 时生效** | `0.0.0.0:19160` |
-| `--relay-url` | 写进加入票据的 relay 地址，可重复指定；不填时自动列出本机网卡地址。用于域名、端口转发、反向代理或外部 relay。**仅在 `--controller` 时生效** | 自动检测 |
+| `--controller` | 显式以 Fleet 控制面运行（**默认已经开启**，见下方说明）。已有节点身份或加入票据时转为节点运行 | 无需指定 |
+| `--relay-listen` | 控制面内嵌 relay 的 TCP 监听地址，节点必须能连到它；填 `off` 表示不起内嵌 relay（此时必须用 `--relay-url` 指定外部 relay）。**仅控制面生效**，作为节点运行时忽略 | `0.0.0.0:19160` |
+| `--relay-url` | 写进加入票据的 relay 地址，可重复指定；不填时自动列出本机网卡地址。用于域名、端口转发、反向代理或外部 relay。**仅控制面生效**，作为节点运行时忽略 | 自动检测 |
 | `-h, --help` | 打印帮助 | — |
 
 示例：
@@ -96,6 +96,17 @@ biliup server --bind 0.0.0.0 --auth
 
 ::: tip
 `--auth` 是布尔开关，不接收 `user:pass` 参数。开启后首次访问 WebUI 会进入注册页面，需创建管理账号（用户名默认预填 `biliup`，可改）。详见 [WebUI 认证](/guide/api/rest-api.html#认证说明)。
+:::
+
+::: info 默认就是 Fleet 控制面（v1.3.1 起）
+`biliup server` 启动后默认已经在控制面模式下运行，**不需要再写 `--controller`**。此时：
+
+- 没有其它节点加入时，直播间、投稿模板与配置完全按单机使用，不会自动迁移或接管；
+- 控制面的 relay 默认监听 `0.0.0.0:19160`（端口被占用时自动挑一个空闲端口，加入票据里带的是实际端口）；
+- 工作目录里已有 `data/node.json`，或用环境变量 `BILIUP_JOIN_TICKET` 给了加入票据时，**优先作为节点运行**，此时 `--relay-listen` / `--relay-url` 被忽略；
+- 显式写了 `--controller` 或 relay 参数时，监听失败会直接报错，而不是悄悄降级。
+
+不想让这台机器被其它节点接入，可以把 relay 关掉：`biliup server --relay-listen off`。完整流程见[多机录制 Fleet](/guide/getting-started/进阶运行/fleet.html)。
 :::
 
 
@@ -434,7 +445,7 @@ biliup user reset-password operator
 | `status` | 查看本机的节点凭据（不连控制面） |
 
 ::: danger --allow-hooks 是安全敏感开关
-`join --allow-hooks` 允许控制面下发的房间使用钩子（各 `*processor`），**等于允许控制面在这台机器上执行命令**。只在你完全信任该控制面时才开启。
+`join --allow-hooks` 允许控制面下发的房间使用钩子（各 `*processor`）**和 ffmpeg 参数（`opt_args`）**，等于允许控制面在这台机器上执行命令、让 ffmpeg 往任意路径写文件。只在你完全信任该控制面时才开启。
 :::
 
 示例：

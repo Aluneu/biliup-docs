@@ -48,6 +48,14 @@ npm run docs:check-anchors
 
 **新增或修改带 `#` 的站内链接后跑一次**。有失效锚点会列出具体位置并以非 0 退出，可直接用于 CI 或提交前检查。
 
+构建产物还有一层巡检（扫真正生成的 HTML，能抓到 frontmatter / 组件里的绝对链接）：
+
+```bash
+npm run docs:build && npm run docs:check-links
+```
+
+CI（`.github/workflows/deploy.yml`）在构建后跑这条，死链或坏锚点会直接让部署失败。
+
 锚点的生成规则（`@mdit-vue/plugin-headers` 的 slugify）：
 
 - 空格与标点**一律替换成 `-`**（不是删掉），中英文标点都算，多个连续 `-` 会合并。
@@ -62,6 +70,14 @@ npm run docs:check-anchors
 - 自定义样式唯一入口：`docs/.vitepress/theme/custom.css`。
 - 配色走 VitePress 设计变量（`--vp-c-*`），明暗主题自动适配，不要硬编码颜色。
 - 首页是唯一用自定义 HTML + CSS 装饰的页面，改样式请复用 `custom.css` 已有的类，不要新造。
+- 404 页在 `docs/.vitepress/theme/NotFound.vue`，由 `theme/Layout.vue` 通过 `#not-found` 插槽注入；改文案只动这个组件。
+
+## 站点配置与资源
+
+- `docs/.vitepress/config.mts` 里已经配好：`sitemap`（`https://doc.biliup.rs`）、`transformHead`（canonical / og:url / og:title / og:description）、`titleTemplate`。
+- `docs/public/robots.txt` 指向 sitemap，别删。
+- 图片进仓库前压一下：导航 logo `icon.png` 只需 96px（显示 24px），`favicon.ico` 用 32px PNG-in-ICO，别把 1MB 级的 PNG 塞进 `logo.svg`。
+- 页面标题就是侧边栏与搜索结果的标题；`description` frontmatter 会被 SEO 与 og 复用，新页面请补一行。
 
 ## 改文档的标准流程
 
